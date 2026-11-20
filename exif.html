@@ -222,43 +222,96 @@
     render();
   }
 
-  /* ── 원본 EXIF 흔적 확인 ───────────────────── */
-  var TAGS = ['Exif', 'GPS', 'GPSLatitude', 'GPSLongitude', 'GPSAltitude', 'Make', 'Model',
-    'LensModel', 'Software', 'Orientation', 'DateTimeOriginal', 'Artist', 'Copyright'];
+  /* ── EXIF(GPS 포함) 실제로 읽어보기 ─────────── */
+  function exifInfo(u8) {
+    var res = { hasExif: false, gps: false, gpsCoord: false, make: '', model: '',
+                time: false, software: false, orientation: false, count: 0 };
+    if (u8.length < 4 || u8[0] !== 0xFF || u8[1] !== 0xD8) return res;
+    var i = 2;
+    while (i + 4 < u8.length) {
+      if (u8[i] !== 0xFF) { i++; continue; }
+      var m = u8[i + 1];
+      if (m === 0xFF) { i++; continue; }
+      if (m === 0xD8 || m === 0x01 || (m >= 0xD0 && m <= 0xD7)) { i += 2; continue; }
+      if (m === 0xDA) break;
+      var len = (u8[i + 2] << 8) | u8[i + 3];
+      if (len < 2) break;
+      if (m === 0xE1 && i + 10 < u8.length &&
+          u8[i + 4] === 0x45 && u8[i + 5] === 0x78 && u8[i + 6] === 0x69 && u8[i + 7] === 0x66) {
+        res.hasExif = true;
+        try { readTiff(u8, i + 10, Math.min(i + 2 + len, u8.length), res); } catch (e) { }
+        break;
+      }
+      i += 2 + len;
+    }
+    return res;
+  }
 
-  function scanTags(u8) {
-    var found = [];
-    var limit = Math.min(u8.length, 512 * 1024);
-    var step = 8192;
-    var hay = '';
-    for (var i = 0; i < limit; i += step) {
-      var chunk = u8.subarray(i, Math.min(i + step + 16, limit));
-      var s = '';
-      for (var j = 0; j < chunk.length; j++) s += String.fromCharCode(chunk[j]);
-      hay += s;
+  function readTiff(u8, b, end, res) {
+    var le = u8[b] === 0x49 && u8[b + 1] === 0x49;
+    function u16(o) { return le ? (u8[o] | (u8[o + 1] << 8)) : ((u8[o] << 8) | u8[o + 1]); }
+    function u32(o) {
+      return le ? ((u8[o] | (u8[o + 1] << 8) | (u8[o + 2] << 16) | (u8[o + 3] << 24)) >>> 0)
+                : (((u8[o] << 24) | (u8[o + 1] << 16) | (u8[o + 2] << 8) | u8[o + 3]) >>> 0);
     }
-    for (var t = 0; t < TAGS.length; t++) {
-      if (hay.indexOf(TAGS[t]) >= 0) found.push(TAGS[t]);
+    function str(off) {
+      var s = '', p = b + off;
+      for (var q = 0; q < 48 && p + q < end; q++) {
+        var c = u8[p + q];
+        if (!c) break;
+        s += String.fromCharCode(c);
+      }
+      return s.trim();
     }
-    return found;
+    if (u16(b) !== 0x002A) return;
+    var ifd0 = b + u32(b + 4);
+    if (ifd0 + 2 > end) return;
+    var n = u16(ifd0);
+    res.count = n;
+    var vals = {};
+    for (var k = 0; k < n; k++) {
+      var e = ifd0 + 2 + k * 12;
+      if (e + 12 > end) break;
+      vals[u16(e)] = u32(e + 8);
+    }
+    if (vals[0x010F] !== undefined) res.make = str(vals[0x010F]);
+    if (vals[0x0110] !== undefined) res.model = str(vals[0x0110]);
+    if (vals[0x0131] !== undefined) res.software = true;
+    if (vals[0x0112] !== undefined) res.orientation = true;
+    if (vals[0x0132] !== undefined || vals[0x9003] !== undefined) res.time = true;
+    if (vals[0x8825] !== undefined) {
+      res.gps = true;
+      var g = b + vals[0x8825];
+      if (g + 2 <= end) {
+        var gn = u16(g), has = {};
+        for (var j = 0; j < gn; j++) {
+          var ge = g + 2 + j * 12;
+          if (ge + 12 > end) break;
+          has[u16(ge)] = true;
+        }
+        res.gpsCoord = !!(has[2] || has[4]);   // GPSLatitude / GPSLongitude
+      }
+    }
   }
 
   function reportExifBefore(file) {
     var head = file.slice(0, 512 * 1024);
     Safe.blobBuf(head).then(function (u8) {
-      var found = scanTags(u8);
+      var info = exifInfo(u8);
       var el = $('exif-before');
-      var gps = found.indexOf('GPS') >= 0 || found.indexOf('GPSLatitude') >= 0;
       var parts = [];
-      if (found.indexOf('Orientation') >= 0) parts.push('회전 정보');
-      if (found.indexOf('Make') >= 0 || found.indexOf('Model') >= 0) parts.push('기기 이름');
-      if (found.indexOf('DateTimeOriginal') >= 0 || found.indexOf('Exif') >= 0) parts.push('촬영 시간');
-      if (gps) parts.push('찍은 장소(위치)');
-      if (found.indexOf('Software') >= 0) parts.push('편집 앱');
-      if (!found.length) {
-        el.innerHTML = '<b>원본에서 눈에 띄는 정보는 찾지 못했습니다.</b><br>그래도 저장하면 새로 그려서 더 깨끗해집니다.';
+      if (info.gps) parts.push('찍은 장소(위치 좌표)');
+      if (info.make || info.model) parts.push('기기 이름' + (info.model ? ' · ' + info.model : ''));
+      if (info.time) parts.push('촬영 시간');
+      if (info.software) parts.push('편집 앱');
+      if (info.orientation) parts.push('회전 정보(방향)');
+      if (!parts.length) {
+        el.className = 'warn good';
+        el.innerHTML = '<b>이 사진에는 눈에 띄는 개인정보가 없습니다.</b><br>그래도 저장하면 새로 그려서 더 깨끗해집니다.';
       } else {
+        el.className = 'warn';
         el.innerHTML = '<b>원본 사진에 이런 정보가 붙어 있었습니다</b><br>' + parts.join(' · ') +
+          (info.gps ? '<br><span style="font-weight:600">📍 이 사진에는 <b>위도·경도 좌표</b>가 그대로 들어 있습니다. 그냥 올리면 찍은 자리가 드러납니다.</span>' : '') +
           '<br><span style="font-weight:600">아래에서 저장하면 이 정보는 전부 사라집니다.</span>';
       }
       el.classList.remove('hidden');
@@ -400,16 +453,16 @@
       Safe.download(blob, name);
 
       Safe.blobBuf(blob).then(function (u8) {
-        var tags = scanTags(u8);
-        var gps = tags.indexOf('GPS') >= 0 || tags.indexOf('GPSLatitude') >= 0;
+        var info = exifInfo(u8);
+        var gps = info.gps;
         var el = $('exif-after');
         if (gps) {
           el.className = 'warn';
-          el.innerHTML = '<b>위치정보 표시가 남아 있습니다.</b><br>이 페이지에서 저장한 파일이 맞는지 확인해 주세요.';
+          el.innerHTML = '<b>위치정보가 남아 있습니다.</b><br>이 페이지에서 저장한 파일이 맞는지 확인해 주세요.';
         } else {
           el.className = 'warn good';
-          el.innerHTML = '<b>✔ 확인 완료 — 저장한 파일에는 위치정보·기기정보가 없습니다.</b><br>' +
-            '저장된 파일을 다시 열어 확인한 결과입니다.';
+          el.innerHTML = '<b>✔ 확인 완료 — 저장한 파일에는 위치정보·기기정보가 0건입니다.</b><br>' +
+            '저장된 파일을 다시 열어 EXIF를 직접 읽어본 결과입니다.';
         }
         el.classList.remove('hidden');
 
