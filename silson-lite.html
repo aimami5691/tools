@@ -547,9 +547,9 @@ a{color:var(--teal-dark);font-weight:800;}
     // 원장
     var rows = [
       ["① 유지 · 3년 보험료", man(three), ""],
-      ["② 선택형 · 3년 보험료", man(selMonth*36), "down"],
+      ["② 선택형 · 3년 보험료", man(selMonth*36), ""],
       ["② 선택형 · 3년 순이득", (selNet >= 0 ? "+" : "−") + man(Math.abs(selNet)), selNet >= 0 ? "up" : "down"],
-      ["③ 전환 · 3년 보험료", man(swMonth*36), "down"],
+      ["③ 전환 · 3년 보험료", man(swMonth*36), ""],
       ["③ 전환 · 3년 순이득", (swNet >= 0 ? "+" : "−") + man(Math.abs(swNet)), swNet >= 0 ? "up" : "down"]
     ];
     $("ledgerRows").innerHTML = rows.map(function(r){
