@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<title>링크 추적 꼬리표 제거기 — 라이프나침반</title>
+<meta name="description" content="인스타·스레드·유튜브·쇼핑 링크에 붙은 utm, fbclid, igshid, si 같은 추적 꼬리표를 한 번에 지워 깔끔한 주소로 만들어 복사합니다.">
+<meta property="og:title" content="링크 추적 꼬리표 제거기">
+<meta property="og:description" content="인스타·스레드·유튜브·쇼핑 링크에 붙은 utm, fbclid, igshid, si 같은 추적 꼬리표를 한 번에 지워 깔끔한 주소로 만들어 복사합니다.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/safe.css">
+
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <a class="back" href="index.html">무료 도구 전체</a>
+    <span class="kicker">서버 전송 ZERO · 링크 청소</span>
+    <h1>지저분한 링크,<br>한 번에 깔끔하게</h1>
+    <p>인스타·스레드·유튜브 링크 뒤에 붙은<br>긴 꼬리표는 <b>나를 따라다니는 표식</b>입니다.<br>지우면 짧고 깔끔한 주소가 됩니다.</p>
+    <div class="stamp"><span>🧹 추적 꼬리표만 제거</span><span>📋 한 번에 복사</span><span>⚡ 붙여넣으면 자동</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>링크 붙여넣기</h2>
+  <p class="help">인스타·스레드·유튜브·쇼핑 링크에는 <b>나를 따라다니는 꼬리표</b>가 붙어 있습니다.<br>지우면 훨씬 짧고 깔끔한 주소가 됩니다.</p>
+  <div class="field">
+    <label for="input" class="sr">지저분한 링크</label>
+    <textarea id="input" placeholder="여기에 링크를 붙여넣으세요.&#10;여러 개를 한 번에 넣어도 됩니다."></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn primary block" id="run">🧹 추적 꼬리표 지우기</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn ghost small" id="paste">📋 붙여넣기</button>
+    <button class="btn ghost small" id="clear">지우기</button>
+  </div>
+  <p class="hint">붙여넣기만 해도 자동으로 정리됩니다.</p>
+</section>
+
+<section class="card hidden" id="result-card">
+  <h2>정리된 링크</h2>
+  <div class="summary" id="summary"></div>
+  <div class="btn-row">
+    <button class="btn navy block" id="copy-all">📋 정리된 링크 전부 복사</button>
+  </div>
+  <div id="list"></div>
+</section>
+
+<div class="warn">
+  <b>쇼핑 제휴 링크는 그대로 두세요.</b><br>
+  쿠팡파트너스·쇼핑커넥트 링크의 <b>sharingId·mtid·sourceType</b>은 광고 꼬리표가 아니라 <b>내 수익을 연결하는 고리</b>입니다. 이건 지우지 않습니다.
+</div>
+
+  <div class="safe-badge">
+    <strong>🔒 입력한 링크는 어디로도 전송되지 않습니다</strong>
+    <p>링크 정리는 이 화면 안에서만 계산합니다. 로그인도, 저장도, 전송도 없습니다.</p>
+    <ul><li>utm_·fbclid·igshid·si 등 추적용 값만 제거</li><li>쇼핑 제휴 링크의 수익 고리는 그대로 보존</li><li>여러 개를 한 번에 정리</li></ul>
+  </div>
+
+  <a class="banner" href="https://litt.ly/lifenavigator" target="_blank" rel="noopener noreferrer">
+    <b>라이프나침반 창고</b>
+    <span>생활 정리 도구·서식·템플릿을 무료로 받아 가세요</span>
+    <em>litt.ly/lifenavigator →</em>
+  </a>
+
+  <footer>
+    <div class="brand">라이프나침반</div>
+    <div>휴대폰 안에서만 도는 안심 도구 · 가입 없음 · 설치 없음</div>
+    <div style="margin-top:10px"><a href="index.html">← 무료 도구 전체 보기</a></div>
+  </footer>
+
+</main>
+
+<div id="toast"></div>
+
+<script src="assets/safe.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = Safe.$;
+
+  var EXACT = [
+    'fbclid', 'gclid', 'dclid', 'gbraid', 'wbraid', 'msclkid', 'yclid', 'twclid', 'ttclid',
+    'li_fat_id', 'igshid', 'igsh', 'mkt_tok', 'vero_id', 'vero_conv', 'oly_anon_id', 'oly_enc_id',
+    'rb_clickid', 's_cid', 'srsltid', 'wickedid', 'epik', '_branch_match_id', '_openstat',
+    'spm', 'scm', 'ref_src', 'ref_url', 'ncid', 'navi', 'trk', 'trkcampaign', 'trk_info',
+    'share_source', 'share_medium', 'share_plat', 'share_tag', 'share_token', 'share_from',
+    'share_session_id', 'share_iid', 'is_from_webapp', 'sender_device', 'web_id', 'checksum',
+    'utm', 'ga', 'glid', 'campaignid', 'adgroupid', 'creative', 'keyword', 'matchtype',
+    'network', 'device', 'gad_source', 'gclsrc', 'cmpid', 'campaign_id', 'ad_id', 'adset_id',
+    'fb_action_ids', 'fb_action_types', 'fb_source', 'fb_ref', 'action_object_map',
+    'action_type_map', 'action_ref_map', 'hsa_cam', 'hsa_grp', 'hsa_mt', 'hsa_src', 'hsa_ad',
+    'hsa_acc', 'hsa_net', 'hsa_kw', 'hsa_tgt', 'hsa_ver', 'hsa_la', 'hsa_ol', 'hsa_rf', 'hsa_pg',
+    'sc_eh', 'sc_lid', 'sc_llid', 'sc_uid', 'sc_cid', 'sc_campaign', 'sc_channel', 'sc_content',
+    'sc_medium', 'sc_outcome', 'sc_geo', 'sc_country', 'wt_mc', 'wt_zmc', 'pk_campaign',
+    'pk_kwd', 'pk_source', 'pk_medium', 'ns_campaign', 'ns_mchannel', 'ns_source', 'ns_linkname',
+    'ns_fee', 'ns_cid', 'epik_uid', 'ck_subscriber_id', 'mkt', 'elqTrackId', 'elqTrack',
+    'assetType', 'assetId', 'campaignId', 'siteId', 'mc_cid', 'mc_eid', 'zmc', 'zmac'
+  ];
+
+  // 특정 사이트에서만 지우는 꼬리표 (다른 사이트에서는 필요한 값일 수 있음)
+  var HOST_SPECIFIC = {
+    si: ['youtube.com', 'youtu.be', 'm.youtube.com'],
+    feature: ['youtube.com', 'youtu.be'],
+    pp: ['youtube.com', 'youtu.be'],
+    ab_channel: ['youtube.com', 'youtu.be'],
+    is_from_webapp: ['instagram.com'],
+    img_index: ['instagram.com'],
+    'igshid': ['instagram.com'],
+    utm_source: ['*'],
+    fbclid: ['*']
+  };
+
+  var PREFIX = ['utm_', 'ga_', 'mtm_', '_hs', 'hscta', 'piwik_', 'matomo_', 'pk_', 'vero_', 'oly_', 'at_', 'hsa_', 'sc_', 'wt_', 'ns_', 'epik_', 'gcl_', 'gbraid', 'wbraid'];
+
+  function isTracked(name, host) {
+    var n = String(name).toLowerCase();
+    if (n.indexOf('utm_') === 0) return true;
+    for (var i = 0; i < PREFIX.length; i++) {
+      if (n.indexOf(PREFIX[i]) === 0) return true;
+    }
+    for (var j = 0; j < EXACT.length; j++) {
+      if (n === EXACT[j].toLowerCase()) {
+        var scope = HOST_SPECIFIC[n];
+        if (scope && scope.length && scope.indexOf('*') < 0) {
+          return scope.some(function (h) { return host === h || host.endsWith('.' + h); });
+        }
+        return true;
+      }
+    }
+    // 호스트 전용
+    var only = HOST_SPECIFIC[n];
+    if (only && only.indexOf('*') < 0) {
+      return only.some(function (h) { return host === h || host.endsWith('.' + h); });
+    }
+    return false;
+  }
+
+  function extractUrls(text) {
+    var re = /((?:https?:\/\/)?(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?::\d{2,5})?(?:\/[^\s<>"'()\[\]]*)?)/gi;
+    var out = [], m;
+    while ((m = re.exec(text)) !== null) {
+      var raw = m[1];
+      var before = text.charAt(m.index - 1);
+      if (before === '@' || before === '/' || before === '.') continue;
+      if (raw.length < 7) continue;
+      out.push(raw);
+    }
+    return out;
+  }
+
+  function cleanOne(raw) {
+    var withScheme = /^https?:\/\//i.test(raw);
+    var url;
+    try {
+      url = new URL(withScheme ? raw : 'https://' + raw);
+    } catch (e) { return null; }
+
+    var host = url.hostname.toLowerCase();
+    var params = [];
+    url.searchParams.forEach(function (v, k) { params.push(k); });
+
+    var removed = [];
+    params.forEach(function (k) {
+      if (isTracked(k, host)) {
+        url.searchParams.delete(k);
+        removed.push(k);
+      }
+    });
+
+    // 값이 빈 파라미터도 정리
+    var empty = [];
+    url.searchParams.forEach(function (v, k) { if (v === '') empty.push(k); });
+    empty.forEach(function (k) { url.searchParams.delete(k); });
+
+    // 경로 끝의 중복 슬래시 정리
+    var path = url.pathname.replace(/\/{2,}/g, '/');
+    url.pathname = path;
+
+    var out = url.toString();
+    if (!withScheme) out = out.replace(/^https?:\/\//, '');
+    // 의미 없는 ? 만 남는 경우 제거
+    out = out.replace(/\?$/, '');
+    return { clean: out, removed: removed, changed: out !== raw };
+  }
+
+  function copy(text) {
+    var done = function () { Safe.toast('복사했습니다'); };
+    var fallback = function () {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { Safe.toast('복사가 안 되면 길게 눌러 복사해 주세요'); }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else fallback();
+  }
+
+  var lastResults = [];
+
+  function run() {
+    var text = $('input').value || '';
+    var raws = extractUrls(text);
+    var card = $('result-card');
+
+    if (!raws.length) {
+      card.classList.add('hidden');
+      return;
+    }
+
+    lastResults = [];
+    var seen = {};
+    raws.forEach(function (r) {
+      if (seen[r]) return;
+      seen[r] = 1;
+      var res = cleanOne(r);
+      if (res) lastResults.push({ raw: r, clean: res.clean, removed: res.removed, changed: res.changed });
+    });
+
+    var removedTotal = lastResults.reduce(function (s, x) { return s + x.removed.length; }, 0);
+    var shorter = lastResults.filter(function (x) { return x.changed; }).length;
+
+    $('summary').innerHTML =
+      '<div><dt>링크</dt><dd>' + lastResults.length + '개</dd></div>' +
+      '<div><dt>지운 꼬리표</dt><dd>' + removedTotal + '개</dd></div>' +
+      '<div><dt>짧아진 링크</dt><dd>' + shorter + '개</dd></div>';
+
+    var html = '';
+    lastResults.forEach(function (x, i) {
+      var tags = x.removed.length
+        ? x.removed.map(function (k) { return '<b style="display:inline-block;background:#F1F5F9;border:1px solid #DCE5EE;border-radius:6px;padding:1px 6px;margin:2px 4px 0 0;font-size:14px;color:#8C2B2B">−' + k + '</b>'; }).join('')
+        : '<span style="color:#0F6B4A;font-weight:800">이미 깨끗한 링크</span>';
+      html += '<div class="item"><div class="body">' +
+        '<div class="name">' + (x.changed ? '정리 완료' : '그대로 둬도 됩니다') + ' · ' + x.clean.length + '자</div>' +
+        '<div class="mono" style="margin-top:6px">' + escapeHtml(x.clean) + '</div>' +
+        '<div style="margin-top:6px">' + tags + '</div>' +
+        '<div class="acts"><button class="btn small primary" data-copy="' + i + '">📋 복사</button></div>' +
+        '</div></div>';
+    });
+    $('list').innerHTML = html;
+    card.classList.remove('hidden');
+
+    Safe.qsa('#list [data-copy]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var idx = +b.getAttribute('data-copy');
+        var txt = lastResults[idx].clean;
+        if (!/^https?:\/\//i.test(txt) && /^[a-z0-9.-]+\.[a-z]{2,}/i.test(txt)) txt = 'https://' + txt;
+        copy(txt);
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  var timer;
+  function schedule() {
+    clearTimeout(timer);
+    timer = setTimeout(run, 320);
+  }
+
+  function init() {
+    $('run').addEventListener('click', run);
+    $('input').addEventListener('input', schedule);
+    $('input').addEventListener('paste', function () { setTimeout(run, 40); });
+    $('clear').addEventListener('click', function () {
+      $('input').value = '';
+      $('result-card').classList.add('hidden');
+      $('input').focus();
+    });
+    $('paste').addEventListener('click', function () {
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        Safe.toast('입력칸을 길게 눌러 붙여넣어 주세요');
+        $('input').focus();
+        return;
+      }
+      navigator.clipboard.readText().then(function (t) {
+        $('input').value = t;
+        run();
+      }).catch(function () { Safe.toast('입력칸을 길게 눌러 붙여넣어 주세요'); });
+    });
+    $('copy-all').addEventListener('click', function () {
+      var txt = lastResults.map(function (x) {
+        var t = x.clean;
+        if (!/^https?:\/\//i.test(t) && /^[a-z0-9.-]+\.[a-z]{2,}/i.test(t)) t = 'https://' + t;
+        return t;
+      }).join('\n');
+      copy(txt);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

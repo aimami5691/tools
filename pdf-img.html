@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<title>PDF ↔ 사진 변환기 — 라이프나침반</title>
+<meta name="description" content="PDF를 장마다 사진(JPG·PNG)으로 바꾸고, 사진 여러 장을 PDF 하나로 묶습니다. 파일이 서버로 전송되지 않는 무료 도구.">
+<meta property="og:title" content="PDF ↔ 사진 변환기">
+<meta property="og:description" content="PDF를 장마다 사진(JPG·PNG)으로 바꾸고, 사진 여러 장을 PDF 하나로 묶습니다. 파일이 서버로 전송되지 않는 무료 도구.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/safe.css">
+
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <a class="back" href="index.html">무료 도구 전체</a>
+    <span class="kicker">서버 전송 ZERO · 문서 안심</span>
+    <h1>PDF는 사진으로,<br>사진은 PDF로</h1>
+    <p>카톡에 PDF가 안 열리는 분께는<br>사진으로 바꿔 보내고,<br>서류 사진은 PDF 하나로 묶어 제출하세요.</p>
+    <div class="stamp"><span>📄 PDF → 사진</span><span>🖼️ 사진 → PDF 1개</span><span>📦 통째로 저장</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div class="seg" role="tablist" aria-label="변환 방향">
+  <button id="tab-pdf2img" role="tab" aria-selected="true">PDF → 사진</button>
+  <button id="tab-img2pdf" role="tab" aria-selected="false">사진 → PDF</button>
+</div>
+
+<!-- PDF → 이미지 -->
+<section id="panel-pdf2img">
+  <div class="card">
+    <h2>PDF 파일 고르기</h2>
+    <p class="help">PDF를 고르면 <b>장마다 사진으로</b> 바꿔 드립니다. 스캔본·계약서·안내문을 카톡에 보낼 때 좋습니다.</p>
+    <label class="filepick" for="pdf-file">
+      <strong>📄 PDF 고르기</strong>
+      <span>여러 장짜리 PDF도 괜찮아요</span>
+      <input id="pdf-file" type="file" accept="application/pdf,.pdf">
+    </label>
+
+    <div class="field">
+      <span class="lbl">화질</span>
+      <select id="dpi">
+        <option value="1.6">보통 — 용량 작게 (카톡·블로그)</option>
+        <option value="2.4" selected>선명 — 추천 (읽기 좋음)</option>
+        <option value="3.4">인쇄용 — 아주 크게</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="lbl">사진 형식</span>
+      <select id="imgfmt">
+        <option value="jpeg" selected>JPG — 용량 작음</option>
+        <option value="png">PNG — 글씨 또렷</option>
+      </select>
+    </div>
+    <p class="hint" id="progress-line" hidden></p>
+  </div>
+
+  <section class="card hidden" id="pages-card">
+    <h2>변환된 장</h2>
+    <div class="summary" id="page-summary"></div>
+    <div class="btn-row">
+      <button class="btn primary block" id="zip-pages">📦 한 번에 모두 저장 (ZIP)</button>
+    </div>
+    <div id="page-list"></div>
+    <p class="hint">아이폰이면 ZIP을 “파일” 앱에서 열어 압축을 풀 수 있습니다. 한 장만 필요하면 아래 <b>저장</b>을 누르세요.</p>
+  </section>
+</section>
+
+<!-- 이미지 → PDF -->
+<section id="panel-img2pdf" class="hidden">
+  <div class="card">
+    <h2>사진 여러 장 고르기</h2>
+    <p class="help">사진들을 <b>PDF 한 개</b>로 묶습니다. 순서는 아래에서 바꿀 수 있어요.</p>
+    <label class="filepick" for="img-files">
+      <strong>🖼️ 사진 고르기 (여러 장)</strong>
+      <span>서류 사진 · 영수증 · 숙제</span>
+      <input id="img-files" type="file" accept="image/*" multiple>
+    </label>
+
+    <div class="field">
+      <span class="lbl">종이 크기</span>
+      <select id="pagesize">
+        <option value="a4p" selected>A4 세로 — 보통 문서</option>
+        <option value="a4l">A4 가로 — 넓은 사진</option>
+        <option value="fit">사진 크기 그대로</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="lbl">화질 (높으면 파일이 커집니다)</span>
+      <div class="range-row">
+        <input id="pdfq" type="range" min="60" max="98" value="90" aria-label="PDF 화질">
+        <output id="pdfq-out">90</output>
+      </div>
+    </div>
+    <p class="hint" id="progress-line2" hidden></p>
+  </div>
+
+  <section class="card hidden" id="order-card">
+    <h2>순서와 미리보기</h2>
+    <p class="help">위에 있는 사진이 PDF 첫 장이 됩니다.</p>
+    <div id="order-list"></div>
+    <div class="btn-row">
+      <button class="btn primary block" id="make-pdf">📄 PDF 만들기</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost small" id="clear-imgs">전부 지우기</button>
+    </div>
+  </section>
+</section>
+
+  <div class="safe-badge">
+    <strong>🔒 서류가 서버로 올라가지 않습니다</strong>
+    <p>계약서·진단서·신분 서류는 민감합니다. 이 도구는 PDF를 읽고 사진을 만드는 일을 모두 이 휴대폰 안에서 처리합니다.</p>
+    <ul><li>PDF 열기·변환 모두 브라우저 안에서</li><li>사진→PDF도 전부 로컬 처리</li><li>변환 결과는 바로 저장, 어디에도 남지 않음</li></ul>
+  </div>
+
+  <a class="banner" href="https://litt.ly/lifenavigator" target="_blank" rel="noopener noreferrer">
+    <b>라이프나침반 창고</b>
+    <span>생활 정리 도구·서식·템플릿을 무료로 받아 가세요</span>
+    <em>litt.ly/lifenavigator →</em>
+  </a>
+
+  <footer>
+    <div class="brand">라이프나침반</div>
+    <div>휴대폰 안에서만 도는 안심 도구 · 가입 없음 · 설치 없음</div>
+    <div style="margin-top:10px"><a href="index.html">← 무료 도구 전체 보기</a></div>
+  </footer>
+
+</main>
+
+<div id="toast"></div>
+<script src="vendor/pdf.min.js"></script>
+<script src="assets/safe.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = Safe.$;
+  var MM = 72 / 25.4;
+  var A4W = 210 * MM, A4H = 297 * MM;
+
+  /* ── 탭 ─────────────────────────────────── */
+  function initTabs() {
+    var tabs = { pdf2img: $('tab-pdf2img'), img2pdf: $('tab-img2pdf') };
+    function show(k) {
+      Object.keys(tabs).forEach(function (key) {
+        tabs[key].setAttribute('aria-selected', key === k ? 'true' : 'false');
+        $('panel-' + key).classList.toggle('hidden', key !== k);
+      });
+    }
+    tabs.pdf2img.addEventListener('click', function () { show('pdf2img'); });
+    tabs.img2pdf.addEventListener('click', function () { show('img2pdf'); });
+  }
+
+  /* ══════════ PDF → 사진 ══════════ */
+  var pages = [];   // {blob, url, w, h, name}
+
+  function initPdf2Img() {
+    $('pdf-file').addEventListener('change', function (e) {
+      var f = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (f) runPdf(f);
+    });
+    $('zip-pages').addEventListener('click', function () {
+      if (!pages.length) return;
+      var used = {};
+      var entries = [];
+      var done = 0;
+      Safe.progress('압축 파일을 준비하는 중…');
+      pages.forEach(function (p, i) {
+        Safe.blobBuf(p.blob).then(function (u8) {
+          entries[i] = { name: Safe.uniqueName(used, p.name), data: u8 };
+          if (++done === pages.length) {
+            Safe.download(Safe.zip(entries.filter(Boolean)), '안심_' + pages.length + '장.zip');
+            Safe.progress('');
+            Safe.toast('ZIP 파일로 저장했습니다');
+          }
+        });
+      });
+    });
+  }
+
+  function pdfjsReady() {
+    if (!window.pdfjsLib) {
+      Safe.toast('PDF 기능을 불러오지 못했습니다. 인터넷에 한 번 연결한 뒤 새로 고쳐 주세요');
+      return false;
+    }
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
+    return true;
+  }
+
+  function runPdf(file) {
+    if (!pdfjsReady()) return;
+    if (file.size > 40 * 1024 * 1024) {
+      Safe.toast('40MB가 넘는 PDF는 휴대폰에서 처리하기 어렵습니다');
+      return;
+    }
+    pages = [];
+    $('pages-card').classList.add('hidden');
+    $('page-list').innerHTML = '';
+    Safe.progress('PDF를 여는 중…');
+
+    Safe.blobBuf(file).then(function (u8) {
+      return window.pdfjsLib.getDocument({ data: u8 }).promise;
+    }).then(function (doc) {
+      var scale = parseFloat($('dpi').value) || 2.4;
+      var mime = $('imgfmt').value === 'png' ? 'image/png' : 'image/jpeg';
+      var ext = mime === 'image/png' ? 'png' : 'jpg';
+      var base = Safe.baseName(file.name).slice(0, 40);
+      var total = doc.numPages;
+      var chain = Promise.resolve();
+      var list = [];
+
+      for (var i = 1; i <= total; i++) {
+        (function (n) {
+          chain = chain.then(function () {
+            Safe.progress(n + ' / ' + total + ' 장 변환 중…');
+            return doc.getPage(n).then(function (page) {
+              var vp = page.getViewport({ scale: scale });
+              var c = document.createElement('canvas');
+              c.width = Math.round(vp.width);
+              c.height = Math.round(vp.height);
+              var cc = c.getContext('2d');
+              cc.fillStyle = '#fff';
+              cc.fillRect(0, 0, c.width, c.height);
+              return page.render({ canvasContext: cc, viewport: vp }).promise.then(function () {
+                return Safe.canvasBlob(c, mime, 0.92).then(function (blob) {
+                  var num = ('0' + n).slice(-2);
+                  list.push({
+                    blob: blob,
+                    url: URL.createObjectURL(blob),
+                    w: c.width, h: c.height,
+                    name: base + '_' + num + '.' + ext
+                  });
+                  page.cleanup();
+                  c.width = 0; c.height = 0;
+                });
+              });
+            }).catch(function () {
+              list.push({ error: true, n: n, name: base + '_' + n });
+            });
+          });
+        })(i);
+      }
+
+      chain.then(function () {
+        pages = list;
+        renderPageList();
+        Safe.progress('');
+        Safe.toast(total + '장을 사진으로 바꿨습니다');
+      }).catch(function (err) {
+        Safe.progress('');
+        Safe.toast('PDF를 읽지 못했습니다. 암호가 걸린 파일인지 확인해 주세요');
+      });
+    }).catch(function () {
+      Safe.progress('');
+      Safe.toast('PDF를 열지 못했습니다. 암호가 걸려 있거나 손상된 파일일 수 있어요');
+    });
+  }
+
+  function renderPageList() {
+    var card = $('pages-card');
+    var list = $('page-list');
+    var ok = pages.filter(function (p) { return !p.error; });
+    var totalBytes = ok.reduce(function (s, p) { return s + p.blob.size; }, 0);
+
+    $('page-summary').innerHTML =
+      '<div><dt>변환된 장</dt><dd>' + ok.length + '장</dd></div>' +
+      '<div><dt>전체 용량</dt><dd>' + Safe.bytes(totalBytes) + '</dd></div>';
+
+    var html = '';
+    pages.forEach(function (p, i) {
+      if (p.error) {
+        html += '<div class="item"><div class="body"><div class="name">' + p.n + '번째 장 — 변환 실패</div>' +
+          '<div class="meta">이 장은 그림이 특수해서 변환되지 않았습니다.</div></div></div>';
+        return;
+      }
+      html += '<div class="item">' +
+        '<img class="thumb" src="' + p.url + '" alt="">' +
+        '<div class="body"><div class="name">' + (i + 1) + '번째 장</div>' +
+        '<div class="meta">' + p.w + '×' + p.h + ' · ' + Safe.bytes(p.blob.size) + '</div>' +
+        '<div class="acts"><button class="btn small primary" data-save="' + i + '">💾 저장</button></div>' +
+        '</div></div>';
+    });
+    list.innerHTML = html;
+    card.classList.remove('hidden');
+
+    Safe.qsa('#page-list [data-save]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var p = pages[+b.getAttribute('data-save')];
+        Safe.download(p.blob, p.name);
+        Safe.toast(p.name + ' 저장');
+      });
+    });
+  }
+
+  /* ══════════ 사진 → PDF ══════════ */
+  var imgs = [];  // {file, url, img, w, h}
+
+  function initImg2Pdf() {
+    $('img-files').addEventListener('change', function (e) {
+      var files = Safe.acceptImages(Safe.pickFiles(e.target));
+      e.target.value = '';
+      if (!files.length) return;
+      var big = Safe.tooBig(files, 25);
+      if (big.length) {
+        Safe.toast('25MB가 넘는 사진이 있어 건너뜁니다');
+      }
+      files = files.filter(function (f) { return f.size <= 25 * 1024 * 1024; });
+      var i = 0;
+      (function next() {
+        if (i >= files.length) { renderOrder(); return; }
+        var f = files[i++];
+        Safe.progress('사진 ' + i + ' / ' + files.length + ' 불러오는 중…', 'progress-line2');
+        Safe.loadImage(f).then(function (r) {
+          imgs.push({ file: f, url: r.url, img: r.img, w: r.w, h: r.h });
+          next();
+        }).catch(function () {
+          Safe.toast(f.name + ' 사진은 열지 못해 건너뜁니다');
+          next();
+        });
+      })();
+    });
+
+    $('pdfq').addEventListener('input', function () {
+      $('pdfq-out').textContent = this.value;
+    });
+
+    $('clear-imgs').addEventListener('click', function () {
+      imgs.forEach(function (x) { URL.revokeObjectURL(x.url); });
+      imgs = [];
+      $('order-card').classList.add('hidden');
+      $('order-list').innerHTML = '';
+    });
+
+    $('make-pdf').addEventListener('click', makePdf);
+  }
+
+  function renderOrder() {
+    Safe.progress('', 'progress-line2');
+    var card = $('order-card');
+    if (!imgs.length) { card.classList.add('hidden'); return; }
+    card.classList.remove('hidden');
+
+    var html = '';
+    imgs.forEach(function (x, i) {
+      html += '<div class="item">' +
+        '<img class="thumb" src="' + x.url + '" alt="">' +
+        '<div class="body"><div class="name">' + (i + 1) + '. ' + escapeHtml(x.file.name) + '</div>' +
+        '<div class="meta">' + x.w + '×' + x.h + ' · ' + Safe.bytes(x.file.size) + '</div>' +
+        '<div class="acts">' +
+        '<button class="btn small ghost" data-up="' + i + '"' + (i === 0 ? ' disabled' : '') + '>↑ 위로</button>' +
+        '<button class="btn small ghost" data-down="' + i + '"' + (i === imgs.length - 1 ? ' disabled' : '') + '>↓ 아래로</button>' +
+        '<button class="btn small ghost" data-del="' + i + '">빼기</button>' +
+        '</div></div></div>';
+    });
+    $('order-list').innerHTML = html;
+
+    Safe.qsa('#order-list [data-up]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.getAttribute('data-up');
+        if (i > 0) { var t = imgs[i - 1]; imgs[i - 1] = imgs[i]; imgs[i] = t; renderOrder(); }
+      });
+    });
+    Safe.qsa('#order-list [data-down]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.getAttribute('data-down');
+        if (i < imgs.length - 1) { var t = imgs[i + 1]; imgs[i + 1] = imgs[i]; imgs[i] = t; renderOrder(); }
+      });
+    });
+    Safe.qsa('#order-list [data-del]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.getAttribute('data-del');
+        URL.revokeObjectURL(imgs[i].url);
+        imgs.splice(i, 1);
+        renderOrder();
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function makePdf() {
+    if (!imgs.length) return;
+    var btn = $('make-pdf');
+    btn.disabled = true;
+    var q = (+$('pdfq').value) / 100;
+    var mode = $('pagesize').value;
+    var i = 0;
+    var items = [];
+
+    (function next() {
+      if (i >= imgs.length) { finish(); return; }
+      var x = imgs[i++];
+      Safe.progress('PDF로 묶는 중… ' + i + ' / ' + imgs.length, 'progress-line2');
+      // 캔버스로 다시 그려서 투명 배경을 흰색으로, EXIF도 제거
+      var MAXP = 2400;
+      var k = Math.min(1, MAXP / Math.max(x.w, x.h));
+      var w = Math.round(x.w * k), h = Math.round(x.h * k);
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      var cc = c.getContext('2d');
+      cc.fillStyle = '#fff';
+      cc.fillRect(0, 0, w, h);
+      cc.drawImage(x.img, 0, 0, w, h);
+      Safe.canvasBlob(c, 'image/jpeg', q).then(function (blob) {
+        return Safe.blobBuf(blob).then(function (u8) {
+          items.push({ jpeg: u8, w: w, h: h });
+          c.width = 0; c.height = 0;
+          next();
+        });
+      }).catch(function () { next(); });
+    })();
+
+    function finish() {
+      var pw = A4W, ph = A4H, margin = 18;
+      if (mode === 'a4l') { pw = A4H; ph = A4W; }
+      if (mode === 'fit') { margin = 0; }
+
+      var blob;
+      try {
+        blob = buildPdf(items, pw, ph, margin, mode === 'fit');
+      } catch (e) {
+        btn.disabled = false;
+        Safe.progress('', 'progress-line2');
+        Safe.toast('PDF를 만들지 못했습니다');
+        return;
+      }
+      var name = '안심_' + imgs.length + '장_' + stamp() + '.pdf';
+      Safe.download(blob, name);
+      Safe.progress('', 'progress-line2');
+      btn.disabled = false;
+      Safe.toast('PDF를 저장했습니다 · ' + Safe.bytes(blob.size));
+    }
+  }
+
+  function stamp() {
+    var d = new Date();
+    function p(n) { return ('0' + n).slice(-2); }
+    return '' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes());
+  }
+
+  /* ── 아주 작은 PDF 생성기 (이미지만) ────────── */
+  function buildPdf(items, pageW, pageH, margin, exact) {
+    var enc = new TextEncoder();
+    var parts = [], size = 0;
+    function P(x) {
+      var u = (x instanceof Uint8Array) ? x : enc.encode(x);
+      parts.push(u); size += u.length;
+    }
+    var offs = [];
+    function startObj(id) { offs[id] = size; P(id + ' 0 obj\n'); }
+    function endObj() { P('endobj\n'); }
+
+    P('%PDF-1.4\n');
+    var n = items.length;
+    var ids = [];
+    var next = 3;
+    items.forEach(function () { ids.push({ img: next, cont: next + 1, page: next + 2 }); next += 3; });
+    var maxId = 2 + n * 3;
+
+    startObj(1);
+    P('<< /Type /Catalog /Pages 2 0 R >>\n');
+    endObj();
+
+    startObj(2);
+    P('<< /Type /Pages /Count ' + n + ' /Kids [' +
+      ids.map(function (x) { return x.page + ' 0 R'; }).join(' ') + '] >>\n');
+    endObj();
+
+    items.forEach(function (it, i) {
+      var x = ids[i];
+      var pw = exact ? it.w * 0.75 : pageW;
+      var ph = exact ? it.h * 0.75 : pageH;
+      var availW = pw - margin * 2, availH = ph - margin * 2;
+      var sc = Math.min(availW / it.w, availH / it.h);
+      var w = it.w * sc, h = it.h * sc;
+      var ox = (pw - w) / 2, oy = (ph - h) / 2;
+
+      startObj(x.page);
+      P('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw.toFixed(2) + ' ' + ph.toFixed(2) +
+        '] /Resources << /XObject << /Im0 ' + x.img + ' 0 R >> >> /Contents ' + x.cont + ' R >>\n');
+      endObj();
+
+      var stream = 'q\n' + w.toFixed(2) + ' 0 0 ' + h.toFixed(2) + ' ' +
+        ox.toFixed(2) + ' ' + oy.toFixed(2) + ' cm\n/Im0 Do\nQ\n';
+      startObj(x.cont);
+      P('<< /Length ' + stream.length + ' >>\nstream\n' + stream + 'endstream\n');
+      endObj();
+
+      startObj(x.img);
+      P('<< /Type /XObject /Subtype /Image /Width ' + it.w + ' /Height ' + it.h +
+        ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + it.jpeg.length + ' >>\nstream\n');
+      P(it.jpeg);
+      P('\nendstream\n');
+      endObj();
+    });
+
+    var xref = size;
+    P('xref\n0 ' + (maxId + 1) + '\n');
+    P('0000000000 65535 f \n');
+    for (var i2 = 1; i2 <= maxId; i2++) {
+      P(('0000000000' + (offs[i2] || 0)).slice(-10) + ' 00000 n \n');
+    }
+    P('trailer\n<< /Size ' + (maxId + 1) + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF\n');
+
+    return new Blob(parts, { type: 'application/pdf' });
+  }
+
+  function boot() {
+    initTabs();
+    initPdf2Img();
+    initImg2Pdf();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+
+</script>
+</body>
+</html>

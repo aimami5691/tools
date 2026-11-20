@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<title>사진 위치정보 지우기 · 손가락 모자이크 — 라이프나침반</title>
+<meta name="description" content="사진에 몰래 붙은 촬영 장소(위치)와 기기 정보를 지우고, 가리고 싶은 곳은 손가락으로 문질러 모자이크. 사진이 서버로 나가지 않는 무료 안심 도구.">
+<meta property="og:title" content="사진 위치정보 지우기 · 손가락 모자이크">
+<meta property="og:description" content="사진에 몰래 붙은 촬영 장소(위치)와 기기 정보를 지우고, 가리고 싶은 곳은 손가락으로 문질러 모자이크. 사진이 서버로 나가지 않는 무료 안심 도구.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/safe.css">
+
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <a class="back" href="index.html">무료 도구 전체</a>
+    <span class="kicker">서버 전송 ZERO · 사진 안심</span>
+    <h1>사진 한 장에<br>집 주소가 찍혀 있습니다</h1>
+    <p>중고거래·블로그에 올린 사진은<br>찍은 장소까지 따라갑니다.<br>여기서 저장하면 흔적 없이 새로 만들어집니다.</p>
+    <div class="stamp"><span>🔒 사진이 밖으로 안 나감</span><span>👆 손가락으로 가리기</span><span>💾 JPG·PNG 저장</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="card" id="pick-card">
+  <h2>1. 사진 불러오기</h2>
+  <p class="help">핸드폰 사진에는 찍은 장소(위치), 기기 이름, 시간이 몰래 붙어 있습니다.<br>여기서 저장하면 <b>그 정보가 하나도 없는 새 사진</b>으로 다시 만들어집니다.</p>
+  <label class="filepick" for="file">
+    <strong>📷 사진 고르기</strong>
+    <span>갤러리에서 선택 · 중고거래 인증샷에 딱</span>
+    <input id="file" type="file" accept="image/*">
+  </label>
+  <div id="exif-before" class="warn hidden"></div>
+  <div id="load-err" class="warn hidden"></div>
+</section>
+
+<section class="card hidden" id="edit-card">
+  <h2>2. 가릴 곳 문지르기</h2>
+  <p class="help">얼굴, 번호판, 현관 비밀번호, 계좌번호처럼 보이면 안 되는 곳을 <b>손가락으로 문지르세요.</b> 문지른 곳만 가려집니다.</p>
+
+  <div class="seg" role="tablist" aria-label="가리는 방법">
+    <button id="mode-mosaic" role="tab" aria-selected="true">▦ 모자이크</button>
+    <button id="mode-blur" role="tab" aria-selected="false">💧 흐리게</button>
+  </div>
+
+  <div class="field">
+    <span class="lbl">붓 굵기</span>
+    <div class="range-row">
+      <input id="brush" type="range" min="12" max="140" value="48" aria-label="붓 굵기">
+      <output id="brush-out">48</output>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn ghost small" id="undo">↩ 한 번 되돌리기</button>
+    <button class="btn ghost small" id="clear">전체 지우기</button>
+  </div>
+  <p class="hint">가린 곳이 없어도 괜찮아요. 저장만 해도 위치정보는 사라집니다.</p>
+</section>
+
+<section class="card hidden" id="save-card">
+  <h2>3. 저장하기</h2>
+  <p class="help">저장과 동시에 위치정보·기기정보가 지워진 새 파일이 만들어집니다.</p>
+
+  <div class="field">
+    <span class="lbl">저장 형식</span>
+    <select id="format">
+      <option value="jpeg">JPG — 용량 작음 (추천)</option>
+      <option value="png">PNG — 화질 그대로, 용량 큼</option>
+    </select>
+  </div>
+
+  <div class="field" id="q-field">
+    <span class="lbl">화질</span>
+    <div class="range-row">
+      <input id="quality" type="range" min="60" max="100" value="92" aria-label="화질">
+      <output id="quality-out">92</output>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary block" id="save">💾 안심 사진 저장</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn ghost small" id="another">다른 사진 하기</button>
+  </div>
+  <div class="summary hidden" id="result-summary"></div>
+  <div id="exif-after" class="warn good hidden"></div>
+</section>
+
+  <div class="safe-badge">
+    <strong>🔒 서버로 파일이 1바이트도 나가지 않습니다</strong>
+    <p>사진을 고르면 이 휴대폰 안에서만 열리고, 저장 역시 휴대폰 안에서 새로 그려 만듭니다. 인터넷 요금도, 회원가입도 필요 없습니다.</p>
+    <ul><li>위치정보·기기정보·촬영시간 전부 제거</li><li>저장한 파일을 다시 검사해 남은 위치정보 0건 확인</li><li>사진은 새로 그려지므로 숨은 정보가 남지 않음</li></ul>
+  </div>
+
+  <a class="banner" href="https://litt.ly/lifenavigator" target="_blank" rel="noopener noreferrer">
+    <b>라이프나침반 창고</b>
+    <span>생활 정리 도구·서식·템플릿을 무료로 받아 가세요</span>
+    <em>litt.ly/lifenavigator →</em>
+  </a>
+
+  <footer>
+    <div class="brand">라이프나침반</div>
+    <div>휴대폰 안에서만 도는 안심 도구 · 가입 없음 · 설치 없음</div>
+    <div style="margin-top:10px"><a href="index.html">← 무료 도구 전체 보기</a></div>
+  </footer>
+
+</main>
+
+<div id="toast"></div>
+
+<script src="assets/safe.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = Safe.$;
+
+  var MAX_SIDE = 4800;      // 너무 큰 사진은 폰 메모리 보호를 위해 줄여서 저장
+  var S = {
+    file: null, img: null, url: null,
+    W: 0, H: 0, capped: false,
+    strokes: [], brush: 48, mode: 'mosaic',
+    ready: false
+  };
+
+  var cv, ctx, stage;
+
+  function init() {
+    cv = $('cv'); ctx = cv.getContext('2d'); stage = $('stage');
+
+    $('file').addEventListener('change', function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (f) load(f);
+      e.target.value = '';
+    });
+
+    $('brush').addEventListener('input', function () {
+      S.brush = +this.value;
+      $('brush-out').textContent = this.value;
+    });
+    $('quality').addEventListener('input', function () {
+      $('quality-out').textContent = this.value;
+    });
+    $('format').addEventListener('change', function () {
+      $('q-field').classList.toggle('hidden', this.value === 'png');
+    });
+
+    $('mode-mosaic').addEventListener('click', function () { setMode('mosaic'); });
+    $('mode-blur').addEventListener('click', function () { setMode('blur'); });
+    $('undo').addEventListener('click', function () {
+      S.strokes.pop(); render();
+      Safe.toast(S.strokes.length ? '한 번 되돌렸습니다' : '가린 곳을 모두 지웠습니다');
+    });
+    $('clear').addEventListener('click', function () {
+      S.strokes = []; render(); Safe.toast('가린 곳을 모두 지웠습니다');
+    });
+    $('save').addEventListener('click', save);
+    $('another').addEventListener('click', reset);
+
+    bindPaint();
+
+    var rt = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () { if (S.img) sizeCanvas(); }, 200);
+    });
+  }
+
+  function setMode(m) {
+    S.mode = m;
+    $('mode-mosaic').setAttribute('aria-selected', m === 'mosaic' ? 'true' : 'false');
+    $('mode-blur').setAttribute('aria-selected', m === 'blur' ? 'true' : 'false');
+    render();
+  }
+
+  /* ── 사진 읽기 ─────────────────────────────── */
+  function load(file) {
+    $('load-err').classList.add('hidden');
+    Safe.loadImage(file).then(function (r) {
+      S.file = file; S.img = r.img; S.url = r.url;
+      S.W = r.w; S.H = r.h; S.capped = false;
+      var k = Math.min(1, MAX_SIDE / Math.max(r.w, r.h));
+      if (k < 1) { S.W = Math.round(r.w * k); S.H = Math.round(r.h * k); S.capped = true; }
+      S.strokes = [];
+      S.ready = true;
+      $('edit-card').classList.remove('hidden');
+      $('save-card').classList.remove('hidden');
+      $('exif-before').classList.add('hidden');
+      $('exif-after').classList.add('hidden');
+      $('result-summary').classList.add('hidden');
+      sizeCanvas();
+      reportExifBefore(file);
+      Safe.toast('사진을 불러왔습니다. 가릴 곳을 문지르세요');
+      setTimeout(function () {
+        $('edit-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
+    }).catch(function () {
+      var el = $('load-err');
+      el.innerHTML = '<b>이 사진은 브라우저가 열지 못합니다.</b><br>아이폰 HEIC 사진이거나 아주 큰 사진일 수 있어요. 갤러리에서 “사본 저장(JPG)”으로 한 번 저장한 뒤 그 사진을 골라 주세요.';
+      el.classList.remove('hidden');
+    });
+  }
+
+  function sizeCanvas() {
+    var cssW = stage.clientWidth || 340;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var cssH = Math.round(cssW * S.H / S.W);
+    cv.width = Math.round(cssW * dpr);
+    cv.height = Math.round(cssH * dpr);
+    cv.style.width = cssW + 'px';
+    cv.style.height = cssH + 'px';
+    cv.style.maxWidth = '100%';
+    render();
+  }
+
+  /* ── 원본 EXIF 흔적 확인 ───────────────────── */
+  var TAGS = ['Exif', 'GPS', 'GPSLatitude', 'GPSLongitude', 'GPSAltitude', 'Make', 'Model',
+    'LensModel', 'Software', 'Orientation', 'DateTimeOriginal', 'Artist', 'Copyright'];
+
+  function scanTags(u8) {
+    var found = [];
+    var limit = Math.min(u8.length, 512 * 1024);
+    var step = 8192;
+    var hay = '';
+    for (var i = 0; i < limit; i += step) {
+      var chunk = u8.subarray(i, Math.min(i + step + 16, limit));
+      var s = '';
+      for (var j = 0; j < chunk.length; j++) s += String.fromCharCode(chunk[j]);
+      hay += s;
+    }
+    for (var t = 0; t < TAGS.length; t++) {
+      if (hay.indexOf(TAGS[t]) >= 0) found.push(TAGS[t]);
+    }
+    return found;
+  }
+
+  function reportExifBefore(file) {
+    var head = file.slice(0, 512 * 1024);
+    Safe.blobBuf(head).then(function (u8) {
+      var found = scanTags(u8);
+      var el = $('exif-before');
+      var gps = found.indexOf('GPS') >= 0 || found.indexOf('GPSLatitude') >= 0;
+      var parts = [];
+      if (found.indexOf('Orientation') >= 0) parts.push('회전 정보');
+      if (found.indexOf('Make') >= 0 || found.indexOf('Model') >= 0) parts.push('기기 이름');
+      if (found.indexOf('DateTimeOriginal') >= 0 || found.indexOf('Exif') >= 0) parts.push('촬영 시간');
+      if (gps) parts.push('찍은 장소(위치)');
+      if (found.indexOf('Software') >= 0) parts.push('편집 앱');
+      if (!found.length) {
+        el.innerHTML = '<b>원본에서 눈에 띄는 정보는 찾지 못했습니다.</b><br>그래도 저장하면 새로 그려서 더 깨끗해집니다.';
+      } else {
+        el.innerHTML = '<b>원본 사진에 이런 정보가 붙어 있었습니다</b><br>' + parts.join(' · ') +
+          '<br><span style="font-weight:600">아래에서 저장하면 이 정보는 전부 사라집니다.</span>';
+      }
+      el.classList.remove('hidden');
+    }).catch(function () { });
+  }
+
+  /* ── 그리기 ─────────────────────────────────── */
+  function paint() {
+    var w = cv.width, h = cv.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(S.img, 0, 0, w, h);
+    if (!S.strokes.length) return;
+    ctx.drawImage(makeCover(w, h), 0, 0);
+  }
+  var render = paint;
+
+  function makeCover(w, h, scaleStrokes) {
+    var k = scaleStrokes || 1;
+    var cover = document.createElement('canvas');
+    cover.width = w; cover.height = h;
+    var cc = cover.getContext('2d');
+
+    if (S.mode === 'blur' && typeof cc.filter === 'string') {
+      cc.drawImage(S.img, 0, 0, w, h);
+      cc.filter = 'blur(' + Math.max(6, Math.round(w / 26)) + 'px)';
+      cc.drawImage(S.img, 0, 0, w, h);
+    } else {
+      var block = Math.max(8, Math.round(w / 26));
+      var sw = Math.max(2, Math.round(w / block));
+      var sh = Math.max(2, Math.round(h / block));
+      var small = document.createElement('canvas');
+      small.width = sw; small.height = sh;
+      var sc = small.getContext('2d');
+      sc.drawImage(S.img, 0, 0, sw, sh);
+      cc.imageSmoothingEnabled = false;
+      cc.drawImage(small, 0, 0, sw, sh, 0, 0, w, h);
+    }
+
+    var mask = document.createElement('canvas');
+    mask.width = w; mask.height = h;
+    var mc = mask.getContext('2d');
+    mc.fillStyle = '#fff';
+    for (var i = 0; i < S.strokes.length; i++) {
+      var s = S.strokes[i];
+      mc.beginPath();
+      mc.arc(s.x * k, s.y * k, s.r * k, 0, Math.PI * 2);
+      mc.fill();
+    }
+    cc.globalCompositeOperation = 'destination-in';
+    cc.drawImage(mask, 0, 0);
+    return cover;
+  }
+
+  function bindPaint() {
+    var drawing = false, last = null;
+
+    function pos(e) {
+      var r = cv.getBoundingClientRect();
+      var sc = cv.width / r.width;
+      return { x: (e.clientX - r.left) * sc, y: (e.clientY - r.top) * sc };
+    }
+    function radius() {
+      var r = cv.getBoundingClientRect();
+      return Math.max(6, S.brush * (cv.width / r.width) / 2);
+    }
+    function dot(p) {
+      S.strokes.push({ x: p.x, y: p.y, r: radius() });
+    }
+    function line(a, b) {
+      var d = Math.hypot(b.x - a.x, b.y - a.y);
+      var rad = radius();
+      var n = Math.max(1, Math.ceil(d / Math.max(4, rad * 0.6)));
+      for (var i = 1; i <= n; i++) {
+        S.strokes.push({
+          x: a.x + (b.x - a.x) * i / n,
+          y: a.y + (b.y - a.y) * i / n,
+          r: rad
+        });
+      }
+    }
+
+    stage.addEventListener('pointerdown', function (e) {
+      if (!S.ready) return;
+      drawing = true;
+      stage.setPointerCapture(e.pointerId);
+      last = pos(e);
+      dot(last);
+      paint();
+      e.preventDefault();
+    });
+
+    stage.addEventListener('pointermove', function (e) {
+      if (!drawing || !S.ready) return;
+      var p = pos(e);
+      line(last, p);
+      last = p;
+      paint();
+      e.preventDefault();
+    });
+
+    function end(e) {
+      if (!drawing) return;
+      drawing = false; last = null;
+      try { stage.releasePointerCapture(e.pointerId); } catch (err) { }
+      paint();
+    }
+    stage.addEventListener('pointerup', end);
+    stage.addEventListener('pointercancel', end);
+    stage.addEventListener('pointerleave', end);
+  }
+
+  /* ── 저장 ───────────────────────────────────── */
+  function fullCanvas() {
+    var f = document.createElement('canvas');
+    f.width = S.W; f.height = S.H;
+    var fc = f.getContext('2d');
+    fc.fillStyle = '#FFFFFF';
+    fc.fillRect(0, 0, S.W, S.H);
+    fc.drawImage(S.img, 0, 0, S.W, S.H);
+    if (S.strokes.length) {
+      fc.drawImage(makeCover(S.W, S.H, S.W / cv.width), 0, 0);
+    }
+    return f;
+  }
+
+  function save() {
+    if (!S.ready) return;
+    var btn = $('save');
+    btn.disabled = true;
+    btn.textContent = '저장하는 중…';
+
+    var fmt = $('format').value;
+    var mime = fmt === 'png' ? 'image/png' : 'image/jpeg';
+    var q = (+$('quality').value) / 100;
+    var canvas = fullCanvas();
+
+    Safe.canvasBlob(canvas, mime, fmt === 'png' ? undefined : q).then(function (blob) {
+      var name = Safe.outName(S.file.name, '_안심', fmt === 'png' ? 'png' : 'jpg');
+      Safe.download(blob, name);
+
+      Safe.blobBuf(blob).then(function (u8) {
+        var tags = scanTags(u8);
+        var gps = tags.indexOf('GPS') >= 0 || tags.indexOf('GPSLatitude') >= 0;
+        var el = $('exif-after');
+        if (gps) {
+          el.className = 'warn';
+          el.innerHTML = '<b>위치정보 표시가 남아 있습니다.</b><br>이 페이지에서 저장한 파일이 맞는지 확인해 주세요.';
+        } else {
+          el.className = 'warn good';
+          el.innerHTML = '<b>✔ 확인 완료 — 저장한 파일에는 위치정보·기기정보가 없습니다.</b><br>' +
+            '저장된 파일을 다시 열어 확인한 결과입니다.';
+        }
+        el.classList.remove('hidden');
+
+        var sum = $('result-summary');
+        var saved = '<div><dt>가로×세로</dt><dd>' + canvas.width + '×' + canvas.height + '</dd></div>' +
+          '<div><dt>원본</dt><dd>' + Safe.bytes(S.file.size) + '</dd></div>' +
+          '<div><dt>저장</dt><dd>' + Safe.bytes(blob.size) + '</dd></div>' +
+          '<div><dt>남은 위치정보</dt><dd>' + (gps ? '확인 필요' : '0건') + '</dd></div>';
+        sum.innerHTML = saved;
+        sum.classList.remove('hidden');
+        if (S.capped) {
+          sum.insertAdjacentHTML('beforeend',
+            '<div style="flex:1 1 100%;background:#FFF4E2;border-color:#E0A64B"><dt style="color:#8A4B00">안내</dt>' +
+            '<dd style="font-size:16px;color:#5B3E05;font-weight:700">사진이 너무 커서 긴 쪽 ' + MAX_SIDE + 'px로 줄여 저장했습니다.</dd></div>');
+        }
+      });
+
+      Safe.toast('저장했습니다 · ' + name);
+    }).catch(function () {
+      Safe.toast('저장에 실패했습니다. 다른 사진으로 다시 해보세요');
+    }).then(function () {
+      btn.disabled = false;
+      btn.textContent = '💾 안심 사진 저장';
+    });
+  }
+
+  function reset() {
+    if (S.url) URL.revokeObjectURL(S.url);
+    S = { file: null, img: null, url: null, W: 0, H: 0, capped: false, strokes: [], brush: S.brush, mode: S.mode, ready: false };
+    $('edit-card').classList.add('hidden');
+    $('save-card').classList.add('hidden');
+    $('exif-before').classList.add('hidden');
+    $('exif-after').classList.add('hidden');
+    $('result-summary').classList.add('hidden');
+    $('exif-before').classList.add('hidden');
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    $('pick-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>

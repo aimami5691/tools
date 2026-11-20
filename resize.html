@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<title>인스타·스레드 비율 리사이즈 — 라이프나침반</title>
+<meta name="description" content="1:1, 4:5, 9:16, 16:9 비율로 사진을 자르지 않고 여백·블러 배경으로 채워 저장합니다. 여러 장 한 번에.">
+<meta property="og:title" content="인스타·스레드 비율 리사이즈">
+<meta property="og:description" content="1:1, 4:5, 9:16, 16:9 비율로 사진을 자르지 않고 여백·블러 배경으로 채워 저장합니다. 여러 장 한 번에.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/safe.css">
+<style>
+.ratio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ratio{
+  font-family:inherit;background:#fff;border:2px solid var(--line);border-radius:14px;
+  padding:12px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-height:74px;
+}
+.ratio b{font-size:21px;font-weight:900;color:var(--navy);letter-spacing:-0.02em;}
+.ratio span{font-size:14px;color:var(--sub);font-weight:700;}
+.ratio[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-l);box-shadow:0 0 0 3px rgba(0,153,145,.15);}
+.ratio[aria-pressed="true"] b{color:var(--teal-d);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <a class="back" href="index.html">무료 도구 전체</a>
+    <span class="kicker">서버 전송 ZERO · 비율 맞춤</span>
+    <h1>사진이 잘리지 않게<br>비율만 딱 맞추기</h1>
+    <p>인스타에 올리면 얼굴이 잘리고<br>글씨가 날아갑니다.<br>여백으로 채워 정확한 비율로 맞추세요.</p>
+    <div class="stamp"><span>✂️ 5가지 비율</span><span>🌫️ 블러 배경</span><span>📦 한 번에 저장</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>사진 고르기</h2>
+  <p class="help">인스타·스레드에 올릴 때 <b>사진이 잘리지 않게</b> 여백을 채워 정확한 비율로 맞춥니다.</p>
+  <label class="filepick" for="files">
+    <strong>🖼️ 사진 고르기 (여러 장)</strong>
+    <span>한 장씩 해도 됩니다</span>
+    <input id="files" type="file" accept="image/*" multiple>
+  </label>
+</section>
+
+<section class="card">
+  <h2>비율과 배경</h2>
+
+  <div class="field">
+    <span class="lbl">비율</span>
+    <div class="ratio-grid" id="ratios">
+      <button class="ratio" data-ratio="1:1" aria-pressed="true"><b>1:1</b><span>정사각</span></button>
+      <button class="ratio" data-ratio="4:5" aria-pressed="false"><b>4:5</b><span>인스타 세로</span></button>
+      <button class="ratio" data-ratio="9:16" aria-pressed="false"><b>9:16</b><span>스토리·릴스</span></button>
+      <button class="ratio" data-ratio="16:9" aria-pressed="false"><b>16:9</b><span>가로·유튜브</span></button>
+      <button class="ratio" data-ratio="3:4" aria-pressed="false"><b>3:4</b><span>카페 썸네일</span></button>
+    </div>
+  </div>
+
+  <div class="field">
+    <span class="lbl">빈 곳 채우기</span>
+    <select id="bg">
+      <option value="white" selected>흰 여백 — 가장 깔끔</option>
+      <option value="blur">흐린 사진으로 채우기 — 꽉 차 보임</option>
+      <option value="navy">딥 네이비 — 브랜드 톤</option>
+      <option value="black">검정</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <span class="lbl">화질</span>
+    <div class="range-row">
+      <input id="quality" type="range" min="60" max="98" value="90" aria-label="화질">
+      <output id="quality-out">90</output>
+    </div>
+  </div>
+
+  <div class="field">
+    <span class="lbl">파일 형식</span>
+    <select id="fmt">
+      <option value="image/jpeg" selected>JPG — 추천</option>
+      <option value="image/png">PNG — 글씨 선명</option>
+    </select>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary block" id="run" disabled>✂️ 비율 맞춰 저장 준비</button>
+  </div>
+  <p class="hint" id="progress-line" hidden></p>
+</section>
+
+<section class="card hidden" id="result-card">
+  <h2>결과</h2>
+  <div class="summary" id="summary"></div>
+  <div class="btn-row">
+    <button class="btn primary block" id="zip">📦 한 번에 모두 저장 (ZIP)</button>
+  </div>
+  <div id="list"></div>
+</section>
+
+  <div class="safe-badge">
+    <strong>🔒 사진은 이 휴대폰 안에서만 바뀝니다</strong>
+    <p>비율을 맞추는 일은 브라우저 그림판에서만 합니다. 사진이 서버로 전송되지 않습니다.</p>
+    <ul><li>잘라내지 않고 전체를 담기</li><li>흰 여백·블러·브랜드 색으로 채우기</li><li>여러 장도 한 번에</li></ul>
+  </div>
+
+  <a class="banner" href="https://litt.ly/lifenavigator" target="_blank" rel="noopener noreferrer">
+    <b>라이프나침반 창고</b>
+    <span>생활 정리 도구·서식·템플릿을 무료로 받아 가세요</span>
+    <em>litt.ly/lifenavigator →</em>
+  </a>
+
+  <footer>
+    <div class="brand">라이프나침반</div>
+    <div>휴대폰 안에서만 도는 안심 도구 · 가입 없음 · 설치 없음</div>
+    <div style="margin-top:10px"><a href="index.html">← 무료 도구 전체 보기</a></div>
+  </footer>
+
+</main>
+
+<div id="toast"></div>
+
+<script src="assets/safe.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = Safe.$;
+
+  var SIZES = {
+    '1:1': [1080, 1080],
+    '4:5': [1080, 1350],
+    '9:16': [1080, 1920],
+    '16:9': [1920, 1080],
+    '3:4': [1080, 1440]
+  };
+
+  var files = [], results = [], ratio = '1:1';
+
+  function init() {
+    $('files').addEventListener('change', function (e) {
+      files = Safe.acceptImages(Safe.pickFiles(e.target));
+      e.target.value = '';
+      if (!files.length) return;
+      $('run').disabled = false;
+      $('run').textContent = '✂️ ' + files.length + '장 비율 맞추기';
+      $('result-card').classList.add('hidden');
+      $('run').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    Safe.qsa('#ratios .ratio').forEach(function (b) {
+      b.addEventListener('click', function () {
+        ratio = b.getAttribute('data-ratio');
+        Safe.qsa('#ratios .ratio').forEach(function (x) {
+          x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+        });
+      });
+    });
+
+    $('quality').addEventListener('input', function () { $('quality-out').textContent = this.value; });
+    $('run').addEventListener('click', run);
+    $('zip').addEventListener('click', doZip);
+  }
+
+  function run() {
+    if (!files.length) return;
+    var dims = SIZES[ratio] || SIZES['1:1'];
+    var W = dims[0], H = dims[1];
+    var bg = $('bg').value;
+    var mime = $('fmt').value;
+    var q = (+$('quality').value) / 100;
+    var i = 0;
+    results = [];
+    $('list').innerHTML = '';
+    $('result-card').classList.remove('hidden');
+
+    (function next() {
+      if (i >= files.length) { done(); return; }
+      var f = files[i];
+      var idx = i;
+      i++;
+      Safe.progress('맞추는 중… ' + i + ' / ' + files.length);
+
+      Safe.loadImage(f).then(function (r) {
+        var c = document.createElement('canvas');
+        c.width = W; c.height = H;
+        var cc = c.getContext('2d');
+        cc.imageSmoothingQuality = 'high';
+
+        // 배경
+        if (bg === 'blur') {
+          var cover = Math.max(W / r.w, H / r.h);
+          var cw = r.w * cover, ch = r.h * cover;
+          cc.drawImage(r.img, (W - cw) / 2, (H - ch) / 2, cw, ch);
+          if (typeof cc.filter === 'string') {
+            cc.filter = 'blur(28px)';
+            cc.drawImage(r.img, (W - cw) / 2, (H - ch) / 2, cw, ch);
+            cc.filter = 'none';
+          }
+          cc.fillStyle = 'rgba(0,0,0,0.12)';
+          cc.fillRect(0, 0, W, H);
+        } else {
+          cc.fillStyle = bg === 'navy' ? '#0B2642' : (bg === 'black' ? '#000000' : '#FFFFFF');
+          cc.fillRect(0, 0, W, H);
+        }
+
+        // 사진은 잘리지 않게 안쪽에 꽉 차도록
+        var k = Math.min(W / r.w, H / r.h);
+        var w = r.w * k, h = r.h * k;
+        cc.drawImage(r.img, (W - w) / 2, (H - h) / 2, w, h);
+
+        Safe.canvasBlob(c, mime, mime === 'image/png' ? undefined : q).then(function (blob) {
+          URL.revokeObjectURL(r.url);
+          c.width = 0; c.height = 0;
+          var ext = mime === 'image/png' ? 'png' : 'jpg';
+          results.push({
+            name: Safe.outName(f.name, '_' + ratio.replace(':', 'x'), ext),
+            before: f.size, after: blob.size, blob: blob,
+            w: W, h: H, url: URL.createObjectURL(blob)
+          });
+          renderOne(results[results.length - 1], idx);
+          next();
+        }).catch(function () { next(); });
+      }).catch(function () {
+        Safe.toast(f.name + ' 은(는) 열지 못해 건너뜁니다');
+        next();
+      });
+    })();
+  }
+
+  function renderOne(x, idx) {
+    $('list').insertAdjacentHTML('beforeend',
+      '<div class="item"><img class="thumb" src="' + x.url + '" alt="">' +
+      '<div class="body"><div class="name">' + (idx + 1) + '. ' + escapeHtml(x.name) + '</div>' +
+      '<div class="meta">' + x.w + '×' + x.h + ' · ' + Safe.bytes(x.after) +
+      ' <span style="color:#3E5670">(원본 ' + Safe.bytes(x.before) + ')</span></div>' +
+      '<div class="acts"><button class="btn small primary" data-save="' + idx + '">💾 저장</button></div>' +
+      '</div></div>');
+    var btn = $('list').lastElementChild.querySelector('[data-save]');
+    btn.addEventListener('click', function () {
+      Safe.download(x.blob, x.name);
+      Safe.toast('저장했습니다');
+    });
+  }
+
+  function done() {
+    Safe.progress('');
+    $('run').disabled = false;
+    $('run').textContent = '✂️ 다시 맞추기';
+    var dims = SIZES[ratio];
+    var total = results.reduce(function (s, x) { return s + x.after; }, 0);
+    $('summary').innerHTML =
+      '<div><dt>비율</dt><dd>' + ratio + '</dd></div>' +
+      '<div><dt>크기</dt><dd>' + dims[0] + '×' + dims[1] + '</dd></div>' +
+      '<div><dt>사진</dt><dd>' + results.length + '장</dd></div>' +
+      '<div><dt>전체 용량</dt><dd>' + Safe.bytes(total) + '</dd></div>';
+    Safe.toast(results.length + '장 완료');
+  }
+
+  function doZip() {
+    if (!results.length) return;
+    var used = {}, entries = [], done = 0;
+    Safe.progress('ZIP 준비 중…');
+    results.forEach(function (x, i) {
+      Safe.blobBuf(x.blob).then(function (u8) {
+        entries[i] = { name: Safe.uniqueName(used, x.name), data: u8 };
+        if (++done === results.length) {
+          Safe.download(Safe.zip(entries.filter(Boolean)), '안심_비율_' + ratio.replace(':', 'x') + '_' + results.length + '장.zip');
+          Safe.progress('');
+          Safe.toast('ZIP으로 저장했습니다');
+        }
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>
