@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#0B2642">
+<meta name="description" content="2026년 11월 23일 시행되는 실손보험 계약전환 할인·선택형 할인특약을 내 보험료와 병원비로 비교하는 참고 계산기. 가입 없이 휴대폰 안에서만 계산합니다.">
+<title>실손보험 5세대 전환 손익 참고 계산기 | 3년 할인·선택형 할인특약</title>
+<style>
+:root{
+  --navy:#0B2642;--navy-soft:#173A5E;--teal:#009991;--teal-dark:#00746D;--teal-pale:#E4F4F2;
+  --cream:#FBF6EA;--card:#FFFFFF;--line:#E2DAC8;--muted:#55616E;
+  --warn-bg:#FFF3DC;--warn-line:#E8B85C;--warn-text:#5B3E05;--radius:18px;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--cream);color:var(--navy);
+  font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif;
+  font-size:19px;line-height:1.62;letter-spacing:-0.01em;word-break:keep-all;overflow-wrap:break-word;}
+.wrap{max-width:480px;margin:0 auto;padding:0 1rem 4rem;}
+h1,h2,h3{margin:0;letter-spacing:-0.03em;line-height:1.35;}
+p{margin:0;}
+.hidden{display:none !important;}
+
+.hero{background:linear-gradient(160deg,#0B2642 0%,#123457 62%,#0E5C5A 100%);color:#FFFDF6;
+  padding:1.6rem 1.15rem 2.1rem;border-radius:0 0 26px 26px;}
+.hero__inner{max-width:480px;margin:0 auto;}
+.badge{display:inline-block;background:rgba(0,153,145,0.28);border:1px solid rgba(120,230,220,0.55);
+  color:#D9FBF6;font-size:18px;font-weight:700;padding:0.3rem 0.75rem;border-radius:999px;margin-bottom:0.85rem;}
+.hero h1{font-size:clamp(28px,8vw,34px);font-weight:800;}
+.hero__lead{margin-top:0.7rem;font-size:19px;font-weight:600;color:#D6E6F2;}
+.hero__tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.95rem;}
+.hero__tags span{font-size:18px;font-weight:700;background:rgba(255,255,255,0.13);
+  border:1px solid rgba(255,255,255,0.22);border-radius:999px;padding:0.24rem 0.7rem;color:#EAF6FF;}
+
+.card{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);
+  padding:1.1rem 1.05rem 1.25rem;margin-top:1rem;box-shadow:0 2px 0 rgba(11,38,66,0.04);}
+.step{display:flex;align-items:center;gap:0.5rem;font-size:18px;font-weight:800;color:var(--teal-dark);}
+.step__num{display:inline-flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;
+  border-radius:999px;background:var(--teal);color:#fff;font-size:18px;font-weight:800;flex:0 0 auto;}
+.card h2{font-size:23px;font-weight:800;margin-top:0.55rem;}
+.hint{margin-top:0.5rem;font-size:18px;color:var(--muted);font-weight:600;line-height:1.6;}
+.hint strong{color:var(--navy);}
+
+.chips{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;}
+.chips--2 .chip{flex:1 1 calc(50% - 0.25rem);}
+.chip{flex:1 1 auto;min-height:58px;padding:0.5rem 0.7rem;border-radius:14px;border:2px solid var(--line);
+  background:#FFFDF8;color:var(--navy);font-family:inherit;font-size:19px;font-weight:800;line-height:1.3;
+  cursor:pointer;letter-spacing:-0.01em;}
+.chip small{display:block;font-size:16px;font-weight:700;color:var(--muted);margin-top:0.12rem;}
+.chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff;}
+.chip[aria-pressed="true"] small{color:#D6FDF8;}
+
+.field{margin-top:1rem;}
+.field__label{display:block;font-size:19px;font-weight:800;}
+.field__label .unit{font-size:17px;font-weight:700;color:var(--muted);}
+.inputrow{display:flex;align-items:center;gap:0.45rem;margin-top:0.45rem;}
+.input{width:100%;min-height:62px;padding:0.5rem 0.85rem;border:2px solid var(--line);border-radius:14px;
+  background:#FFFDF8;color:var(--navy);font-family:inherit;font-size:24px;font-weight:800;text-align:right;}
+.input:focus{outline:3px solid #9FD9D2;outline-offset:1px;border-color:var(--teal);}
+.input::placeholder{font-weight:700;color:#9AA6B2;}
+.unitbox{flex:0 0 auto;font-size:19px;font-weight:800;color:var(--muted);}
+.quick{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem;}
+.quick button{flex:1 1 auto;min-height:50px;padding:0.3rem 0.55rem;border-radius:12px;border:2px dashed var(--line);
+  background:#FFFDF8;color:var(--muted);font-family:inherit;font-size:18px;font-weight:800;cursor:pointer;}
+.quick button:active{background:var(--teal-pale);border-color:var(--teal);color:var(--teal-dark);}
+.echo{margin-top:0.4rem;font-size:18px;font-weight:800;color:var(--teal-dark);min-height:1.4em;}
+
+.btn{display:block;width:100%;min-height:66px;margin-top:1rem;border:none;border-radius:14px;
+  font-family:inherit;font-size:22px;font-weight:800;cursor:pointer;letter-spacing:-0.01em;}
+.btn--primary{background:var(--teal);color:#fff;}
+.btn--primary:active{background:var(--teal-dark);}
+.btn--ghost{background:#FFFDF8;color:var(--navy);border:2px solid var(--line);font-size:19px;}
+
+details{margin-top:0.8rem;border:1px solid var(--line);border-radius:14px;background:#FFFDF8;}
+summary{list-style:none;cursor:pointer;padding:0.8rem 0.95rem;font-size:18px;font-weight:800;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";float:right;color:var(--teal);font-size:22px;font-weight:800;}
+details[open] summary::after{content:"\2212";}
+.details__body{padding:0 0.95rem 1rem;font-size:18px;color:var(--navy);line-height:1.65;}
+.details__body p{margin-top:0.55rem;}
+.details__body ul{margin:0.5rem 0 0;padding-left:1.2rem;}
+.details__body li{margin-top:0.4rem;}
+
+.notice{border-radius:14px;padding:0.85rem 0.95rem;margin-top:1rem;font-size:18px;font-weight:700;line-height:1.6;}
+.notice--warn{background:var(--warn-bg);border:2px solid var(--warn-line);color:var(--warn-text);}
+.notice--info{background:#EEF3F9;border:2px solid #B9CCE0;color:#1B3A57;}
+
+/* 결과 */
+.result{margin-top:1rem;border-radius:22px;padding:1.15rem 1.05rem 1.3rem;color:#FFFDF6;
+  background:linear-gradient(165deg,#0B2642 0%,#123A5C 55%,#0C5B59 100%);}
+.result__kicker{font-size:18px;font-weight:800;color:#8FE9DF;}
+.result__title{font-size:26px;font-weight:800;margin-top:0.35rem;color:#fff;}
+.result__lead{margin-top:0.55rem;font-size:18px;font-weight:600;color:#CFE1EE;}
+.summary{margin-top:0.9rem;background:rgba(255,255,255,0.09);border:2px solid rgba(125,230,218,0.5);
+  border-radius:16px;padding:0.85rem 0.9rem;}
+.summary__label{font-size:18px;font-weight:800;color:#BFE9E4;}
+.summary__value{display:block;margin-top:0.15rem;font-size:clamp(30px,9vw,38px);font-weight:800;
+  letter-spacing:-0.03em;color:#fff;line-height:1.15;}
+.summary__value .won{font-size:21px;font-weight:700;margin-left:0.1rem;letter-spacing:0;}
+.summary__note{display:block;margin-top:0.3rem;font-size:18px;font-weight:700;color:#CFE1EE;}
+
+.opt{margin-top:0.85rem;border-radius:16px;padding:0.9rem 0.95rem 1rem;background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.18);}
+.opt--keep{border-color:rgba(255,255,255,0.28);}
+.opt--pick{border:2px solid #48D6C8;background:rgba(0,153,145,0.18);}
+.opt__top{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;}
+.opt__name{font-size:21px;font-weight:800;color:#fff;}
+.opt__tag{font-size:16px;font-weight:800;color:#0B2642;background:#7DE6DA;border-radius:999px;padding:0.2rem 0.6rem;white-space:nowrap;}
+.opt__price{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 0.35rem;margin-top:0.45rem;}
+.opt__num{font-size:clamp(26px,8vw,32px);font-weight:800;letter-spacing:-0.03em;color:#fff;line-height:1.15;}
+.opt__num .won{font-size:19px;font-weight:700;margin-left:0.05rem;}
+.opt__per{font-size:18px;font-weight:700;color:#CFE1EE;}
+.opt__lines{margin:0.55rem 0 0;padding:0;list-style:none;font-size:18px;color:#E6F1F8;line-height:1.55;}
+.opt__lines li{position:relative;padding-left:0.95rem;margin-top:0.35rem;}
+.opt__lines li::before{content:"·";position:absolute;left:0.2rem;color:#7DE6DA;font-weight:800;}
+.opt__lines b{color:#fff;font-weight:800;}
+.opt__lines .minus{color:#FFD9A6;font-weight:800;}
+
+.ledger{margin-top:1rem;border-radius:16px;background:rgba(255,255,255,0.95);color:var(--navy);padding:0.9rem 0.95rem 1rem;}
+.ledger h3{font-size:21px;font-weight:800;}
+.ledger__row{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;padding:0.55rem 0;
+  border-bottom:1px dashed #D8D2C4;font-size:18px;font-weight:700;}
+.ledger__row:last-child{border-bottom:none;}
+.ledger__row span:first-child{color:#3E4A57;}
+.ledger__num{font-size:20px;font-weight:800;color:var(--navy);white-space:nowrap;}
+.ledger__num.up{color:var(--teal-dark);}
+.ledger__num.down{color:#A5452A;}
+.ledger__note{margin-top:0.6rem;font-size:17px;font-weight:600;color:var(--muted);line-height:1.55;}
+
+.share{margin-top:1rem;padding-top:0.95rem;border-top:1px dashed rgba(255,255,255,0.3);}
+.btn--share{background:#FFFDF6;color:var(--navy);border:2px solid #48D6C8;line-height:1.38;padding:0.5rem 0.6rem;}
+.btn--share:active{background:#C8FBF3;}
+.share__hint{margin-top:0.5rem;font-size:18px;font-weight:600;color:#CFE1EE;}
+.share__box{display:block;width:100%;min-height:240px;margin-top:0.6rem;padding:0.8rem;
+  font-family:inherit;font-size:18px;line-height:1.7;color:var(--navy);background:#fff;
+  border:2px solid var(--line);border-radius:12px;resize:vertical;}
+
+.list{margin:0.5rem 0 0;padding-left:1.2rem;font-size:18px;line-height:1.65;}
+.list li{margin-top:0.5rem;}
+.list strong{color:var(--teal-dark);}
+.qbox{margin-top:0.7rem;border:2px solid var(--line);border-left:6px solid var(--teal);border-radius:12px;
+  padding:0.8rem 0.9rem;background:#FFFDF8;font-size:18px;line-height:1.6;}
+.qbox b{display:block;color:var(--teal-dark);font-size:19px;margin-bottom:0.2rem;}
+.qbox + .qbox{margin-top:0.6rem;}
+
+.fine{margin-top:1.2rem;padding:1rem 1.05rem;background:#EFEAD9;border-radius:14px;
+  font-size:18px;color:#3E4A57;line-height:1.65;}
+.fine b{color:var(--navy);}
+.foot{margin-top:1rem;text-align:center;font-size:18px;color:var(--muted);line-height:1.7;}
+.foot .brand{display:block;font-size:20px;font-weight:800;color:var(--navy);}
+a{color:var(--teal-dark);font-weight:800;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero__inner">
+    <span class="badge">2026. 11. 23(월) 시행 · 금융위원회 발표 기준</span>
+    <h1>실손보험, 갈아탈까요?<br>그대로 둘까요?</h1>
+    <p class="hero__lead">월 보험료와 1년 병원비만 넣으면<br>세 가지 선택지의 숫자를 나란히 놓아 드립니다.</p>
+    <div class="hero__tags">
+      <span>🔒 입력값 서버 전송 0</span>
+      <span>가입·설치 없음</span>
+      <span>👀 큰글씨</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice notice--warn">
+    이 화면은 <b>참고용 숫자 비교</b>입니다. 특정 보험회사나 상품을 권하지 않고, 보험을 모집하거나 자문하지 않습니다. 실제로 전환하거나 해지하시기 전에 <b>본인이 가입한 보험회사 콜센터와 공식 약관</b>을 꼭 확인하세요. 입력한 값은 휴대폰 밖으로 나가지 않습니다.
+  </div>
+
+  <section class="card" aria-labelledby="s1t">
+    <p class="step"><span class="step__num">1</span> 내 실손은 언제 가입했나요?</p>
+    <h2 id="s1t">가입 시기만 골라 주세요</h2>
+    <p class="hint">이번 할인 두 가지는 <strong>2013년 3월 이전 계약 중에서 다시 가입하는 조건(재가입)이 붙지 않은 실손</strong>이 대상입니다. 대상자는 약 1,630만 명으로 추산됩니다.</p>
+    <div class="chips chips--2" role="group" aria-label="가입 시기 선택">
+      <button type="button" class="chip" data-gen="g1" aria-pressed="true">1세대<small>2009년 9월까지</small></button>
+      <button type="button" class="chip" data-gen="g2" aria-pressed="false">2세대<small>2009년 10월 ~ 2013년 3월</small></button>
+      <button type="button" class="chip" data-gen="g3" aria-pressed="false">그 이후<small>2013년 4월부터</small></button>
+      <button type="button" class="chip" data-gen="unk" aria-pressed="false">잘 모르겠어요<small>두 세대의 중간값으로 계산</small></button>
+    </div>
+    <details>
+      <summary>내 계약이 대상인지 1분 만에 확인하는 방법</summary>
+      <div class="details__body">
+        <p><b>① 내보험찾아줌</b>(cont.insure.or.kr)에 접속해 본인인증을 합니다. 생명보험협회와 손해보험협회가 함께 운영하는 서비스입니다.</p>
+        <p><b>②</b> 가입한 실손 계약의 <b>가입일과 보험기간</b>을 확인합니다. 금융위원회도 이 조회로 가입계약과 보험기간을 확인하라고 안내했습니다.</p>
+        <p><b>③</b> 2013년 3월 이전 가입이면 보험회사 콜센터에 <b>"제 계약에 약관변경(재가입) 조건이 붙어 있나요?"</b>라고 물어보세요. 재가입 조건이 있으면 이번 할인 대상이 아닙니다(2024년 말 기준 전체 실손의 약 47.5%가 재가입 조건이 없는 계약).</p>
+        <p>10년납처럼 보험료를 이미 다 낸 상품은 선택형 할인특약 가입이 제한될 수 있습니다. 이것도 콜센터에서 함께 확인하세요.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="card" aria-labelledby="s2t">
+    <p class="step"><span class="step__num">2</span> 지금 내는 보험료</p>
+    <h2 id="s2t">한 달에 얼마씩 나가나요?</h2>
+    <p class="hint">통장이나 카드 명세서에서 <strong>실손보험료</strong>만 보시면 됩니다. 다른 특약이 섞여 있으면 콜센터에서 실손 부분만 확인해 보세요.</p>
+    <div class="field">
+      <label class="field__label" for="premium">한 달 보험료 <span class="unit">(원)</span></label>
+      <div class="inputrow">
+        <input class="input" id="premium" type="number" inputmode="numeric" min="0" step="1000" placeholder="예: 120000">
+        <span class="unitbox">원</span>
+      </div>
+      <div class="quick" role="group" aria-label="보험료 빠른 선택">
+        <button type="button" data-prem="50000">5만</button>
+        <button type="button" data-prem="80000">8만</button>
+        <button type="button" data-prem="120000">12만</button>
+        <button type="button" data-prem="170000">17만</button>
+        <button type="button" data-prem="200000">20만</button>
+      </div>
+      <p class="echo" id="premiumEcho" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="s3t">
+    <p class="step"><span class="step__num">3</span> 1년 병원비</p>
+    <h2 id="s3t">지난 1년, 병원에 내가 낸 돈은?</h2>
+    <p class="hint">영수증에서 <strong>내가 낸 금액</strong>(급여 본인부담금 + 비급여)을 1년치로 더한 값입니다. 정확하지 않아도 됩니다. 모르면 최근 1년 카드·통장 내역에서 병원·약국 결제만 훑어보세요.</p>
+    <div class="field">
+      <label class="field__label" for="medical">1년 병원비 합계 <span class="unit">(원, 선택)</span></label>
+      <div class="inputrow">
+        <input class="input" id="medical" type="number" inputmode="numeric" min="0" step="10000" placeholder="예: 600000">
+        <span class="unitbox">원</span>
+      </div>
+      <div class="quick" role="group" aria-label="병원비 빠른 선택">
+        <button type="button" data-med="0">거의 없음</button>
+        <button type="button" data-med="300000">30만</button>
+        <button type="button" data-med="1000000">100만</button>
+        <button type="button" data-med="3000000">300만</button>
+      </div>
+      <p class="echo" id="medicalEcho" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="s4t">
+    <p class="step"><span class="step__num">4</span> 도수치료·주사는 얼마나?</p>
+    <h2 id="s4t">1년에 몇 번 받으셨나요?</h2>
+    <p class="hint">도수치료, 체외충격파, 비급여 주사, 비급여 MRI·MRA를 <strong>1년에 받은 횟수</strong>입니다. 이 항목이 두 할인의 손익을 가르는 갈림길입니다.</p>
+    <div class="chips" role="group" aria-label="도수치료·주사 횟수">
+      <button type="button" class="chip" data-cnt="0" aria-pressed="true">0회</button>
+      <button type="button" class="chip" data-cnt="1" aria-pressed="false">1~5회</button>
+      <button type="button" class="chip" data-cnt="2" aria-pressed="false">6~20회</button>
+      <button type="button" class="chip" data-cnt="3" aria-pressed="false">21회 이상</button>
+    </div>
+    <div class="field">
+      <label class="field__label" for="therapy">그 항목에 쓴 돈 <span class="unit">(1년, 원, 선택)</span></label>
+      <div class="inputrow">
+        <input class="input" id="therapy" type="number" inputmode="numeric" min="0" step="10000" placeholder="모르면 비워 두세요">
+        <span class="unitbox">원</span>
+      </div>
+      <p class="hint">금액을 넣으면 <strong>돌려받지 못하게 되는 돈</strong>까지 3년치로 계산해 드립니다. 비워 두면 보험료 차이만 보여 드립니다.</p>
+      <p class="echo" id="therapyEcho" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <button type="button" class="btn btn--primary" id="calcBtn">세 가지 선택지 비교하기</button>
+
+  <section class="result" id="resultCard" aria-live="polite" aria-labelledby="resultTitle">
+    <p class="result__kicker">참고용 · 금융위원회 예시 비율 적용</p>
+    <h2 class="result__title" id="resultTitle">3년 손익 비교</h2>
+    <p class="result__lead" id="resultLead">위 네 칸을 채우고 <b>비교하기</b>를 눌러 주세요.</p>
+
+    <div id="resultBody" class="hidden">
+
+      <div class="summary">
+        <span class="summary__label" id="summaryLabel">3년 동안 보험료로 나가는 돈</span>
+        <span class="summary__value" id="summaryValue">0<span class="won">원</span></span>
+        <span class="summary__note" id="summaryNote"></span>
+      </div>
+
+      <div class="opt opt--keep" id="optKeep">
+        <div class="opt__top">
+          <span class="opt__name">① 지금 그대로 유지</span>
+          <span class="opt__tag">변화 없음</span>
+        </div>
+        <div class="opt__price">
+          <span class="opt__num" id="keepMonth">0<span class="won">원</span></span>
+          <span class="opt__per">/ 월</span>
+        </div>
+        <ul class="opt__lines" id="keepLines"></ul>
+      </div>
+
+      <div class="opt" id="optSelective">
+        <div class="opt__top">
+          <span class="opt__name">② 선택형 할인특약</span>
+          <span class="opt__tag" id="selTag">기존 계약 유지</span>
+        </div>
+        <div class="opt__price">
+          <span class="opt__num" id="selMonth">0<span class="won">원</span></span>
+          <span class="opt__per">/ 월 (예상)</span>
+        </div>
+        <ul class="opt__lines" id="selLines"></ul>
+      </div>
+
+      <div class="opt opt--pick" id="optSwitch">
+        <div class="opt__top">
+          <span class="opt__name">③ 5세대 전환 + 3년 할인</span>
+          <span class="opt__tag" id="swTag">11.23 ~ 5.22 신청</span>
+        </div>
+        <div class="opt__price">
+          <span class="opt__num" id="swMonth">0<span class="won">원</span></span>
+          <span class="opt__per">/ 월 (3년간)</span>
+        </div>
+        <ul class="opt__lines" id="swLines"></ul>
+      </div>
+
+      <div class="ledger">
+        <h3>3년 숫자만 나란히</h3>
+        <div id="ledgerRows"></div>
+        <p class="ledger__note" id="ledgerNote"></p>
+      </div>
+
+      <div class="notice notice--warn" id="signalNote" style="color:#5B3E05"></div>
+
+      <div class="share" id="shareBlock">
+        <button type="button" class="btn btn--share" id="shareBtn">내 비교 결과<br>가족에게 복사해서 보내기</button>
+        <p class="share__hint" id="shareHint">문자·카톡에 붙여넣을 수 있는 요약 문구만 복사됩니다.</p>
+        <textarea class="share__box" id="shareText" readonly aria-label="공유 문구"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <div id="notTarget" class="notice notice--info hidden"></div>
+
+  <section class="card" aria-labelledby="s5t">
+    <p class="step"><span class="step__num">📞</span> 전화 전에 적어 두세요</p>
+    <h2 id="s5t">콜센터에 물어볼 세 가지</h2>
+    <p class="hint">그대로 읽으시면 됩니다. 답을 들으면서 아래 칸에 적어 두시면 비교가 쉬워집니다.</p>
+    <div class="qbox"><b>①</b>"제 실손 계약에 약관변경(재가입) 조건이 붙어 있나요? 2013년 3월 이전 가입인데 이번 계약전환 할인과 선택형 할인특약 대상인가요?"</div>
+    <div class="qbox"><b>②</b>"5세대로 전환하면 제 월 보험료가 얼마가 되나요? 3년 할인이 끝난 뒤에는 얼마인가요?"</div>
+    <div class="qbox"><b>③</b>"선택형 할인특약에서 도수치료를 빼면 제 월 보험료가 얼마가 되나요? 지금 받고 있는 치료도 빠지는지 확인해 주세요."</div>
+    <details>
+      <summary>왜 이 세 가지를 물어야 하나요?</summary>
+      <div class="details__body">
+        <p>이번 두 제도는 <b>보험료를 낮추는 대신 돌려받는 범위가 줄어드는</b> 거래입니다. 그래서 숫자만 보면 손해를 놓치기 쉽습니다.</p>
+        <ul>
+          <li><b>전환 할인은 3년만</b>입니다. 4년째부터는 할인 없는 5세대 보험료를 냅니다. 금융위 예시(60대 여성 1세대)에서 3년 뒤 월 보험료는 2만 1,620원에서 4만 3,241원으로 올라갑니다.</li>
+          <li><b>선택형 할인특약은 한 번뿐</b>입니다. 가입 뒤 해지하거나 청약을 철회하면 다시 가입할 수 없고, 옵션을 하나만 더 넣는 것도 안 됩니다(전부 해지 후 재가입 불가).</li>
+          <li><b>도수치료를 빼면 급여 치료비도 빠집니다.</b> 관리급여로 지정된 근골격계 이학요법은 급여 치료비까지 함께 제외됩니다.</li>
+          <li><b>주변 계약을 정리하면 할인이 끊깁니다.</b> 전환 신청 6개월 전부터 할인 기간 중에 같은 증권의 다른 특약을 해지하거나 가입금액을 줄이면(감액도 해지로 봄) 할인이 중단될 수 있습니다. 11월 19일 이전에 이미 해지한 경우는 예외로 인정됩니다.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <section class="card" aria-labelledby="s6t">
+    <p class="step"><span class="step__num">🧾</span> 3년 동안 안 찾은 보험금</p>
+    <h2 id="s6t">청구하지 않은 돈부터 챙기세요</h2>
+    <p class="hint">보험료를 줄이는 일보다 먼저 할 일이 있습니다. 실손보험금 청구권은 <strong>3년</strong>이 지나면 사라집니다.</p>
+    <ul class="list">
+      <li>금융위원회는 2024년부터 2026년까지 3년 동안 <strong>찾아가지 않은 실손보험금이 최대 1조 원</strong>으로 추산된다고 밝혔습니다. 2025년 한 해만 약 3,386억 원입니다.</li>
+      <li>2027년 1분기에 <strong>실손24</strong> 앱에 '미청구 보험금 찾기'가 들어갑니다. 카드 결제내역으로 병원 방문을 찾아내고, 보험금 청구 이력과 대조해 알려 주는 방식입니다.</li>
+      <li>기다리지 마세요. 시효가 임박한 진료비는 <strong>내보험찾아줌</strong>이나 가입한 보험회사 앱에서 지금 확인하시는 편이 안전합니다.</li>
+      <li>병원이 실손24에 연계돼 있지 않으면 서류를 따로 떼야 합니다. 2026년 11월 18일 기준 연계율은 54.2%(10만 5,643곳 중 5만 7,258곳)였습니다.</li>
+    </ul>
+  </section>
+
+  <section class="card" aria-labelledby="promoT">
+    <p class="step"><span class="step__num">🧭</span> 다음에 챙길 것</p>
+    <h2 id="promoT">보험료·병원비·구독료를 한 장에</h2>
+    <p class="hint">매달 자동으로 나가는 돈을 한 장에 모아 '무엇을 지울지'까지 정리하는 큰글씨 가계부입니다. 하이퍼링크 21쪽 + 인쇄용 21쪽, 4050 큰글씨 판.</p>
+    <a class="btn btn--primary" href="https://litt.ly/lifenavigator/sale/ItKUa8H" target="_blank" rel="noopener noreferrer" style="text-decoration:none;line-height:1.35;padding:0.9rem 0.6rem;text-align:center">우리집 고정비 방어 가계부<br>(4,900원) 보러 가기</a>
+  </section>
+
+
+  <div class="fine">
+    <b>꼭 확인해 주세요</b><br>
+    · 이 계산기는 금융위원회가 2026년 11월 19일 발표한 보도자료와 금융위원회·금융감독원의 <b>'실손 계약전환 할인·선택형 할인특약 제도 관련 Q&amp;A'</b>에 나온 예시 비율을 빌려 계산한 참고값입니다.<br>
+    · 5세대 전환 후 보험료는 보험회사·나이·가입 시점에 따라 크게 다릅니다. 이 화면의 숫자는 금융위 예시(60대 여성, 6개 대형 손해보험사 기준) 비율을 내 보험료에 곱한 추정치입니다.<br>
+    · 특정 보험회사나 상품을 권하지 않으며, 보험 모집·자문이 아닙니다. 실제 전환·해지 전에 <b>본인이 가입한 보험회사 콜센터와 공식 약관</b>을 확인하세요. 보험료와 할인율은 이후 바뀔 수 있습니다.<br>
+    · 이 화면은 인터넷 연결 없이 휴대폰 안에서만 계산하며, 입력한 값은 어디에도 저장되거나 전송되지 않습니다.
+  </div>
+
+  <div class="foot">
+    <span class="brand">라이프나침반</span>
+    생활 속 돈 문제를 1분 안에 정리하는 무료 계산기
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // 금융위원회 2026-11-19 보도자료 예시(60대 여성) 비율
+  // 1세대 176,982원 -> 5세대 43,241원 : 24.4%
+  // 2세대 126,773원 -> 5세대 43,241원 : 34.1%
+  var GEN = {
+    g1:  {name:"1세대",  ratio5:0.2443, selDiscount:0.37},
+    g2:  {name:"2세대",  ratio5:0.3411, selDiscount:0.27},
+    unk: {name:"세대 미확인", ratio5:0.2900, selDiscount:0.32}
+  };
+
+  var state = {gen:"g1", cnt:0};
+  var $ = function(id){ return document.getElementById(id); };
+
+  function won(n){ return Math.round(n).toLocaleString("ko-KR"); }
+  function man(n){
+    var v = Math.round(n);
+    if (v >= 100000000) {
+      var eok = v / 100000000;
+      return (Math.round(eok*10)/10).toLocaleString("ko-KR") + "억원";
+    }
+    if (v >= 10000) {
+      var m = v / 10000;
+      return (m >= 100 ? Math.round(m) : Math.round(m*10)/10).toLocaleString("ko-KR") + "만원";
+    }
+    return won(v) + "원";
+  }
+
+  function num(el){
+    if (!el) return 0;
+    var v = String(el.value || "").replace(/[^0-9]/g, "");
+    return v ? parseInt(v, 10) : 0;
+  }
+
+  // 칩 그룹
+  document.querySelectorAll(".chip[data-gen]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".chip[data-gen]").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      btn.setAttribute("aria-pressed","true");
+      state.gen = btn.getAttribute("data-gen");
+      if (state.gen === "g3") { showNotTarget(); } else { hideNotTarget(); }
+    });
+  });
+  document.querySelectorAll(".chip[data-cnt]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".chip[data-cnt]").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      btn.setAttribute("aria-pressed","true");
+      state.cnt = parseInt(btn.getAttribute("data-cnt"), 10);
+    });
+  });
+
+  document.querySelectorAll(".quick button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var p = btn.getAttribute("data-prem");
+      var m = btn.getAttribute("data-med");
+      if (p) { $("premium").value = p; echoPremium(); }
+      if (m) { $("medical").value = m; echoMedical(); }
+    });
+  });
+
+  function echoPremium(){
+    var v = num($("premium"));
+    $("premiumEcho").textContent = v ? "한 달 " + won(v) + "원 · 1년 " + man(v*12) : "";
+  }
+  function echoMedical(){
+    var v = num($("medical"));
+    $("medicalEcho").textContent = v ? "1년 병원비 " + won(v) + "원" : "";
+  }
+  function echoTherapy(){
+    var v = num($("therapy"));
+    $("therapyEcho").textContent = v ? "1년 " + won(v) + "원" : "";
+  }
+  ["premium","medical","therapy"].forEach(function(id){
+    var el = $(id);
+    if (!el) return;
+    el.addEventListener("input", function(){
+      el.value = el.value.replace(/[^0-9]/g, "");
+      if (id === "premium") echoPremium();
+      if (id === "medical") echoMedical();
+      if (id === "therapy") echoTherapy();
+    });
+  });
+
+  function showNotTarget(){
+    var box = $("notTarget");
+    box.classList.remove("hidden");
+    box.innerHTML = "<b>2013년 4월 이후에 가입하셨다면 이번 두 할인은 해당되지 않습니다.</b><br>" +
+      "계약전환 할인과 선택형 할인특약은 2013년 3월 이전 계약 중 재가입 조건이 없는 실손이 대상입니다. " +
+      "다만 3·4세대도 본인 보험회사의 5세대 실손으로 바꾸는 것은 가능합니다. 보험료 차이는 보험회사에 직접 확인하세요.";
+    $("resultBody").classList.add("hidden");
+    $("resultLead").textContent = "이번 할인 두 가지는 2013년 3월 이전 가입 계약이 대상입니다. 아래 안내를 먼저 봐 주세요.";
+  }
+  function hideNotTarget(){ $("notTarget").classList.add("hidden"); }
+
+  function calc(){
+    var P = num($("premium"));
+    var M = num($("medical"));
+    var X = num($("therapy"));
+
+    if (!P) {
+      $("resultBody").classList.add("hidden");
+      $("resultLead").innerHTML = "한 달 보험료를 먼저 넣어 주세요. 그 한 칸만 있으면 바로 비교됩니다.";
+      $("premium").focus();
+      return;
+    }
+    if (state.gen === "g3") { showNotTarget(); return; }
+
+    var g = GEN[state.gen] || GEN.unk;
+    var P12 = P * 12;
+    var three = P12 * 3;
+
+    // ① 유지
+    var keepMonth = P;
+
+    // ② 선택형 할인특약 (금융위 예시: 세 옵션 모두 선택 시)
+    var selMonth = P * (1 - g.selDiscount);
+    var selSaveYear = P12 * g.selDiscount;
+    var selSave3 = three * g.selDiscount;
+
+    // ③ 5세대 전환 + 3년 할인
+    var swBase = P * g.ratio5;
+    var swMonth = swBase * 0.5;
+    var swSave3 = three - (swMonth * 36);
+    var swAfter = swBase;
+
+    // 제외·자기부담으로 돌려받지 못하게 되는 돈(입력 시)
+    var loss3 = X * 3;
+
+    var selNet = selSave3 - loss3;
+    var swNet = swSave3 - loss3;
+
+    $("resultBody").classList.remove("hidden");
+
+    // 요약
+    $("summaryLabel").textContent = "3년 동안 ③으로 바꿀 때 보험료 차액";
+    $("summaryValue").innerHTML = won(swSave3) + '<span class="won">원</span>';
+    $("summaryNote").textContent = "지금 그대로 낼 때 " + man(three) + " → 3년간 " + man(swMonth*36) + " (할인 끝나면 월 " + won(swAfter) + "원)";
+
+    // ①
+    $("keepMonth").innerHTML = won(keepMonth) + '<span class="won">원</span>';
+    $("keepLines").innerHTML =
+      "<li>3년 보험료 <b>" + man(three) + "</b></li>" +
+      "<li>지금 돌려받는 범위가 그대로 유지됩니다</li>" +
+      "<li>갱신 때 보험료가 오르는 부담은 계속 남습니다</li>";
+
+    // ②
+    $("selMonth").innerHTML = won(selMonth) + '<span class="won">원</span>';
+    $("selTag").textContent = g.name + " · -" + Math.round(g.selDiscount*100) + "%";
+    $("selLines").innerHTML =
+      "<li>3년 절감 <b>" + man(selSave3) + "</b> (연 " + man(selSaveYear) + ")</li>" +
+      "<li>도수치료·체외충격파·비급여 주사는 <b>급여 치료비까지</b> 빠집니다</li>" +
+      "<li>비급여 MRI·MRA를 빼면 조금 더 줄고, 자기부담 20%를 고르면 급여·비급여 모두 20%를 냅니다</li>" +
+      "<li>가입은 <b>1회뿐</b>, 해지하면 다시 가입할 수 없습니다</li>" +
+      (X ? "<li class='minus'>입력하신 그 항목 " + man(X) + "/년은 돌려받지 못합니다 (3년 " + man(loss3) + ")</li>" : "");
+
+    // ③
+    $("swMonth").innerHTML = won(swMonth) + '<span class="won">원</span>';
+    $("swTag").textContent = g.name + " → 5세대";
+    $("swLines").innerHTML =
+      "<li>3년 절감 <b>" + man(swSave3) + "</b> · 3년 뒤부터 월 <b>" + won(swAfter) + "원</b></li>" +
+      "<li>할인은 <b>3년만</b>입니다. 4년째부터는 할인 없는 5세대 보험료를 냅니다</li>" +
+      "<li>중증 질환(암·뇌혈관·심장·희귀난치) 치료는 지금처럼 두텁게 남습니다</li>" +
+      "<li>비중증 비급여는 자기부담이 50%로 커지고, 도수치료·체외충격파·비급여 주사는 산정특례 질환 치료가 아니면 대상에서 빠집니다</li>" +
+      "<li>신청은 <b>2026.11.23 ~ 2027.5.22</b>까지만 받습니다</li>" +
+      (X ? "<li class='minus'>입력하신 그 항목 " + man(X) + "/년은 5세대에서 돌려받기 어렵습니다 (3년 " + man(loss3) + ")</li>" : "");
+
+    // 원장
+    var rows = [
+      ["① 유지 · 3년 보험료", man(three), ""],
+      ["② 선택형 · 3년 보험료", man(selMonth*36), "down"],
+      ["② 선택형 · 3년 순이득", (selNet >= 0 ? "+" : "−") + man(Math.abs(selNet)), selNet >= 0 ? "up" : "down"],
+      ["③ 전환 · 3년 보험료", man(swMonth*36), "down"],
+      ["③ 전환 · 3년 순이득", (swNet >= 0 ? "+" : "−") + man(Math.abs(swNet)), swNet >= 0 ? "up" : "down"]
+    ];
+    $("ledgerRows").innerHTML = rows.map(function(r){
+      return '<div class="ledger__row"><span>' + r[0] + '</span><span class="ledger__num ' + r[2] + '">' + r[1] + '</span></div>';
+    }).join("");
+    $("ledgerNote").textContent = X
+      ? "순이득 = 보험료 아낀 돈 − 입력하신 도수·주사 항목에 쓴 돈(3년). 실제 돌려받는 금액은 병원·치료 내용에 따라 다릅니다."
+      : "도수·주사에 쓴 돈을 넣으시면 그만큼을 빼고 계산해 드립니다. 지금은 보험료 차이만 반영된 숫자입니다.";
+
+    // 방향 신호
+    var box = $("signalNote");
+    box.classList.remove("hidden");
+    if (!M) {
+      box.innerHTML = "<b>방향을 알려면 병원비가 필요합니다.</b><br>1년 병원비를 넣으시면 '보험료가 큰지, 병원비가 큰지'를 비교해 방향만 짚어 드립니다.";
+    } else {
+      var ratio = P12 ? M / P12 : 0;
+      var msg;
+      if (ratio < 0.5) {
+        msg = "<b>1년 병원비(" + man(M) + ")가 1년 보험료(" + man(P12) + ")의 절반보다 적습니다.</b><br>숫자만 보면 보험료를 줄이는 쪽을 검토할 여지가 있습니다. 다만 앞으로 치료 계획이 있으면 그게 우선입니다.";
+      } else if (ratio < 1) {
+        msg = "<b>1년 병원비(" + man(M) + ")와 1년 보험료(" + man(P12) + ")가 비슷합니다.</b><br>어느 쪽도 숫자만으로는 기울지 않습니다. 앞으로 받을 치료 계획을 종이에 적어 놓고 비교해 보세요.";
+      } else {
+        msg = "<b>1년 병원비(" + man(M) + ")가 1년 보험료(" + man(P12) + ")보다 큽니다.</b><br>지금 돌려받는 범위를 지키는 쪽을 먼저 살펴보셔야 합니다. 전환하면 이 병원비에서 본인부담이 늘어납니다.";
+      }
+      if (state.cnt >= 2) {
+        msg += "<br><br><b>도수·주사 횟수가 많으신 편입니다.</b> 두 할인 모두 그 항목을 줄이는 제도라, 아낀 보험료보다 잃는 돈이 커질 수 있습니다.";
+      } else if (state.cnt === 0) {
+        msg += "<br><br><b>도수·주사 이용이 거의 없으신 편입니다.</b> 그래서 두 할인의 손실이 작게 나옵니다.";
+      }
+      box.innerHTML = msg;
+    }
+
+    buildShare({
+      P:P, P12:P12, three:three, g:g,
+      keepMonth:keepMonth, selMonth:selMonth, selSave3:selSave3,
+      swMonth:swMonth, swAfter:swAfter, swSave3:swSave3,
+      selNet:selNet, swNet:swNet, X:X, loss3:loss3, M:M, cnt:state.cnt
+    });
+
+    $("resultLead").textContent = "금융위 예시 비율로 계산한 참고값입니다. 실제 보험료는 보험회사 안내로 확인하세요.";
+  }
+
+  function buildShare(d){
+    var lines = [];
+    lines.push("[내 실손보험 3년 비교 · 참고값]");
+    lines.push("가입 " + d.g.name + " · 월 보험료 " + won(d.P) + "원");
+    lines.push("");
+    lines.push("① 그대로 유지 : 3년 " + man(d.three));
+    lines.push("② 선택형 할인특약 : 월 " + won(d.selMonth) + "원 · 3년 " + man(d.selMonth*36));
+    lines.push("③ 5세대 전환(3년 할인) : 월 " + won(d.swMonth) + "원 · 3년 " + man(d.swMonth*36));
+    lines.push("   3년 뒤 ③은 월 " + won(d.swAfter) + "원");
+    if (d.X) {
+      lines.push("");
+      lines.push("※ 도수·주사에 쓴 " + man(d.X) + "/년은 ②③에서 돌려받기 어려움(3년 " + man(d.loss3) + ")");
+    }
+    lines.push("");
+    lines.push("금융위원회 2026-11-19 발표 예시 비율로 계산한 참고값입니다.");
+    lines.push("특정 상품 권유가 아니며, 실제 전환 전 본인 보험회사 콜센터·약관 확인이 필요합니다.");
+    var txt = lines.join("\n");
+    $("shareText").value = txt;
+    return txt;
+  }
+
+  $("calcBtn").addEventListener("click", calc);
+
+  $("shareBtn").addEventListener("click", function(){
+    var box = $("shareText");
+    box.select();
+    box.setSelectionRange(0, 99999);
+    var done = function(){
+      $("shareBtn").textContent = "복사됐습니다. 붙여넣으세요";
+      setTimeout(function(){ $("shareBtn").innerHTML = "내 비교 결과<br>가족에게 복사해서 보내기"; }, 2200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(box.value).then(done, function(){ try{ document.execCommand("copy"); done(); }catch(e){} });
+    } else {
+      try { document.execCommand("copy"); done(); } catch(e) {}
+    }
+  });
+
+  echoPremium(); echoMedical(); echoTherapy();
+})();
+</script>
+
+</body>
+</html>
