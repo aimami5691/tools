@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<meta name="description" content="전월세 5% 상한 한도와 아파트 장기수선충당금 환급액을 법령 기준으로 바로 계산하고, 집주인·관리사무소에 보낼 문자까지 복사하는 큰글씨 정산기입니다.">
+<title>전월세 5% 상한 · 장기수선충당금 정산기 (큰글씨)</title>
+<style>
+  :root{
+    color-scheme:light;
+    --navy:#0B2642;
+    --navy2:#123A5C;
+    --teal:#009991;
+    --teal-d:#00716B;
+    --cream:#FDF8EF;
+    --cream2:#F5EDDD;
+    --card:#FFFFFF;
+    --line:#E0D8C6;
+    --text:#12283D;
+    --sub:#3E5670;
+    --warn:#8A4B00;
+    --warn-bg:#FFF4E2;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR",sans-serif;
+    font-size:19px;
+    line-height:1.68;
+    letter-spacing:-0.01em;
+    word-break:keep-all;
+    overflow-wrap:anywhere;
+  }
+  .wrap{max-width:480px;margin:0 auto;padding:0 16px 64px;}
+
+  header.hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff;
+    padding:26px 16px 30px;
+  }
+  header.hero .inner{max-width:480px;margin:0 auto;}
+  .kicker{
+    display:inline-block;font-size:18px;font-weight:700;color:#9FE8E2;
+    border:2px solid rgba(159,232,226,.45);border-radius:999px;padding:4px 14px;margin-bottom:12px;
+  }
+  h1{font-size:28px;line-height:1.34;margin:0 0 10px;font-weight:800;letter-spacing:-0.02em;}
+  .hero p{margin:0;font-size:18px;color:#D8E6F2;line-height:1.6;}
+  .hero .stamp{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+  .hero .stamp span{
+    font-size:18px;font-weight:700;background:rgba(255,255,255,.12);
+    border-radius:10px;padding:6px 12px;color:#fff;
+  }
+
+  /* 탭 */
+  nav.tabs{
+    position:sticky;top:0;z-index:30;background:var(--cream);
+    padding:10px 0 10px;border-bottom:1px solid var(--line);
+  }
+  nav.tabs .bar{display:flex;gap:8px;}
+  nav.tabs button{
+    flex:1 1 0;min-width:0;min-height:64px;padding:8px 6px;
+    border:2px solid var(--navy);border-radius:14px;background:#fff;color:var(--navy);
+    font-family:inherit;font-size:19px;font-weight:800;line-height:1.3;cursor:pointer;
+  }
+  nav.tabs button[aria-selected="true"]{background:var(--navy);color:#fff;}
+  nav.tabs button:focus-visible{outline:4px solid var(--teal);outline-offset:3px;}
+  nav.tabs button small{display:block;font-size:18px;font-weight:700;color:var(--sub);}
+  nav.tabs button[aria-selected="true"] small{color:#B9D3E8;}
+
+  section{margin-top:24px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:20px 18px;
+  }
+  .card + .card{margin-top:16px;}
+  h2{
+    font-size:22px;line-height:1.4;margin:0 0 6px;font-weight:800;color:var(--navy);
+    display:flex;align-items:center;gap:10px;
+  }
+  h2 .num{
+    flex:0 0 auto;width:36px;height:36px;border-radius:10px;background:var(--teal);
+    color:#fff;font-size:19px;display:flex;align-items:center;justify-content:center;font-weight:800;
+  }
+  h3{font-size:20px;margin:24px 0 8px;font-weight:800;color:var(--navy);}
+  p{margin:8px 0;}
+  .lead{font-size:18px;color:var(--sub);margin:0 0 4px;}
+
+  .notice{
+    background:var(--warn-bg);border:1px solid #F0D6AC;border-left:8px solid #E0A64B;
+    border-radius:14px;padding:16px;margin-top:8px;
+  }
+  .notice b{color:var(--warn);}
+  .notice ul{margin:8px 0 0;padding-left:22px;}
+  .notice li{margin:6px 0;font-size:18px;}
+
+  .step{margin-top:24px;}
+  .step:first-of-type{margin-top:6px;}
+  .step .q{font-size:20px;font-weight:800;color:var(--navy);margin:0 0 4px;}
+  .step .hint{font-size:18px;color:var(--sub);margin:0 0 10px;}
+
+  .chips{display:flex;gap:10px;}
+  .chips.c3{gap:8px;}
+  .chips > .chip{flex:1 1 0;min-width:0;}
+  .chip{
+    appearance:none;border:2px solid #A79D8C;background:#fff;color:var(--text);
+    border-radius:14px;min-height:60px;padding:10px 6px;font-size:19px;font-weight:700;
+    font-family:inherit;cursor:pointer;line-height:1.25;
+  }
+  .chip small{display:block;font-size:18px;font-weight:700;color:var(--sub);margin-top:2px;}
+  .chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .chip[aria-pressed="true"] small{color:#DFF7F4;}
+  .chip:focus-visible{outline:4px solid #0B2642;outline-offset:2px;}
+
+  .field{margin-top:12px;}
+  .field label{display:block;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+  input[type="text"],input[type="number"],input[type="date"]{
+    width:100%;border:2px solid #A79D8C;border-radius:14px;background:#fff;
+    padding:16px 14px;font-size:22px;font-family:inherit;color:var(--text);font-weight:700;
+  }
+  input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px rgba(0,153,145,.18);}
+  .inputrow{display:flex;gap:10px;align-items:stretch;}
+  .inputrow input{flex:1 1 auto;min-width:0;}
+  .unitbox{display:flex;flex-direction:column;gap:6px;flex:0 0 auto;}
+  .unitbox .chip{min-height:0;height:100%;padding:0 14px;font-size:18px;}
+
+  .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .quick button{
+    appearance:none;font-family:inherit;font-size:18px;font-weight:700;
+    border:2px solid #A79D8C;background:var(--cream2);color:var(--navy);
+    border-radius:12px;min-height:52px;padding:0 14px;cursor:pointer;
+  }
+  .quick button:focus-visible{outline:4px solid #0B2642;outline-offset:2px;}
+  .echo{font-size:18px;color:var(--teal-d);font-weight:800;margin-top:8px;min-height:0;}
+
+  details.more{margin-top:14px;border:2px dashed #A79D8C;border-radius:14px;background:#FFFDF7;}
+  details.more > summary{
+    cursor:pointer;list-style:none;padding:16px 44px 16px 16px;font-size:18px;font-weight:800;color:var(--navy);
+    position:relative;
+  }
+  details.more > summary::-webkit-details-marker{display:none;}
+  details.more > summary::after{content:"▾";font-size:18px;position:absolute;right:16px;top:16px;}
+  details.more[open] > summary::after{content:" ▴";}
+  details.more .body{padding:0 16px 16px;}
+
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+    min-height:64px;border-radius:16px;border:none;font-family:inherit;
+    font-size:21px;font-weight:800;cursor:pointer;
+  }
+  .btn.primary{background:var(--teal);color:#fff;}
+  .btn.primary:active{background:var(--teal-d);}
+  .btn.navy{background:var(--navy);color:#fff;}
+  .btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy);}
+  .btn:focus-visible{outline:4px solid #0B2642;outline-offset:3px;}
+  .sharebar{
+    margin-top:16px;padding:14px;border:2px dashed #A79D8C;border-radius:16px;background:#FFFDF7;
+  }
+  .btn.share{
+    background:#E6F6F4;color:var(--teal-d);border:2px solid var(--teal);
+    font-size:19px;line-height:1.35;min-height:64px;padding:10px 12px;
+  }
+  .btn.share:active{background:#D2EFEC;}
+  .sharehint{font-size:18px;color:var(--sub);margin:10px 0 0;line-height:1.6;}
+
+  .result{
+    background:linear-gradient(165deg,#0B2642 0%,#123A5C 100%);
+    border-radius:20px;color:#fff;padding:22px 18px;margin-top:20px;
+  }
+  .result .rlabel{font-size:18px;color:#B9D3E8;font-weight:700;margin:0;}
+  .result .rmoney{
+    font-size:32px;line-height:1.16;font-weight:800;color:#fff;margin:2px 0 2px;
+    letter-spacing:-0.02em;
+  }
+  .result .rmoney.zero{font-size:30px;color:#FFD9A8;}
+  .result .rgloss{font-size:19px;line-height:1.4;font-weight:800;color:#9FE8E2;margin:0 0 8px;}
+  .result .rgloss:empty{display:none;}
+  .result .rsub{font-size:18px;color:#CFE2F1;margin:0;white-space:pre-line;}
+  .mnum{white-space:nowrap;}
+  .mkor{font-size:18px;font-weight:800;color:var(--teal-d);white-space:nowrap;}
+  .result .mkor{color:#9FE8E2;font-weight:700;}
+  .result .divider{height:1px;background:rgba(255,255,255,.2);margin:16px 0;}
+  .kv{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:18px;padding:5px 0;}
+  .kv .k{color:#B9D3E8;flex:1 1 auto;min-width:0;word-break:keep-all;}
+  .kv .v{font-weight:800;text-align:right;flex:0 0 auto;max-width:64%;word-break:keep-all;}
+  .kv .v .mkor{display:block;color:#CFE2F1;font-weight:700;white-space:normal;}
+  .v.strong{color:#9FE8E2;}
+  .result .range{
+    margin-top:12px;background:rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;font-size:18px;
+    white-space:pre-line;
+  }
+  .result .warnline{
+    margin-top:12px;background:rgba(255,196,120,.18);border:1px solid rgba(255,196,120,.5);
+    border-radius:12px;padding:12px 14px;font-size:18px;color:#FFE6C2;
+  }
+
+  .optgrid{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+  .opt{
+    border:2px solid var(--line);border-radius:14px;padding:14px;background:#FFFDF7;
+  }
+  .opt.on{border-color:var(--teal);background:#F1FBFA;}
+  .opt .opt-t{font-size:19px;font-weight:800;color:var(--navy);margin:0 0 4px;}
+  .opt .opt-v{font-size:19px;margin:0;font-weight:800;color:var(--text);}
+  .opt .opt-v.sub{font-size:18px;font-weight:700;margin-top:4px;}
+  .opt .opt-n{font-size:18px;margin:8px 0 0;color:var(--sub);}
+  .tag{
+    display:inline-block;font-size:18px;font-weight:800;border-radius:8px;padding:1px 8px;
+    margin-left:6px;vertical-align:2px;
+  }
+  .tag.safe{background:#DCF3F0;color:var(--teal-d);}
+  .tag.risk{background:#FFE9D6;color:#8A4B00;}
+
+  .tablewrap{margin-top:10px;overflow-x:auto;}
+  .tbl{width:100%;border-collapse:collapse;font-size:18px;}
+  .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:12px 6px;text-align:left;vertical-align:top;}
+  .tbl th{font-size:18px;color:var(--sub);font-weight:800;border-bottom:2px solid var(--navy);}
+  .tbl td{font-weight:700;}
+  .tbl td.h{color:var(--teal-d);font-weight:800;}
+  .tblnote{font-size:18px;color:var(--sub);margin-top:8px;}
+
+  .script{
+    background:#F3F7FA;border:2px solid #CBDDEA;border-radius:14px;padding:16px;
+    font-size:19px;line-height:1.75;white-space:pre-line;
+  }
+  .checklist{list-style:none;padding:0;margin:10px 0 0;}
+  .checklist li{position:relative;padding-left:38px;margin:12px 0;font-size:18px;}
+  .checklist li::before{
+    content:"✓";position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:8px;
+    background:var(--teal);color:#fff;font-size:18px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps{padding-left:26px;margin:8px 0 0;}
+  ol.steps li{margin:12px 0;font-size:18px;}
+  ol.steps b{color:var(--navy);}
+
+  .disclaimer{
+    background:#fff;border:2px solid var(--navy);border-radius:16px;padding:18px;margin-top:22px;
+    font-size:18px;line-height:1.7;
+  }
+  .disclaimer b{color:var(--navy);}
+  .src{font-size:18px;color:var(--sub);line-height:1.7;}
+  .src a,ol.steps a{color:var(--teal-d);font-weight:800;text-decoration:underline;}
+  footer{margin-top:26px;text-align:center;font-size:18px;color:var(--sub);}
+  .footlink{margin:14px 0 0;font-size:18px;line-height:1.6;}
+  .footlink a{color:var(--teal-d);font-weight:800;text-decoration:underline;}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(200%);
+    background:#0B2642;color:#fff;font-size:19px;font-weight:800;padding:14px 22px;border-radius:14px;
+    transition:transform .25s ease;z-index:60;max-width:88vw;text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  [hidden]{display:none !important;}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  @media (max-width:360px){
+    body{font-size:18px;}
+    h1{font-size:25px;}
+    .result .rmoney{font-size:28px;}
+    .result .rmoney.zero{font-size:27px;}
+    .result .rgloss{font-size:18px;}
+    nav.tabs button{font-size:18px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <span class="kicker">2026년 11월 법령 기준</span>
+    <h1>전월세 5% 상한은 얼마까지,<br>장기수선충당금은 얼마나?</h1>
+    <p>세입자와 집주인 모두를 위한 큰글씨 정산기입니다. 보증금·월세·관리비만 넣으면 바로 계산되고, 보낼 문자까지 그대로 복사됩니다.</p>
+    <div class="stamp">
+      <span>가입 없음</span><span>로그인 없음</span><span>엑셀 없음</span><span>저장 없음</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="계산기 종류">
+  <div class="wrap" style="padding-bottom:0;">
+    <div class="bar" role="tablist">
+      <button type="button" id="tab1Btn" role="tab" aria-selected="true" aria-controls="tab1" data-tab="1">전월세 5% 상한<small>계산기</small></button>
+      <button type="button" id="tab2Btn" role="tab" aria-selected="false" aria-controls="tab2" data-tab="2">장기수선충당금<small>환급 정산기</small></button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============================ TAB 1 ============================ -->
+  <div id="tab1" role="tabpanel" aria-labelledby="tab1Btn">
+
+    <section aria-label="5% 상한이 적용되는 경우">
+      <div class="notice">
+        <b>5% 상한은 '계약을 이어갈 때'만 붙습니다.</b>
+        아래 두 경우에만 직전 금액의 5%를 넘길 수 없습니다.
+        <ul>
+          <li>계약 기간 중에 집주인이 올려 달라고 할 때</li>
+          <li>세입자가 <b>계약갱신요구권</b>을 써서 갱신할 때</li>
+        </ul>
+        <p style="margin:10px 0 0;font-size:18px;">
+          반대로 <b>새 세입자와 새로 맺는 계약</b>, <b>갱신요구권 없이 서로 합의해 다시 쓰는 계약</b>에는 이 상한이 없습니다.
+          또 한 번 올린 뒤 <b>1년 안에는 또 올릴 수 없고</b>, 시·도 조례가 5%보다 낮게 정한 곳은 그 조례가 우선합니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t1title">
+      <h2 id="t1title"><span class="num" aria-hidden="true">1</span>지금 조건 넣기</h2>
+      <p class="lead">전세면 월세에 0을 넣으세요. 계산 결과는 화면에만 있고 어디에도 저장되지 않습니다.</p>
+
+      <div class="step">
+        <p class="q">① 지금 보증금은 얼마인가요?</p>
+        <p class="hint">계약서에 적힌 현재 보증금입니다. 만원 단위로 넣으면 가장 편합니다.</p>
+        <div class="field">
+          <label for="deposit">현재 보증금</label>
+          <div class="inputrow">
+            <input id="deposit" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 20000 (2억원)">
+            <div class="unitbox" role="group" aria-label="보증금 단위">
+              <button type="button" class="chip" id="depMan" aria-pressed="true">만원</button>
+              <button type="button" class="chip" id="depWon" aria-pressed="false">원</button>
+            </div>
+          </div>
+          <div class="quick" role="group" aria-label="보증금 빠른 입력">
+            <button type="button" data-dep="5000">5,000만</button>
+            <button type="button" data-dep="10000">1억</button>
+            <button type="button" data-dep="20000">2억</button>
+            <button type="button" data-dep="30000">3억</button>
+            <button type="button" id="depClear">지우기</button>
+          </div>
+          <p class="echo" id="depEcho" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <p class="q">② 지금 월세는 얼마인가요?</p>
+        <p class="hint">전세라면 <b>0</b>을 넣으세요. 반전세라면 매달 내는 월세를 넣습니다.</p>
+        <div class="field">
+          <label for="rent">현재 월세 (원)</label>
+          <input id="rent" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 500000 (전세면 0)">
+          <div class="quick" role="group" aria-label="월세 빠른 입력">
+            <button type="button" data-rent="0">전세(0원)</button>
+            <button type="button" data-rent="300000">30만</button>
+            <button type="button" data-rent="500000">50만</button>
+            <button type="button" data-rent="800000">80만</button>
+          </div>
+          <p class="echo" id="rentEcho" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <details class="more">
+        <summary>적용되는 전환율 확인 (지금 연 5.0%)</summary>
+        <div class="body">
+          <p class="hint">
+            보증금과 월세를 하나의 금액으로 비교할 때 쓰는 비율입니다.
+            법은 <b>연 10%</b>와 <b>한국은행 기준금리 + 연 2%</b> 중 <b>낮은 쪽</b>을 넘지 못하게 합니다.
+            지금은 기준금리 <b>연 3.00%</b> + 2% = <b>연 5.0%</b>입니다.
+          </p>
+          <div class="field">
+            <label for="baseRate">한국은행 기준금리 (%)</label>
+            <input id="baseRate" type="number" step="0.25" min="0" max="10" inputmode="decimal" value="3.00">
+            <p class="echo" id="rateEcho" aria-live="polite"></p>
+          </div>
+          <p class="hint" style="margin-top:12px;">
+            기준금리는 2026년 8월 27일에 3.00%로 정해졌고 10월 22일 회의에서 그대로 유지되었습니다.
+            금리가 바뀌면 이 비율도 같이 바뀝니다.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="t1res">
+      <h2 id="t1res"><span class="num" aria-hidden="true">2</span>올릴 수 있는 한도</h2>
+      <p class="lead">5%는 '지금 계약서 금액'에 붙습니다. 시세가 아무리 올라도 여기까지입니다.</p>
+
+      <div class="result" aria-live="polite">
+        <p class="rlabel" id="rCapLabel">이번 갱신에서 올릴 수 있는 최대 폭</p>
+        <p class="rmoney" id="rCapMoney">0원</p>
+        <p class="rgloss" id="rCapGloss"></p>
+        <p class="rsub" id="rCapSub">보증금을 넣으면 바로 계산됩니다.</p>
+        <div class="divider"></div>
+        <div class="kv"><span class="k">지금 보증금</span><span class="v" id="rDep">-</span></div>
+        <div class="kv"><span class="k">지금 월세</span><span class="v" id="rRent">-</span></div>
+        <div class="kv"><span class="k">환산보증금</span><span class="v" id="rHv">-</span></div>
+        <div class="kv"><span class="k">적용 전환율</span><span class="v" id="rRate">연 5.0%</span></div>
+        <div class="range" id="rEach">보증금과 월세 각각 5%까지가 가장 안전합니다.</div>
+        <div class="warnline" id="rWarn" hidden></div>
+      </div>
+
+      <div class="sharebar">
+        <button type="button" class="btn share" id="shareRent">📤 내 계산 결과 가족·지인에게 공유 복사</button>
+        <p class="sharehint">가족·지인에게 보낼 요약 문구를 복사합니다. 맨 아래에 이사 정산 상품 링크가 함께 붙습니다. 집주인에게 보내는 공식 문자에는 링크가 들어가지 않습니다.</p>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3 style="margin-top:0">🧭 나갈 때 정산까지 미리 준비하세요</h3>
+        <p class="hint" style="margin-top:10px">5% 한도를 확인하셨다면, 이사 나갈 때 돌려받을 관리비·계량기 요금·장기수선충당금 정산도 함께 준비해 두시면 좋아요. 이사일만 넣으면 일할계산이 끝나는 정산 웹앱과 A4 10쪽 체크리스트입니다.</p>
+        <p class="hint">참고용 생활 도구이며, 법적 청구를 대행하지는 않습니다. 관리사무소·집주인과 다투는 자리에는 이 링크를 보내지 마세요.</p>
+        <a class="btn navy" href="https://litt.ly/lifenavigator/sale/Ul3Dc2F" target="_blank" rel="noopener noreferrer" style="margin-top:14px;text-decoration:none;line-height:1.35;text-align:center">이사 공과금·장충금 1초 일할계산기<br>(4,900원) 보러 가기</a>
+        <p class="hint" style="margin-top:12px"><a href="https://litt.ly/lifenavigator/sale/N1BEAeJ" target="_blank" rel="noopener noreferrer" style="color:var(--teal-d);font-weight:800;text-decoration:underline">새 집 점검은? 아파트 사전점검 67항목 체크 키트 →</a></p>
+      </div>
+
+      <h3>어떻게 나눌까요?</h3>
+      <p class="hint">같은 5%라도 보증금으로 받을지, 월세로 받을지에 따라 매달 나가는 돈이 달라집니다.</p>
+      <div class="optgrid" id="optGrid"></div>
+      <p class="tblnote" id="optNote"></p>
+    </section>
+
+    <section class="card" aria-labelledby="t1conv">
+      <h2 id="t1conv"><span class="num" aria-hidden="true">3</span>보증금을 낮추고 월세로 바꿀 때</h2>
+      <p class="lead">보증금 일부를 월세로 돌리면, 그 돈에는 전환율 상한이 따로 붙습니다.</p>
+
+      <div class="field">
+        <label for="newDep">바꾼 뒤 보증금 (만원)</label>
+        <div class="inputrow">
+          <input id="newDep" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 15000 (1억 5,000만원)">
+          <div class="unitbox">
+            <button type="button" class="chip" id="newDepKeep" aria-pressed="false">그대로</button>
+          </div>
+        </div>
+        <p class="echo" id="newDepEcho" aria-live="polite"></p>
+      </div>
+
+      <div class="result" style="margin-top:16px;" aria-live="polite">
+        <p class="rlabel">이 보증금에서 받을 수 있는 월세 상한</p>
+        <p class="rmoney" id="cRentMax">-</p>
+        <p class="rgloss" id="cGloss"></p>
+        <p class="rsub" id="cSub">바꾼 뒤 보증금을 넣으면 계산됩니다.</p>
+        <div class="divider"></div>
+        <div class="kv"><span class="k">월세로 바뀌는 금액</span><span class="v" id="cConv">-</span></div>
+        <div class="kv"><span class="k">전환분 월세 상한</span><span class="v" id="cConvRent">-</span></div>
+        <div class="kv"><span class="k">남은 5% 증액분</span><span class="v" id="cInc">-</span></div>
+      </div>
+      <p class="tblnote">
+        보증금을 낮추는 것은 세입자에게 조건을 바꾸는 일이라 <b>세입자 동의</b>가 필요합니다.
+        갱신요구권을 행사했다면 기존 조건(전세)대로 두고 5% 안에서만 올리는 쪽을 고를 수도 있습니다.
+      </p>
+    </section>
+
+    <section class="card" aria-labelledby="t1check">
+      <h2 id="t1check"><span class="num" aria-hidden="true">4</span>집주인이 제시한 금액, 괜찮을까?</h2>
+      <p class="lead">문자로 받은 금액을 넣어 보세요. 한도를 넘었는지 바로 알려 드립니다.</p>
+
+      <div class="field">
+        <label for="askDep">제시받은 보증금 (만원)</label>
+        <input id="askDep" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 22000">
+      </div>
+      <div class="field">
+        <label for="askRent">제시받은 월세 (원)</label>
+        <input id="askRent" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 600000">
+      </div>
+
+      <div class="result" style="margin-top:16px;" aria-live="polite">
+        <p class="rlabel">판정 결과</p>
+        <p class="rmoney" id="vVerdict">-</p>
+        <p class="rgloss" id="vGloss"></p>
+        <p class="rsub" id="vSub">두 금액 중 하나만 넣어도 확인할 수 있습니다.</p>
+        <div class="divider"></div>
+        <div class="kv"><span class="k">제시안 환산보증금</span><span class="v" id="vHv">-</span></div>
+        <div class="kv"><span class="k">올릴 수 있는 환산보증금</span><span class="v" id="vLimit">-</span></div>
+        <div class="range" id="vDetail">5%를 넘은 금액은 반환을 청구할 수 있습니다(주택임대차보호법 제10조의2).</div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t1letter">
+      <h2 id="t1letter"><span class="num" aria-hidden="true">5</span>집주인에게 보낼 문자</h2>
+      <p class="lead">숫자는 위에서 넣은 값으로 자동으로 채워집니다. 감정적인 말 없이 담백하게 쓰는 편이 실제로 잘 풀립니다.</p>
+      <div class="script" id="letterBox" style="margin-top:12px;">보증금과 월세를 넣으면 문자가 완성됩니다.</div>
+      <button type="button" class="btn navy" id="copyLetter" style="margin-top:14px;">문자 복사하기</button>
+    </section>
+
+    <section class="card" aria-labelledby="t1rule">
+      <h2 id="t1rule"><span class="num" aria-hidden="true">6</span>알아 두면 힘이 되는 규칙</h2>
+      <div class="tablewrap">
+        <table class="tbl">
+          <thead><tr><th>상황</th><th>5% 상한</th></tr></thead>
+          <tbody>
+            <tr><td>계약 기간 중 집주인의 증액 요구</td><td class="h">적용</td></tr>
+            <tr><td>계약갱신요구권으로 갱신</td><td class="h">적용 (1회, 2년)</td></tr>
+            <tr><td>아무 말 없이 지나가 묵시적 갱신</td><td>같은 조건으로 연장</td></tr>
+            <tr><td>합의해서 새 조건으로 다시 계약</td><td>상한 없음</td></tr>
+            <tr><td>다른 세입자와 새로 계약</td><td>상한 없음</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>갱신요구권은 언제 쓸 수 있나요?</h3>
+      <p class="hint">만기 <b>6개월 전부터 2개월 전</b>까지입니다. 이 기간을 넘기면 쓸 수 없으니 날짜를 달력에 표시해 두세요. 한 번만 쓸 수 있고, 갱신되면 2년입니다.</p>
+      <p class="hint">5%는 집주인이 아무 때나 올릴 수 있다는 뜻이 아닙니다. 조세·공과금이나 경제사정이 크게 바뀌는 등 증액을 청구할 만한 사정이 있을 때 붙는 상한입니다.</p>
+
+      <h3>5%를 넘겨 냈다면</h3>
+      <p class="hint">넘긴 부분은 효력이 없고, 이미 낸 초과분은 <b>반환을 청구</b>할 수 있습니다(제10조의2). 계약서, 이체 내역, 문자를 모아 두세요.</p>
+
+      <h3>1년 안에는 또 못 올립니다</h3>
+      <p class="hint">계약을 맺었거나 금액을 올린 날부터 1년 이내에는 다시 증액을 청구할 수 없습니다(제7조 제1항).</p>
+
+      <h3>지역 조례를 확인하세요</h3>
+      <p class="hint">시·도는 5% 범위 안에서 더 낮게 정할 수 있습니다. 사는 지역 조례가 4%라면 4%가 한도입니다.</p>
+    </section>
+
+  </div>
+
+  <!-- ============================ TAB 2 ============================ -->
+  <div id="tab2" role="tabpanel" aria-labelledby="tab2Btn" hidden>
+
+    <section aria-label="장기수선충당금이란">
+      <div class="notice">
+        <b>이 돈은 원래 집주인이 내는 돈입니다.</b>
+        관리비 고지서에 함께 찍혀 나와서 세입자가 대신 내고 있을 뿐입니다.
+        <ul>
+          <li>법이 정한 부담자는 <b>그 집의 소유자</b>(공동주택관리법 제30조)</li>
+          <li>세입자가 대신 냈다면 <b>소유자가 돌려줘야</b> 합니다(같은 법 시행령 제31조 제8항)</li>
+          <li>관리사무소는 <b>납부확인서를 바로 발급</b>해야 합니다(같은 조 제9항)</li>
+        </ul>
+        <p style="margin:10px 0 0;font-size:18px;">
+          월 1~3만원이라도 2년이면 수십만원입니다. 이사 전에 챙기면 대개 돌려받습니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t2title">
+      <h2 id="t2title"><span class="num" aria-hidden="true">1</span>낸 돈과 산 기간 넣기</h2>
+      <p class="lead">관리비 고지서의 '장기수선충당금' 칸에 적힌 금액을 넣으세요.</p>
+
+      <div class="step">
+        <p class="q">① 한 달에 얼마씩 냈나요?</p>
+        <p class="hint">고지서에 매달 같은 금액이 찍혀 있습니다. 요율이 중간에 올랐다면 마지막 달 금액보다 <b>평균 금액</b>을 넣는 편이 정확합니다.</p>
+        <div class="field">
+          <label for="monthly">월 장기수선충당금 (원)</label>
+          <input id="monthly" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 25000">
+          <div class="quick" role="group" aria-label="월 충당금 빠른 입력">
+            <button type="button" data-mon="10000">1만</button>
+            <button type="button" data-mon="15000">1만5천</button>
+            <button type="button" data-mon="20000">2만</button>
+            <button type="button" data-mon="30000">3만</button>
+            <button type="button" data-mon="50000">5만</button>
+          </div>
+          <p class="echo" id="monEcho" aria-live="polite"></p>
+        </div>
+
+        <details class="more">
+          <summary>고지서에 이 항목이 안 보여요 / 요율로 계산할게요</summary>
+          <div class="body">
+            <p class="hint">
+              관리비 고지서의 <b>비목별 내역</b>에 '장기수선충당금'이 따로 적혀 있습니다.
+              총 관리비만 보인다면 관리사무소에 <b>"장기수선충당금이 월 얼마인지"</b> 한 번만 물어보세요.
+              단지 적립요율은 공동주택관리정보시스템(k-apt.go.kr)에서도 확인할 수 있습니다.
+            </p>
+            <div class="field">
+              <label for="area">우리 집 공급면적 (㎡)</label>
+              <input id="area" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="예: 84">
+            </div>
+            <div class="field">
+              <label for="unitRate">단지 적립요율 (원/㎡, 관리사무소에 확인)</label>
+              <input id="unitRate" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="예: 300">
+            </div>
+            <div class="quick">
+              <button type="button" id="calcFromRate">이 값으로 월 충당금 채우기</button>
+            </div>
+            <p class="hint" style="margin-top:10px;">단지마다 요율이 다르고, 같은 단지에서도 오를 수 있습니다. 계산은 참고용입니다.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="step">
+        <p class="q">② 얼마나 살았나요?</p>
+        <p class="hint">날짜를 넣으면 개월 수를 자동으로 셉니다. 이미 나왔다면 개월 수만 넣어도 됩니다.</p>
+        <div class="chips" role="group" aria-label="기간 입력 방식">
+          <button type="button" class="chip" id="modeDate" aria-pressed="true">날짜로 계산</button>
+          <button type="button" class="chip" id="modeMonths" aria-pressed="false">개월수로 입력</button>
+        </div>
+
+        <div id="dateBox">
+          <div class="field">
+            <label for="startDate">입주일 (관리비를 내기 시작한 날)</label>
+            <input id="startDate" type="date">
+          </div>
+          <div class="field">
+            <label for="endDate">퇴거일 (마지막으로 관리비를 낸 날)</label>
+            <input id="endDate" type="date">
+          </div>
+          <p class="echo" id="periodEcho" aria-live="polite"></p>
+          <div class="tierchips" style="margin-top:8px;">
+            <button type="button" class="chip" id="proRate" aria-pressed="false" style="width:100%;">월 중간에 들고났다면 일할로 계산</button>
+          </div>
+        </div>
+
+        <div id="monthBox" hidden>
+          <div class="field">
+            <label for="months">거주 개월 수</label>
+            <input id="months" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 24">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t2res">
+      <h2 id="t2res"><span class="num" aria-hidden="true">2</span>돌려받을 금액</h2>
+      <p class="lead">관리사무소에서 확인서를 받으면 이 금액이 그대로 적혀 나옵니다.</p>
+
+      <div class="result" aria-live="polite">
+        <p class="rlabel">대신 낸 장기수선충당금</p>
+        <p class="rmoney" id="rRefund">0원</p>
+        <p class="rgloss" id="rRefundGloss"></p>
+        <p class="rsub" id="rRefundSub">월 충당금과 기간을 넣으면 계산됩니다.</p>
+        <div class="divider"></div>
+        <div class="kv"><span class="k">월 충당금</span><span class="v" id="rMon">-</span></div>
+        <div class="kv"><span class="k">거주 기간</span><span class="v" id="rMonths">-</span></div>
+        <div class="kv"><span class="k">계산 방식</span><span class="v" id="rWay">-</span></div>
+        <div class="kv"><span class="k">청구 기한 (10년)</span><span class="v" id="rLimit">-</span></div>
+        <div class="range" id="rCalcLine">월 충당금 × 거주 개월 수 = 돌려받을 금액</div>
+        <div class="warnline" id="rWarn2" hidden></div>
+      </div>
+
+      <div class="sharebar" style="margin-top:20px;">
+        <button type="button" class="btn share" id="shareRepair">📤 내 계산 결과 가족·지인에게 공유 복사</button>
+        <p class="sharehint">가족·지인에게 보낼 요약 문구를 복사합니다. 맨 아래에 이사 정산 상품 링크가 함께 붙습니다. 관리사무소·집주인에게 보내는 공식 문자에는 링크가 들어가지 않습니다.</p>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3 style="margin-top:0">🧭 이사 당일 정산도 한 번에</h3>
+        <p class="hint" style="margin-top:10px">돌려받을 충당금을 확인하셨다면, 이사 당일 계량기 숫자와 관리비·공과금 정산도 미리 준비해 두세요. 이사일만 넣으면 일할계산이 끝나는 정산 웹앱과 A4 10쪽 체크리스트입니다.</p>
+        <p class="hint">참고용 생활 도구이며, 법적 청구를 대행하지는 않습니다. 관리사무소·집주인에게 보내는 문자에는 이 링크를 넣지 마세요.</p>
+        <a class="btn navy" href="https://litt.ly/lifenavigator/sale/Ul3Dc2F" target="_blank" rel="noopener noreferrer" style="margin-top:14px;text-decoration:none;line-height:1.35;text-align:center">이사 공과금·장충금 1초 일할계산기<br>(4,900원) 보러 가기</a>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t2letter">
+      <h2 id="t2letter"><span class="num" aria-hidden="true">3</span>보낼 문자 두 통</h2>
+      <p class="lead">순서가 중요합니다. ① 관리사무소에서 확인서를 먼저 받고 ② 그 확인서를 집주인에게 보냅니다.</p>
+
+      <h3>① 관리사무소에 확인서 요청</h3>
+      <div class="script" id="letterOffice" style="margin-top:10px;">기간을 넣으면 문자가 완성됩니다.</div>
+      <button type="button" class="btn ghost" id="copyOffice" style="margin-top:12px;">관리사무소 문자 복사</button>
+
+      <h3>② 집주인에게 반환 요청</h3>
+      <div class="script" id="letterOwner" style="margin-top:10px;">기간을 넣으면 문자가 완성됩니다.</div>
+      <button type="button" class="btn navy" id="copyOwner" style="margin-top:12px;">집주인 문자 복사</button>
+    </section>
+
+    <section class="card" aria-labelledby="t2check">
+      <h2 id="t2check"><span class="num" aria-hidden="true">4</span>받기 전에 확인할 것</h2>
+      <ul class="checklist">
+        <li><b>계약서에 특약이 있는지</b> 보세요. "장기수선충당금은 임차인이 부담한다"는 문구가 있으면 다툼이 생길 수 있습니다. 다만 그런 특약도 항상 유효한 것은 아니어서, 금액이 크면 전문가 확인을 권합니다.</li>
+        <li><b>아파트·연립·다세대</b>는 이 법이 그대로 적용됩니다. <b>상가·오피스텔</b>은 적용이 달라서 관리규약과 계약서를 먼저 봐야 합니다.</li>
+        <li><b>납부확인서는 전체 관리비가 아니라 장기수선충당금이 따로 표시된 것</b>을 받으세요. 그래야 반환 범위가 분명해집니다.</li>
+        <li>거주 중 <b>집주인이 바뀌었다면</b> 지금 소유자에게 청구하는 것이 원칙입니다. 매매 시점과 기간을 함께 정리해 두세요.</li>
+        <li>집주인이 <b>미납 관리비와 상계</b>하겠다고 하면, 항목별로 근거를 나눠 확인하세요. 근거 없는 공제는 보증금 반환 청구에서 다툴 수 있습니다.</li>
+        <li><b>청구 기한</b>은 일반 채권과 같이 10년으로 보는 것이 일반적입니다. 다만 일부 견해가 달라 늦어질수록 증거를 구하기 어려우니 이사 직후에 요청하는 편이 좋습니다.</li>
+      </ul>
+
+      <h3>관리사무소가 안 해 줄 때</h3>
+      <ol class="steps">
+        <li>관리사무소 방문 → <b>장기수선충당금 납부확인서</b> 요구 (법상 지체 없이 발급 의무)</li>
+        <li>거절당하면 단지 <b>입주자대표회의</b> 또는 지자체 <b>공동주택 관리 담당 부서</b>에 문의</li>
+        <li>그래도 안 되면 <b>중앙공동주택관리지원센터</b> 상담, 금액이 크면 법률 상담</li>
+      </ol>
+    </section>
+
+  </div>
+
+  <!-- ============================ 공통 ============================ -->
+  <div class="disclaimer">
+    <b>꼭 읽어 주세요</b><br>
+    본 툴은 법령 기준에 따른 시뮬레이션 참고용이며, 개별 분쟁 시 대한법률구조공단(132) 등 전문가 확인이 필요합니다.
+    <p style="margin:10px 0 0;font-size:18px;">
+      실제 금액은 관리규약, 계약서 특약, 지역 조례, 고지서에 찍힌 금액에 따라 달라질 수 있습니다.
+      입력한 정보는 어디에도 저장되거나 전송되지 않고, 이 화면을 닫으면 사라집니다.
+    </p>
+  </div>
+
+  <p class="src" style="margin-top:16px;">
+    <b>근거 법령</b> (2026년 11월 20일 확인)<br>
+    · 주택임대차보호법 제6조의3(계약갱신 요구), 제7조(차임 등의 증감청구권), 제7조의2(월차임 전환 시 산정률), 제10조의2(초과 차임 등의 반환청구),
+    같은 법 시행령 제9조 — <a href="https://www.law.go.kr/LSW/lsInfoR.do?efYd=20260102&amp;lsiSeq=276291" target="_blank" rel="noopener">국가법령정보센터</a><br>
+    · 공동주택관리법 제30조(장기수선충당금의 적립), 같은 법 시행령 제31조 제8항·제9항 — <a href="https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032312857" target="_blank" rel="noopener">조문 원문</a><br>
+    · 전환율 산정 기준금리: 한국은행 기준금리 연 3.00%(2026. 8. 27. 결정, 10. 22. 동결)
+  </p>
+
+  <footer>
+    전월세 5% 상한 · 장기수선충당금 큰글씨 정산기<br>
+    이 화면은 인터넷 없이도 열립니다.
+    <p class="footlink">가족·지인에게 보낼 상품 링크: <a href="https://litt.ly/lifenavigator/sale/Ul3Dc2F" target="_blank" rel="noopener noreferrer">이사 공과금·장충금 1초 일할계산기</a></p>
+    <p style="margin:12px 0 0;font-size:18px;font-weight:800;color:var(--navy);">※ 참고용 계산이며 최종 기준·수급 여부는 해당 공식 기관 안내 및 계약서 확인이 필요합니다.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script id="core">
+/* ============================================================
+   계산 핵심부 (화면과 분리 · 단위 테스트 대상)
+   근거: 주택임대차보호법 제7조·제7조의2·시행령 제9조,
+        공동주택관리법 제30조·시행령 제31조
+   ============================================================ */
+
+/* 전월세 전환율 상한 = min(연 10%, 기준금리 + 연 2%) */
+function conversionRate(baseRate) {
+  var b = Number(baseRate);
+  if (!isFinite(b) || b < 0) b = 0;
+  var r = b + 2;
+  return Math.min(10, r);
+}
+
+function numberOrZero(v) {
+  var n = Number(v);
+  if (!isFinite(n) || n < 0) return 0;
+  return n;
+}
+
+/* 환산보증금 = 보증금 + (월세 × 12 ÷ 전환율) */
+function hwansanDeposit(deposit, monthlyRent, ratePct) {
+  var dep = numberOrZero(deposit);
+  var rent = numberOrZero(monthlyRent);
+  var r = Number(ratePct) / 100;
+  if (!isFinite(r) || r <= 0) return dep;
+  return dep + (rent * 12) / r;
+}
+
+/* 5% 상한 계산 묶음 */
+function calcRentCap(deposit, monthlyRent, ratePct, capPct) {
+  var cap = (typeof capPct === "number" && capPct > 0) ? capPct : 5;
+  var dep = numberOrZero(deposit);
+  var rent = numberOrZero(monthlyRent);
+  var rate = Number(ratePct);
+  if (!isFinite(rate) || rate <= 0) rate = 5;
+
+  var hv = hwansanDeposit(dep, rent, rate);
+  var budget = hv * cap / 100;             /* 환산 기준 증액 폭 */
+  var hvLimit = hv + budget;               /* 올릴 수 있는 환산보증금 */
+
+  var depMax5 = dep * (1 + cap / 100);     /* 보증금만 올릴 때(법문 5%) */
+  var rentMax5 = rent * (1 + cap / 100);   /* 월세만 올릴 때(법문 5%) */
+
+  /* 5% 폭을 전부 월세로 몰아줄 때의 월세 */
+  var rentMaxAll = rent + budget * rate / 100 / 12;
+  /* 5% 폭을 전부 보증금으로 몰아줄 때의 보증금(법문상 5%가 상한) */
+  var depMaxAll = Math.min(depMax5, dep + budget);
+
+  return {
+    cap: cap,
+    rate: rate,
+    deposit: dep,
+    rent: rent,
+    hv: hv,
+    budget: budget,
+    hvLimit: hvLimit,
+    depositMax: depMax5,
+    rentMax: rentMax5,
+    rentMaxAll: rentMaxAll,
+    depositMaxAll: depMaxAll
+  };
+}
+
+/* 보증금을 newDeposit 으로 바꿀 때 받을 수 있는 월세 상한 */
+function calcConvertedRent(deposit, monthlyRent, newDeposit, ratePct, capPct) {
+  var cap = (typeof capPct === "number" && capPct > 0) ? capPct : 5;
+  var dep = numberOrZero(deposit);
+  var rent = numberOrZero(monthlyRent);
+  var nd = numberOrZero(newDeposit);
+  var rate = Number(ratePct);
+  if (!isFinite(rate) || rate <= 0) rate = 5;
+
+  var hv = hwansanDeposit(dep, rent, rate);
+  var hvLimit = hv * (1 + cap / 100);
+  var convertAmount = Math.max(0, dep - nd);           /* 월세로 돌리는 보증금 */
+  var convertRentCap = convertAmount * rate / 100 / 12; /* 전환분의 법정 월세 상한 */
+  var rentMax = Math.max(0, (hvLimit - nd) * rate / 100 / 12);
+  var increaseRent = Math.max(0, rentMax - convertRentCap);
+
+  return {
+    hv: hv,
+    hvLimit: hvLimit,
+    convertAmount: convertAmount,
+    convertRentCap: convertRentCap,
+    rentMax: rentMax,
+    increaseRent: increaseRent,
+    overLimit: nd > hvLimit
+  };
+}
+
+/* 제시안이 5% 안인지 판정 */
+function judgeProposal(deposit, monthlyRent, askDeposit, askRent, ratePct, capPct) {
+  var cap = (typeof capPct === "number" && capPct > 0) ? capPct : 5;
+  var base = calcRentCap(deposit, monthlyRent, ratePct, cap);
+  var hvAsk = hwansanDeposit(askDeposit, askRent, base.rate);
+  var over = hvAsk - base.hvLimit;
+  var ratio = base.hv > 0 ? ((hvAsk - base.hv) / base.hv * 100) : 0;
+  return {
+    hvAsk: hvAsk,
+    hvLimit: base.hvLimit,
+    over: over,
+    overAmount: Math.max(0, over),
+    pct: ratio,
+    ok: over <= 0.5,
+    base: base
+  };
+}
+
+/* ---------- 날짜 ---------- */
+function parseYMD(s) {
+  if (!s) return null;
+  var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  var y = parseInt(m[1], 10), mo = parseInt(m[2], 10), d = parseInt(m[3], 10);
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  return { y: y, m: mo, d: d };
+}
+function daysInMonth(y, m) {
+  return new Date(y, m, 0).getDate();
+}
+/* 고지서 기준 개월 수 (입주한 달 ~ 퇴거한 달, 양끝 포함) */
+function billingMonths(startStr, endStr) {
+  var a = parseYMD(startStr), b = parseYMD(endStr);
+  if (!a || !b) return 0;
+  var n = (b.y - a.y) * 12 + (b.m - a.m) + 1;
+  if (n < 0) return 0;
+  return n;
+}
+/* 일할 포함 개월 수 (만 개월 + 남은 날짜 비율) */
+function exactMonths(startStr, endStr) {
+  var a = parseYMD(startStr), b = parseYMD(endStr);
+  if (!a || !b) return 0;
+  var months = (b.y - a.y) * 12 + (b.m - a.m);
+  var anchorDay = a.d;
+  if (b.d < anchorDay) months -= 1;
+  if (months < 0) return 0;
+  /* 남은 일수 */
+  var ay = a.y, am = a.m + months;
+  while (am > 12) { am -= 12; ay += 1; }
+  var anchor = new Date(ay, am - 1, Math.min(anchorDay, daysInMonth(ay, am)));
+  var end = new Date(b.y, b.m - 1, b.d);
+  var rest = Math.round((end - anchor) / 86400000);
+  if (rest < 0) rest = 0;
+  var denom = daysInMonth(ay, am);
+  var frac = denom > 0 ? rest / denom : 0;
+  if (frac > 1) frac = 1;
+  return months + frac;
+}
+function addYearsYMD(s, years) {
+  var a = parseYMD(s);
+  if (!a) return null;
+  var y = a.y + years;
+  var d = Math.min(a.d, daysInMonth(y, a.m));
+  return { y: y, m: a.m, d: d };
+}
+/* 관리비 장충금 환급액 */
+function calcRepairFund(monthly, months) {
+  var m = numberOrZero(monthly);
+  var n = numberOrZero(months);
+  return {
+    monthly: m,
+    months: n,
+    total: Math.round(m * n)
+  };
+}
+
+/* ---------- 표기 ---------- */
+function commaText(n) {
+  var v = Math.round(Number(n) || 0);
+  return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+function wonText(n) { return commaText(n) + "원"; }
+function manText(n) {
+  var v = Number(n) || 0;
+  if (v === 0) return "0원";
+  if (v % 10000 === 0) return commaText(v / 10000) + "만원";
+  if (v >= 100000000) {
+    var eok = Math.floor(v / 100000000);
+    var rest = Math.round((v % 100000000) / 10000);
+    if (rest === 0) return commaText(eok) + "억원";
+    return commaText(eok) + "억 " + commaText(rest) + "만원";
+  }
+  return wonText(v);
+}
+/* 1억/만원 혼합 표기 (금액이 큰 보증금용) */
+function moneyText(n) {
+  var v = Math.round(Number(n) || 0);
+  if (v >= 100000000) {
+    var eok = Math.floor(v / 100000000);
+    var man = Math.round((v % 100000000) / 10000);
+    if (man >= 10000) { eok += 1; man -= 10000; }
+    if (man === 0) return commaText(eok) + "억원";
+    if (man % 10000 === 0) return commaText(eok) + "억 " + commaText(man / 10000) + "만원";
+    return commaText(eok) + "억 " + commaText(man) + "만원";
+  }
+  if (v >= 10000 && v % 10000 === 0) return commaText(v / 10000) + "만원";
+  return wonText(v);
+}
+function pctText(v) {
+  var n = Math.round((Number(v) || 0) * 100) / 100;
+  return String(n).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "") + "%";
+}
+function dateKo(s) {
+  var a = parseYMD(s);
+  if (!a) return "";
+  return a.y + ". " + a.m + ". " + a.d + ".";
+}
+function dateKo2(obj) {
+  if (!obj) return "";
+  return obj.y + ". " + obj.m + ". " + obj.d + ".";
+}
+
+/* ---------- 큰 금액 한글 단위 병기 ('0' 개수 헷갈림 방지) ---------- */
+function wonFull(n) { return commaText(n) + "원"; }
+
+/* 16000000 -> "1,600만 원" · 210000000 -> "2억 1,000만 원" · 479167 -> "47만 9,167원" */
+function korMoney(n) {
+  var v = Math.round(Number(n) || 0);
+  if (v < 0) v = 0;
+  if (v === 0) return "0원";
+  var jo = Math.floor(v / 1000000000000);
+  var eok = Math.floor((v % 1000000000000) / 100000000);
+  var man = Math.floor((v % 100000000) / 10000);
+  var won = v % 10000;
+  var parts = [];
+  if (jo > 0) parts.push(commaText(jo) + "조");
+  if (eok > 0) parts.push(commaText(eok) + "억");
+  if (man > 0) parts.push(commaText(man) + "만");
+  if (won > 0) parts.push(commaText(won) + "원");
+  else if (parts.length) parts.push("원");
+  return parts.join(" ");
+}
+
+/* { num: "16,000,000원", kor: "(1,600만 원)" } — 만원 미만은 kor 비움 */
+function moneyWithKor(n) {
+  var v = Math.round(Number(n) || 0);
+  var num = wonFull(v);
+  var kor = korMoney(v);
+  return { num: num, kor: kor === num ? "" : "(" + kor + ")" };
+}
+
+/* 줄글용: "16,000,000원 (1,600만 원)" */
+function moneyLine(n) {
+  var p = moneyWithKor(n);
+  return p.kor ? p.num + " " + p.kor : p.num;
+}
+
+/* 화면용: 숫자 크게 + 한글 단위 작게 */
+function moneySpan(n) {
+  var p = moneyWithKor(n);
+  return '<span class="mnum">' + p.num + "</span>"
+    + (p.kor ? ' <span class="mkor">' + p.kor + "</span>" : "");
+}
+
+/* ---------- 가족·지인 공유 문구 (리틀리 링크 포함) ---------- */
+var SHARE_LINK = "https://litt.ly/lifenavigator/sale/Ul3Dc2F";
+var SHARE_FOOT = "👉 이사 공과금·충당금 일할계산 정산기: " + SHARE_LINK;
+function shareFootText() { return SHARE_FOOT; }
+
+/* 탭1 공유 문구 — 공식 문자와 달리 맨 아래에 링크가 붙는다 */
+function shareRentText(o) {
+  var dep = numberOrZero(o.dep);
+  var rent = numberOrZero(o.rent);
+  var rate = Number(o.rate);
+  if (!isFinite(rate) || rate <= 0) rate = 5;
+  var c = calcRentCap(dep, rent, rate, 5);
+  var lines = [];
+  lines.push("[전월세 5% 상한 계산 결과]");
+  lines.push("");
+  lines.push("· 지금 조건: 보증금 " + moneyLine(dep) + (rent > 0 ? " / 월세 " + moneyLine(rent) : " (전세)"));
+  lines.push("· 지금 환산보증금: " + moneyLine(c.hv));
+  lines.push("· 이번 갱신에서 올릴 수 있는 최대 폭: " + moneyLine(c.budget));
+  lines.push("· 보증금만 5%: " + moneyLine(c.depositMax) + "까지");
+  if (rent > 0) {
+    lines.push("· 월세만 5%: " + moneyLine(c.rentMax) + "까지");
+    lines.push("· 둘 다 5%씩: 보증금 " + moneyLine(c.depositMax) + " · 월세 " + moneyLine(c.rentMax));
+  }
+  if (o.hasAsk) {
+    var j = judgeProposal(dep, rent, numberOrZero(o.askDep), numberOrZero(o.askRent), rate, 5);
+    lines.push("· 집주인 제시안: " + (j.ok
+      ? "한도 안 (환산 " + pctText(j.pct) + " 인상)"
+      : "한도 초과 (환산 " + pctText(j.pct) + " 인상, " + moneyLine(j.overAmount) + " 초과)"));
+  }
+  lines.push("");
+  lines.push("적용 전환율 연 " + pctText(rate) + " 기준입니다. 법령 기준 시뮬레이션이라 개별 분쟁은 전문가 확인이 필요합니다.");
+  lines.push("");
+  lines.push(SHARE_FOOT);
+  return lines.join("\n");
+}
+
+/* 탭2 공유 문구 */
+function shareRepairText(o) {
+  var monthly = numberOrZero(o.monthly);
+  var total = numberOrZero(o.total);
+  var lines = [];
+  lines.push("[장기수선충당금 환급 계산 결과]");
+  lines.push("");
+  lines.push("· 월 장기수선충당금: " + moneyLine(monthly));
+  lines.push("· 거주 기간: " + (o.period || "-"));
+  lines.push("· 돌려받을 금액: " + moneyLine(total));
+  if (o.limit) lines.push("· 청구 가능 기한(10년): " + o.limit + "까지");
+  lines.push("");
+  lines.push("관리사무소에서 장기수선충당금 납부확인서를 먼저 받고, 그 확인서로 집주인에게 반환을 요청하면 됩니다.");
+  lines.push("");
+  lines.push(SHARE_FOOT);
+  return lines.join("\n");
+}
+</script>
+
+<script id="ui">
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function all(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+  function digits(str) { return String(str == null ? "" : str).replace(/[^0-9]/g, ""); }
+  function numFrom(el) { var d = digits(el.value); return d ? parseInt(d, 10) : 0; }
+
+  var toastEl = $("toast");
+  var toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.className = "toast show";
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.className = "toast"; }, 2600);
+  }
+
+  function copyText(text, okMsg) {
+    function done(ok) {
+      toast(ok ? (okMsg || "복사했어요. 붙여넣기만 하세요.") : "복사가 안 되면 글자를 길게 눌러 직접 복사해 주세요.");
+    }
+    function legacy() {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      ta.style.fontSize = "18px";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      done(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { legacy(); });
+    } else {
+      legacy();
+    }
+  }
+
+  /* ================= 탭 ================= */
+  function showTab(no) {
+    var t1 = no === "1";
+    $("tab1").hidden = !t1;
+    $("tab2").hidden = t1;
+    $("tab1Btn").setAttribute("aria-selected", t1 ? "true" : "false");
+    $("tab2Btn").setAttribute("aria-selected", t1 ? "false" : "true");
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  $("tab1Btn").addEventListener("click", function () { showTab("1"); });
+  $("tab2Btn").addEventListener("click", function () { showTab("2"); });
+
+  /* ================= 공통 입력 도우미 ================= */
+  function bindComma(input) {
+    input.addEventListener("input", function () {
+      var d = digits(input.value);
+      if (!d) { input.value = ""; return; }
+      input.value = commaText(parseInt(d, 10));
+      input.dispatchEvent(new Event("change"));
+    });
+  }
+
+  /* ============================================================
+     TAB 1
+     ============================================================ */
+  var S1 = { depUnit: "man" };
+
+  var depEl = $("deposit"), rentEl = $("rent"), baseEl = $("baseRate");
+  var newDepEl = $("newDep"), askDepEl = $("askDep"), askRentEl = $("askRent");
+
+  bindComma(depEl); bindComma(rentEl); bindComma(newDepEl); bindComma(askDepEl); bindComma(askRentEl);
+
+  function depValue() {
+    var n = numFrom(depEl);
+    return S1.depUnit === "man" ? n * 10000 : n;
+  }
+  function rentValue() { return numFrom(rentEl); }
+  function newDepValue() { return numFrom(newDepEl) * 10000; }
+  function rateValue() {
+    var b = parseFloat(baseEl.value);
+    if (!isFinite(b) || b < 0) b = 3;
+    return conversionRate(b);
+  }
+
+  function setUnit(unit) {
+    var cur = depValue();
+    S1.depUnit = unit;
+    $("depMan").setAttribute("aria-pressed", unit === "man" ? "true" : "false");
+    $("depWon").setAttribute("aria-pressed", unit === "won" ? "true" : "false");
+    if (cur > 0) {
+      depEl.value = unit === "man" ? commaText(cur / 10000) : commaText(cur);
+    }
+    render1();
+  }
+  $("depMan").addEventListener("click", function () { setUnit("man"); });
+  $("depWon").addEventListener("click", function () { setUnit("won"); });
+
+  all("[data-dep]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var man = parseInt(b.getAttribute("data-dep"), 10);
+      S1.depUnit = "man";
+      $("depMan").setAttribute("aria-pressed", "true");
+      $("depWon").setAttribute("aria-pressed", "false");
+      depEl.value = commaText(man);
+      render1();
+    });
+  });
+  $("depClear").addEventListener("click", function () { depEl.value = ""; render1(); });
+
+  all("[data-rent]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      rentEl.value = commaText(parseInt(b.getAttribute("data-rent"), 10));
+      render1();
+    });
+  });
+
+  depEl.addEventListener("input", render1);
+  rentEl.addEventListener("input", render1);
+  baseEl.addEventListener("input", render1);
+  newDepEl.addEventListener("input", render1);
+  askDepEl.addEventListener("input", render1);
+  askRentEl.addEventListener("input", render1);
+
+  $("newDepKeep").addEventListener("click", function () {
+    var d = depValue();
+    newDepEl.value = d > 0 ? commaText(Math.round(d / 10000)) : "";
+    render1();
+  });
+
+  function render1() {
+    var dep = depValue();
+    var rent = rentValue();
+    var rate = rateValue();
+    var c = calcRentCap(dep, rent, rate, 5);
+
+    /* 입력 되비추기 */
+    $("depEcho").textContent = dep > 0 ? "= " + moneyLine(dep) : "";
+    $("rentEcho").textContent = rentEl.value === "" ? "" : (rent === 0 ? "전세로 계산합니다." : "= " + moneyLine(rent) + " / 월");
+    $("rateEcho").textContent = "적용 전환율: 연 " + (Math.round(rate * 100) / 100).toFixed(2) + "% (연 10%와 비교해 낮은 쪽)";
+
+    /* 결과 카드 */
+    var moneyEl = $("rCapMoney"), glossEl = $("rCapGloss"), subEl = $("rCapSub"), warnEl = $("rWarn");
+    warnEl.hidden = true;
+
+    if (dep <= 0 && rent <= 0) {
+      moneyEl.textContent = "0원";
+      moneyEl.className = "rmoney zero";
+      glossEl.textContent = "";
+      subEl.textContent = "보증금을 넣으면 바로 계산됩니다.";
+      $("rDep").innerHTML = "-";
+      $("rRent").innerHTML = "-";
+      $("rHv").innerHTML = "-";
+      $("rRate").textContent = "연 " + rate + "%";
+      $("rEach").textContent = "보증금과 월세 각각 5%까지가 가장 안전합니다.\n환산보증금 = 보증금 + 월세 × 12 ÷ 전환율";
+    } else {
+      moneyEl.textContent = wonFull(c.budget);
+      moneyEl.className = "rmoney";
+      glossEl.textContent = moneyWithKor(c.budget).kor;
+      subEl.innerHTML = rent > 0
+        ? "보증금 " + moneySpan(c.depositMax) + "까지\n월세 " + moneySpan(c.rentMax) + "까지 (각각 5%)"
+        : "보증금 " + moneySpan(c.depositMax) + "까지";
+      $("rDep").innerHTML = moneySpan(dep);
+      $("rRent").innerHTML = rent > 0 ? moneySpan(rent) : "전세 (0원)";
+      $("rHv").innerHTML = moneySpan(c.hv);
+      $("rRate").textContent = "연 " + (Math.round(rate * 100) / 100) + "%";
+      $("rEach").innerHTML = "환산보증금 = 보증금 + 월세 × 12 ÷ 전환율"
+        + "\n· 지금 환산보증금 " + moneySpan(c.hv) + "의 5%가 " + moneySpan(c.budget) + "입니다.";
+      if (dep > 0 && dep < 1000000) {
+        warnEl.hidden = false;
+        warnEl.textContent = "보증금이 100만원보다 작습니다. 단위(만원/원)를 한 번만 확인해 주세요.";
+      }
+    }
+
+    /* 나누는 방법 카드 */
+    var grid = $("optGrid");
+    var html = "";
+    if (dep <= 0 && rent <= 0) {
+      html = '<div class="opt"><p class="opt-t">보증금을 먼저 넣어 주세요</p><p class="opt-n">금액을 넣으면 세 가지 방법을 나란히 보여 드립니다.</p></div>';
+      $("optNote").textContent = "";
+    } else if (rent <= 0) {
+      html += optCard("① 보증금만 5% 올리기", ["보증금 " + moneySpan(c.depositMax), "월세 없음"], "전세는 이 한 가지뿐입니다. 5%가 곧 " + moneyLine(c.budget) + "입니다.", "safe");
+      html += optCard("② 일부를 월세로 돌리기", ["아래 3번 칸에서 계산"], "보증금을 낮추는 대신 매달 월세를 받는 방식입니다. 세입자 동의가 필요합니다.", "");
+      $("optNote").textContent = "전세 계약은 보증금만 올릴 수 있어 5% 한도가 곧 " + moneyLine(c.budget) + "입니다.";
+    } else {
+      html += optCard("① 보증금만 5% 올리기", ["보증금 " + moneySpan(c.depositMax), "월세 " + moneySpan(rent) + " 그대로"], "매달 나가는 돈은 그대로입니다. 목돈이 필요한 집주인에게 맞습니다.", "safe");
+      html += optCard("② 월세만 5% 올리기", ["보증금 " + moneySpan(dep) + " 그대로", "월세 " + moneySpan(c.rentMax)], "목돈 부담이 없습니다. 대신 매달 " + moneyLine(c.rentMax - rent) + "이 늘어납니다.", "safe");
+      html += optCard("③ 둘 다 5%씩 올리기", ["보증금 " + moneySpan(c.depositMax), "월세 " + moneySpan(c.rentMax)], "두 금액을 각각 5% 올리는 방식입니다. 가장 다툼이 적습니다.", "safe");
+      var risePct = rent > 0 ? (c.rentMaxAll - rent) / rent * 100 : 0;
+      html += optCard("④ 한쪽에 몰아주기", ["보증금 " + moneySpan(dep) + " 그대로", "월세 " + moneySpan(c.rentMaxAll)], "환산 기준으로는 5% 안이지만 월세만 " + pctText(risePct) + " 오르게 되어 다툼이 생길 수 있습니다.", "risk");
+      $("optNote").textContent = "①~③은 모두 환산 기준으로 정확히 5%입니다. 어느 쪽이 유리한지는 세입자의 목돈 사정과 매달 부담으로 정하세요.";
+    }
+    grid.innerHTML = html;
+
+    /* 전환 계산 */
+    renderConvert(c, rate);
+
+    /* 제시안 판정 */
+    renderVerdict(dep, rent, rate);
+
+    /* 문자 */
+    $("letterBox").textContent = buildLetter(dep, rent, rate, c);
+  }
+
+  function optCard(title, lines, note, tag) {
+    var badge = tag === "safe" ? '<span class="tag safe">안전</span>'
+      : (tag === "risk" ? '<span class="tag risk">주의</span>' : "");
+    var body = "";
+    for (var i = 0; i < lines.length; i++) {
+      body += '<p class="opt-v' + (i > 0 ? " sub" : "") + '">' + lines[i] + '</p>';
+    }
+    return '<div class="opt"><p class="opt-t">' + title + badge + '</p>' + body
+      + '<p class="opt-n">' + note + '</p></div>';
+  }
+
+  function renderConvert(c, rate) {
+    var dep = c.deposit;
+    var nd = newDepEl.value === "" ? 0 : newDepValue();
+    var el = $("cRentMax"), gloss = $("cGloss"), sub = $("cSub");
+
+    if (newDepEl.value === "") {
+      el.textContent = "-";
+      el.className = "rmoney zero";
+      gloss.textContent = "";
+      sub.textContent = "바꾼 뒤 보증금을 넣으면 계산됩니다.";
+      $("cConv").innerHTML = "-";
+      $("cConvRent").innerHTML = "-";
+      $("cInc").innerHTML = "-";
+      $("newDepEcho").textContent = "";
+      return;
+    }
+
+    var r = calcConvertedRent(dep, c.rent, nd, rate, 5);
+    $("newDepEcho").innerHTML = "= " + moneySpan(nd) + (r.convertAmount > 0 ? " · 보증금 " + moneySpan(r.convertAmount) + "을 월세로 전환" : "");
+
+    if (r.overLimit) {
+      el.textContent = "한도 초과";
+      el.className = "rmoney zero";
+      gloss.textContent = "";
+      sub.textContent = "이 보증금만으로 이미 5% 한도를 넘습니다. 보증금을 더 낮춰야 월세를 받을 수 있습니다.";
+    } else if (r.rentMax <= 0) {
+      el.textContent = "0원";
+      el.className = "rmoney zero";
+      gloss.textContent = "";
+      sub.textContent = "월세를 받을 여유가 없습니다. 보증금을 낮추지 않는 편이 낫습니다.";
+    } else {
+      el.textContent = wonFull(r.rentMax);
+      el.className = "rmoney";
+      gloss.textContent = moneyWithKor(r.rentMax).kor;
+      sub.innerHTML = r.convertAmount > 0
+        ? "보증금 " + moneySpan(nd) + "으로 낮추고 매달 이만큼까지 받을 수 있습니다."
+        : "보증금을 올리지 않고 월세만 받는 경우입니다.";
+    }
+
+    $("cConv").innerHTML = r.convertAmount > 0 ? moneySpan(r.convertAmount) : "없음";
+    $("cConvRent").innerHTML = r.convertAmount > 0 ? moneySpan(r.convertRentCap) : "-";
+    $("cInc").innerHTML = moneySpan(r.increaseRent);
+  }
+
+  function renderVerdict(dep, rent, rate) {
+    var hasAsk = askDepEl.value !== "" || askRentEl.value !== "";
+    var bigEl = $("vVerdict"), sub = $("vSub"), gloss = $("vGloss");
+    if (!hasAsk || dep <= 0) {
+      bigEl.textContent = "-";
+      bigEl.className = "rmoney zero";
+      gloss.textContent = "";
+      sub.textContent = "두 금액 중 하나만 넣어도 확인할 수 있습니다.";
+      $("vHv").innerHTML = "-";
+      $("vLimit").innerHTML = "-";
+      $("vDetail").textContent = "5%를 넘은 금액은 반환을 청구할 수 있습니다(주택임대차보호법 제10조의2).";
+      return;
+    }
+
+    var askDep = askDepEl.value === "" ? dep : numFrom(askDepEl) * 10000;
+    var askRent = askRentEl.value === "" ? rent : numFrom(askRentEl);
+    var j = judgeProposal(dep, rent, askDep, askRent, rate, 5);
+
+    $("vHv").innerHTML = moneySpan(j.hvAsk);
+    $("vLimit").innerHTML = moneySpan(j.hvLimit);
+
+    if (j.ok) {
+      bigEl.textContent = "한도 안";
+      bigEl.className = "rmoney";
+      gloss.textContent = "";
+      sub.textContent = "올릴 수 있는 범위 안입니다. 환산 기준 " + pctText(j.pct) + " 인상입니다.";
+      $("vDetail").textContent = "받아들여도 법 위반이 아닙니다. 다만 1년 안에 또 올릴 수는 없습니다.";
+    } else {
+      bigEl.textContent = "한도 초과";
+      bigEl.className = "rmoney zero";
+      gloss.textContent = "";
+      sub.innerHTML = "환산 기준 " + pctText(j.pct) + " 인상 · 한도보다 " + moneySpan(j.overAmount) + " 많습니다.";
+      $("vDetail").textContent = "넘은 부분은 효력이 없고, 이미 냈다면 반환을 청구할 수 있습니다. 갱신요구권을 쓰면 5% 안으로 줄일 수 있습니다.";
+    }
+  }
+
+  function buildLetter(dep, rent, rate, c) {
+    if (dep <= 0) return "보증금과 월세를 넣으면 문자가 완성됩니다.";
+
+    var lines = [];
+    lines.push("안녕하세요, 집주인님. 세입자입니다.");
+    lines.push("계약 갱신을 앞두고 연락드립니다.");
+    lines.push("");
+    if (rent > 0) {
+      lines.push("현재 조건은 보증금 " + moneyText(dep) + " / 월세 " + wonText(rent) + "입니다.");
+    } else {
+      lines.push("현재 조건은 전세 보증금 " + moneyText(dep) + "입니다.");
+    }
+    lines.push("주택임대차보호법 제7조에 따라 계약을 이어가는 경우 임대료는 직전 금액의 5%를 넘지 않게 정할 수 있습니다.");
+    if (rent > 0) {
+      lines.push("제 조건에서는 보증금 " + moneyText(c.depositMax) + "까지, 또는 월세 " + wonText(c.rentMax) + "까지입니다. 두 금액을 함께 조정할 때는 환산해 합친 기준으로 5% 이내입니다.");
+    } else {
+      lines.push("제 조건에서는 보증금 " + moneyText(c.depositMax) + "까지입니다. 5% 폭은 " + moneyText(c.budget) + "입니다.");
+    }
+
+    var hasAsk = askDepEl.value !== "" || askRentEl.value !== "";
+    if (hasAsk) {
+      var askDep = askDepEl.value === "" ? dep : numFrom(askDepEl) * 10000;
+      var askRent = askRentEl.value === "" ? rent : numFrom(askRentEl);
+      var j = judgeProposal(dep, rent, askDep, askRent, rate, 5);
+      lines.push("");
+      if (j.ok) {
+        lines.push("말씀 주신 조건은 이 범위 안이라 그대로 진행해도 괜찮습니다.");
+      } else {
+        lines.push("말씀 주신 금액은 이 범위를 " + moneyText(j.overAmount) + " 넘습니다. 그 부분만 조정해 주시면 바로 진행하겠습니다.");
+      }
+    }
+
+    lines.push("");
+    lines.push("갱신요구권은 만기 6개월 전부터 2개월 전까지 행사할 수 있습니다. 일정은 편하실 때 알려 주세요.");
+    lines.push("좋은 방향으로 맞춰 가고 싶습니다. 감사합니다.");
+    return lines.join("\n");
+  }
+
+  $("copyLetter").addEventListener("click", function () { copyText($("letterBox").textContent); });
+
+  /* 가족·지인 공유 복사 (리틀리 링크 포함 · 공식 문자와 별개) */
+  $("shareRent").addEventListener("click", function () {
+    var dep = depValue(), rent = rentValue(), rate = rateValue();
+    if (dep <= 0 && rent <= 0) { toast("보증금을 먼저 넣어 주세요."); return; }
+    var hasAsk = askDepEl.value !== "" || askRentEl.value !== "";
+    var askDep = askDepEl.value === "" ? dep : numFrom(askDepEl) * 10000;
+    var askRent = askRentEl.value === "" ? rent : numFrom(askRentEl);
+    copyText(shareRentText({ dep: dep, rent: rent, rate: rate, askDep: askDep, askRent: askRent, hasAsk: hasAsk }),
+      "가족·지인에게 보낼 문구를 복사했어요. 맨 아래에 이사 정산 상품 링크가 들어갑니다.");
+  });
+
+  /* ============================================================
+     TAB 2
+     ============================================================ */
+  var S2 = { mode: "date", proRate: false };
+
+  var monEl = $("monthly"), startEl = $("startDate"), endEl = $("endDate"), monthsEl = $("months");
+  bindComma(monEl); bindComma(monthsEl);
+
+  (function initEndDate() {
+    var d = new Date();
+    var mm = String(d.getMonth() + 1); if (mm.length < 2) mm = "0" + mm;
+    var dd = String(d.getDate()); if (dd.length < 2) dd = "0" + dd;
+    endEl.value = d.getFullYear() + "-" + mm + "-" + dd;
+  })();
+
+  $("modeDate").addEventListener("click", function () {
+    S2.mode = "date";
+    $("modeDate").setAttribute("aria-pressed", "true");
+    $("modeMonths").setAttribute("aria-pressed", "false");
+    $("dateBox").hidden = false;
+    $("monthBox").hidden = true;
+    render2();
+  });
+  $("modeMonths").addEventListener("click", function () {
+    S2.mode = "months";
+    $("modeDate").setAttribute("aria-pressed", "false");
+    $("modeMonths").setAttribute("aria-pressed", "true");
+    $("dateBox").hidden = true;
+    $("monthBox").hidden = false;
+    render2();
+  });
+
+  $("proRate").addEventListener("click", function () {
+    S2.proRate = !S2.proRate;
+    $("proRate").setAttribute("aria-pressed", S2.proRate ? "true" : "false");
+    render2();
+  });
+
+  monEl.addEventListener("input", render2);
+  monthsEl.addEventListener("input", render2);
+  startEl.addEventListener("change", render2);
+  endEl.addEventListener("change", render2);
+  startEl.addEventListener("input", render2);
+  endEl.addEventListener("input", render2);
+
+  all("[data-mon]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      monEl.value = commaText(parseInt(b.getAttribute("data-mon"), 10));
+      render2();
+    });
+  });
+
+  $("calcFromRate").addEventListener("click", function () {
+    var area = parseFloat($("area").value.replace(/[^0-9.]/g, ""));
+    var unit = parseFloat($("unitRate").value.replace(/[^0-9.]/g, ""));
+    if (!isFinite(area) || !isFinite(unit) || area <= 0 || unit <= 0) {
+      toast("면적과 요율을 숫자로 넣어 주세요.");
+      return;
+    }
+    var v = Math.round(area * unit);
+    monEl.value = commaText(v);
+    toast("월 " + wonText(v) + "으로 채웠어요. 고지서와 꼭 비교해 보세요.");
+    render2();
+  });
+
+  function monthsValue() {
+    if (S2.mode === "months") {
+      var n = numFrom(monthsEl);
+      return { months: n, text: n + "개월", note: "직접 입력" };
+    }
+    var s = startEl.value, e = endEl.value;
+    if (!parseYMD(s) || !parseYMD(e)) return { months: 0, text: "-", note: "" };
+    var bill = billingMonths(s, e);
+    var exact = exactMonths(s, e);
+    if (S2.proRate) {
+      return { months: exact, text: (Math.round(exact * 10) / 10) + "개월 (일할)", note: "고지서 기준 " + bill + "개월" };
+    }
+    return { months: bill, text: bill + "개월", note: "일할로 보면 " + (Math.round(exact * 10) / 10) + "개월" };
+  }
+
+  function render2() {
+    var monthly = numFrom(monEl);
+    var mv = monthsValue();
+    var r = calcRepairFund(monthly, mv.months);
+
+    $("monEcho").textContent = monthly > 0 ? "= " + moneyLine(monthly) : "";
+
+    /* 기간 안내 */
+    var s = startEl.value, e = endEl.value;
+    if (S2.mode === "date" && parseYMD(s) && parseYMD(e)) {
+      if (billingMonths(s, e) <= 0) {
+        $("periodEcho").textContent = "퇴거일이 입주일보다 빠릅니다. 날짜를 확인해 주세요.";
+      } else {
+        $("periodEcho").textContent = "고지서로 낸 개월 수 " + billingMonths(s, e) + "개월 · 일할로는 "
+          + (Math.round(exactMonths(s, e) * 10) / 10) + "개월입니다.";
+      }
+    } else {
+      $("periodEcho").textContent = "";
+    }
+
+    var bigEl = $("rRefund"), glossEl = $("rRefundGloss"), sub = $("rRefundSub"), warnEl = $("rWarn2");
+    warnEl.hidden = true;
+
+    if (monthly <= 0 || r.months <= 0) {
+      bigEl.textContent = "0원";
+      bigEl.className = "rmoney zero";
+      glossEl.textContent = "";
+      sub.textContent = "월 충당금과 기간을 넣으면 계산됩니다.";
+      $("rMon").innerHTML = "-";
+      $("rMonths").textContent = "-";
+      $("rWay").textContent = "-";
+      $("rLimit").textContent = "-";
+      $("rCalcLine").textContent = "월 충당금 × 거주 개월 수 = 돌려받을 금액";
+    } else {
+      bigEl.textContent = wonFull(r.total);
+      bigEl.className = "rmoney";
+      glossEl.textContent = moneyWithKor(r.total).kor;
+      sub.innerHTML = "월 " + moneySpan(monthly) + " × " + (Math.round(r.months * 10) / 10) + "개월";
+      $("rMon").innerHTML = moneySpan(monthly);
+      $("rMonths").textContent = mv.text;
+      $("rWay").textContent = S2.mode === "months" ? "직접 입력" : (S2.proRate ? "일할 계산" : "고지서 개월수");
+      var lim = (S2.mode === "date" && parseYMD(e)) ? addYearsYMD(e, 10) : null;
+      $("rLimit").textContent = lim ? dateKo2(lim) + "까지" : "-";
+      $("rCalcLine").innerHTML = "월 " + moneySpan(monthly) + " × " + (Math.round(r.months * 10) / 10)
+        + "개월 = " + moneySpan(r.total) + (mv.note ? "\n(" + mv.note + ")" : "");
+
+      if (r.total >= 1000000) {
+        warnEl.hidden = false;
+        warnEl.textContent = "금액이 100만원을 넘습니다. 요율이 올랐던 단지라면 달마다 금액이 달랐을 수 있으니, 고지서 몇 달치를 대조해 평균으로 다시 넣어 보세요.";
+      }
+    }
+
+    /* 문자 두 통 */
+    var gap = (S2.mode === "date" && parseYMD(s) && parseYMD(e)) ? billingMonths(s, e) : 0;
+    $("letterOffice").textContent = buildOfficeLetter(monthly, mv, s, e);
+    $("letterOwner").textContent = buildOwnerLetter(monthly, r, mv, s, e, gap);
+  }
+
+  function periodPhrase(s, e) {
+    if (parseYMD(s) && parseYMD(e)) return dateKo(s) + " ~ " + dateKo(e);
+    return "○○년 ○○월 ○○일 ~ ○○년 ○○월 ○○일";
+  }
+
+  function buildOfficeLetter(monthly, mv, s, e) {
+    var lines = [];
+    lines.push("안녕하세요. ○○아파트 ○○동 ○○호에 살았던 세입자 ○○○입니다.");
+    lines.push("관리비에 포함해 낸 장기수선충당금 납부확인서를 발급받고 싶어 연락드립니다.");
+    lines.push("");
+    lines.push("· 거주 기간: " + periodPhrase(s, e));
+    if (monthly > 0) {
+      lines.push("· 월 장기수선충당금: " + wonText(monthly));
+      lines.push("· 합계(약 " + (Math.round(mv.months * 10) / 10) + "개월분): " + wonText(Math.round(monthly * mv.months)));
+    } else {
+      lines.push("· 월 장기수선충당금: (고지서 확인 부탁드립니다)");
+    }
+    lines.push("");
+    lines.push("전체 관리비가 아니라 장기수선충당금만 따로 표시된 확인서가 필요합니다.");
+    lines.push("공동주택관리법 시행령 제31조 제9항에 따라 요청드립니다.");
+    lines.push("방문 수령이나 이메일·문자로 받을 수 있는지도 알려 주시면 감사하겠습니다.");
+    return lines.join("\n");
+  }
+
+  function buildOwnerLetter(monthly, r, mv, s, e, gap) {
+    var lines = [];
+    lines.push("안녕하세요, 집주인님. 세입자입니다.");
+    lines.push(periodPhrase(s, e) + " 기간 동안 거주하고 퇴거합니다.");
+    lines.push("");
+    if (monthly > 0) {
+      lines.push("거주 기간에 관리비로 대신 낸 장기수선충당금은 월 " + wonText(monthly)
+        + " × 약 " + (Math.round(mv.months * 10) / 10) + "개월 = " + wonText(r.total) + "입니다.");
+    } else {
+      lines.push("거주 기간에 관리비로 대신 낸 장기수선충당금의 반환을 요청드립니다.");
+    }
+    lines.push("공동주택관리법 제30조와 같은 법 시행령 제31조 제8항에 따라 이 금액은 소유자가 부담하고, 제가 대신 낸 만큼은 돌려받을 수 있습니다.");
+    lines.push("");
+    lines.push("관리사무소에서 발급받은 납부확인서를 함께 보내드리니, 보증금 정산 때 반환해 주시면 감사하겠습니다.");
+    lines.push("확인서 확인 후 금액이 다르면 그 기준으로 다시 맞추겠습니다.");
+    return lines.join("\n");
+  }
+
+  $("copyOffice").addEventListener("click", function () { copyText($("letterOffice").textContent); });
+  $("copyOwner").addEventListener("click", function () { copyText($("letterOwner").textContent); });
+
+  $("shareRepair").addEventListener("click", function () {
+    var monthly = numFrom(monEl);
+    var mv = monthsValue();
+    var r = calcRepairFund(monthly, mv.months);
+    if (monthly <= 0 || r.months <= 0) { toast("월 충당금과 기간을 먼저 넣어 주세요."); return; }
+    var s = startEl.value, e = endEl.value;
+    var period = (Math.round(r.months * 10) / 10) + "개월";
+    if (S2.mode === "date" && parseYMD(s) && parseYMD(e)) period = dateKo(s) + " ~ " + dateKo(e) + " (" + period + ")";
+    var lim = (S2.mode === "date" && parseYMD(e)) ? dateKo2(addYearsYMD(e, 10)) : "";
+    copyText(shareRepairText({ monthly: monthly, total: r.total, period: period, limit: lim }),
+      "가족·지인에게 보낼 문구를 복사했어요. 맨 아래에 이사 정산 상품 링크가 들어갑니다.");
+  });
+
+  /* 시작 */
+  render1();
+  render2();
+})();
+</script>
+</body>
+</html>
