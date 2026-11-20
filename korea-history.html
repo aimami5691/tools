@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F2537">
+<title>옛 땅, 지금 어디? · 한국사 연표 30개 무료</title>
+<meta name="description" content="고조선부터 5·18까지 한국사 핵심 사건 30개를 눌러 펼치는 무료 연표. 황산벌이 지금 어느 동네인지, 귀주가 어디인지 바로 확인하고 오늘의 5문제 퀴즈로 복습합니다. 가입·설치 없이 휴대폰에서.">
+<meta property="og:title" content="옛 땅, 지금 어디? · 한국사 연표 30개">
+<meta property="og:description" content="황산벌은 논산, 귀주는 구성. 사건을 누르면 옛 지명이 오늘 주소로 바뀝니다. 오늘의 한국사 5문제도 무료.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    color-scheme:light;
+    --navy:#0F2537;
+    --navy2:#17384F;
+    --teal:#0D9488;
+    --teal-d:#0B7C72;
+    --teal-l:#E4F5F3;
+    --gold:#B8892F;
+    --gold-l:#FBF2DE;
+    --gold-line:#E8CFA0;
+    --cream:#FAF8F3;
+    --card:#FFFFFF;
+    --line:#DFE6EA;
+    --text:#172A38;
+    --sub:#4A6070;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--cream);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR",sans-serif;
+    font-size:19px;line-height:1.62;letter-spacing:-0.01em;word-break:keep-all;overflow-wrap:anywhere;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px 52px;}
+
+  header.hero{background:linear-gradient(165deg,#0F2537 0%,#17384F 100%);color:#fff;padding:28px 16px 26px;}
+  header.hero .inner{max-width:560px;margin:0 auto;}
+  .kicker{display:inline-block;font-size:17px;font-weight:800;color:#8FE3DA;border:2px solid rgba(143,227,218,.45);border-radius:999px;padding:4px 14px;margin-bottom:14px;}
+  h1{font-size:33px;line-height:1.28;margin:0 0 12px;font-weight:800;letter-spacing:-0.03em;}
+  h1 .g{color:#EBC77E;}
+  header.hero p{margin:0;font-size:18px;color:#D3E3EC;line-height:1.58;}
+  .stamp{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .stamp span{font-size:16px;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:5px 12px;}
+
+  .tabs{position:sticky;top:0;z-index:9;background:#fff;border-bottom:2px solid var(--line);padding:9px 16px;}
+  .tabs .inner{max-width:560px;margin:0 auto;display:flex;gap:9px;}
+  .tabs button{
+    flex:1;min-height:54px;border:2px solid var(--line);border-radius:14px;background:#fff;
+    font-family:inherit;font-size:18px;font-weight:800;color:var(--sub);cursor:pointer;padding:6px 8px;line-height:1.2;
+  }
+  .tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+  h2.sec{font-size:22px;font-weight:800;color:var(--navy);margin:26px 0 4px;letter-spacing:-0.02em;}
+  p.sec-sub{margin:0 0 14px;font-size:17px;color:var(--sub);}
+
+  .searchbox{margin-top:18px;}
+  .searchbox input{
+    width:100%;padding:16px 16px;border:2px solid var(--line);border-radius:16px;background:#fff;
+    font-family:inherit;font-size:19px;color:var(--text);min-height:58px;
+  }
+  .searchbox input:focus{outline:none;border-color:var(--teal);}
+  .searchbox input::placeholder{color:#8AA0AE;font-size:18px;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px;}
+  .chips button{
+    min-height:48px;border:2px solid var(--line);border-radius:999px;background:#fff;
+    font-family:inherit;font-size:17px;font-weight:800;color:var(--sub);padding:8px 15px;cursor:pointer;
+  }
+  .chips button.on{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+  .count{font-size:16px;color:var(--sub);margin:10px 0 12px;font-weight:700;}
+  .count b{color:var(--teal-d);}
+
+  .card{border:2px solid var(--line);border-radius:18px;background:var(--card);margin-bottom:12px;overflow:hidden;transition:border-color .15s;}
+  .card.open{border-color:var(--teal);}
+  .card .head{
+    display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;
+    padding:15px 16px;font-family:inherit;color:inherit;cursor:pointer;min-height:66px;
+  }
+  .card .head:active{background:#F6FAFA;}
+  .year{
+    flex:0 0 auto;font-size:15px;font-weight:900;color:#7A5A16;background:var(--gold-l);
+    border:1px solid var(--gold-line);border-radius:9px;padding:5px 9px;white-space:nowrap;letter-spacing:0;
+  }
+  .card .t{flex:1;font-size:20px;font-weight:800;color:var(--navy);line-height:1.36;}
+  .card .chev{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:#EEF3F6;color:var(--navy);
+    display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;transition:transform .18s;}
+  .card.open .chev{transform:rotate(180deg);background:var(--teal);color:#fff;}
+
+  .body{display:none;padding:2px 16px 18px;border-top:1px dashed var(--line);}
+  .card.open .body{display:block;animation:fade .18s ease-out;}
+  @keyframes fade{from{opacity:.35}to{opacity:1}}
+  .label{display:block;font-size:15px;font-weight:900;color:var(--teal-d);letter-spacing:.02em;margin:14px 0 5px;}
+  .label.gold{color:#7A5A16;}
+  .body p{margin:0;font-size:18px;line-height:1.66;color:var(--text);}
+  .loc{background:#F1F9F8;border:1px solid #B8E5E1;border-radius:14px;padding:12px 14px;margin:4px 0 0;}
+  .loc .old{font-size:19px;font-weight:900;color:var(--navy);}
+  .loc .arrow{display:block;font-size:15px;font-weight:900;color:var(--teal);margin:3px 0 2px;letter-spacing:.06em;}
+  .loc .now{font-size:18px;font-weight:800;color:#075E58;line-height:1.5;}
+  .point{background:var(--gold-l);border:1px solid var(--gold-line);border-radius:14px;padding:12px 14px;margin:4px 0 0;}
+  .point p{font-size:18px;font-weight:700;color:#5B4310;line-height:1.58;}
+
+  .empty{background:#fff;border:2px dashed var(--line);border-radius:18px;padding:26px 18px;text-align:center;color:var(--sub);font-size:18px;font-weight:700;line-height:1.6;}
+
+  .note{background:#fff;border:2px solid var(--line);border-radius:18px;padding:18px;margin-top:22px;}
+  .note h3{margin:0 0 10px;font-size:19px;color:var(--navy);font-weight:800;}
+  .note ul{margin:0;padding-left:20px;font-size:17px;color:var(--sub);line-height:1.68;}
+  .note li{margin:5px 0;}
+  .note li b{color:var(--navy);}
+
+  /* quiz */
+  .qhead{background:var(--navy);color:#fff;border-radius:18px;padding:18px;margin-top:18px;}
+  .qhead .d{font-size:16px;font-weight:800;color:#8FE3DA;}
+  .qhead h2{margin:6px 0 6px;font-size:23px;font-weight:800;letter-spacing:-0.02em;}
+  .qhead p{margin:0;font-size:17px;color:#CFE0EA;font-weight:600;}
+
+  .q{border:2px solid var(--line);border-radius:18px;background:#fff;padding:16px;margin-bottom:12px;}
+  .q .qn{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+  .q .qn .num{flex:0 0 auto;width:32px;height:32px;border-radius:10px;background:var(--teal-l);color:var(--teal-d);
+    font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;}
+  .q .qn .tag{font-size:15px;font-weight:800;color:var(--sub);}
+  .q .qt{font-size:20px;font-weight:800;color:var(--navy);line-height:1.44;margin:0 0 13px;}
+  .opt{
+    display:flex;gap:10px;align-items:center;width:100%;text-align:left;min-height:58px;
+    border:2px solid var(--line);border-radius:14px;background:#FCFDFD;
+    font-family:inherit;font-size:18px;font-weight:700;color:var(--text);
+    padding:13px 14px;margin-bottom:9px;cursor:pointer;line-height:1.42;
+  }
+  .opt .k{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:#EEF3F6;color:var(--navy);
+    font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;}
+  .opt:active{border-color:var(--teal);}
+  .opt.right{background:#E7F7F2;border-color:var(--teal);color:#07564F;}
+  .opt.right .k{background:var(--teal);color:#fff;}
+  .opt.wrong{background:#FDECEC;border-color:#C0392B;color:#8E2A20;}
+  .opt.wrong .k{background:#C0392B;color:#fff;}
+  .opt.done{cursor:default;}
+  .exp{display:none;background:#F4F8FA;border-left:5px solid var(--teal);border-radius:10px;padding:12px 14px;margin-top:4px;font-size:17px;line-height:1.62;color:#243B4D;font-weight:600;}
+  .exp.show{display:block;}
+  .exp b{color:var(--teal-d);}
+
+  .score{background:var(--teal);color:#fff;border-radius:16px;padding:16px;font-size:19px;font-weight:800;text-align:center;margin-top:6px;line-height:1.5;}
+  .score.idle{background:#EDF3F6;color:var(--sub);}
+  .again{display:none;width:100%;min-height:58px;border:0;border-radius:16px;background:var(--navy);color:#fff;
+    font-family:inherit;font-size:19px;font-weight:800;margin-top:10px;cursor:pointer;}
+  .again.show{display:block;}
+
+  footer{margin-top:30px;padding-top:18px;border-top:2px solid var(--line);text-align:center;}
+  footer .brand{font-size:16px;font-weight:800;color:var(--sub);letter-spacing:.01em;}
+  footer p{margin:6px 0 0;font-size:15px;color:#7C8E9B;line-height:1.6;}
+
+  .hidden{display:none !important;}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <span class="kicker">무료 · 가입 없이 · 설치 없이</span>
+    <h1>옛 땅,<br><span class="g">지금 어디?</span></h1>
+    <p>황산벌은 논산 연산면, 귀주는 평안북도 구성.<br>사건을 누르면 옛 지명이 오늘 주소로 바뀝니다.</p>
+    <div class="stamp">
+      <span>사건 30개</span>
+      <span>오늘의 5문제</span>
+      <span>서버 전송 0</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="화면 선택">
+  <div class="inner">
+    <button type="button" id="tabTimeline" class="on" data-tab="timeline">연표 30개</button>
+    <button type="button" id="tabQuiz" data-tab="quiz">오늘의 5문제</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section id="paneTimeline">
+    <div class="searchbox">
+      <label class="hidden" for="q">검색</label>
+      <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="지명·인물·사건 검색 (예: 황산벌)">
+    </div>
+
+    <div class="chips" id="chips" role="group" aria-label="시대 선택">
+      <button type="button" class="on" data-era="all">전체</button>
+      <button type="button" data-era="samguk">고조선·삼국</button>
+      <button type="button" data-era="nam">남북국</button>
+      <button type="button" data-era="goryeo">고려</button>
+      <button type="button" data-era="joseon">조선</button>
+      <button type="button" data-era="modern">근현대</button>
+    </div>
+
+    <p class="count" id="count"></p>
+    <div id="list"></div>
+
+    <div class="note">
+      <h3>이렇게 보시면 됩니다</h3>
+      <ul>
+        <li><b>카드를 누르면</b> 세 가지가 한 번에 펼쳐집니다. 무슨 일이 있었는지, 옛 지명이 지금 어디인지, 꼭 기억할 한 줄.</li>
+        <li><b>검색창</b>에 지명이나 인물을 넣으면 바로 찾아 줍니다. 예: <b>황산벌</b>, <b>을지문덕</b>, <b>발해</b>.</li>
+        <li><b>오늘의 5문제</b>는 날마다 문제가 바뀝니다. 눌러서 바로 채점하고 해설을 봅니다.</li>
+        <li>입력한 검색어는 <b>휴대폰 안에서만</b> 쓰이고 서버로 보내지 않습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="paneQuiz" class="hidden">
+    <div class="qhead">
+      <div class="d" id="quizDate"></div>
+      <h2>오늘의 한국사 5문제</h2>
+      <p>답을 누르면 바로 채점하고, 왜 그런지 해설이 나옵니다.</p>
+    </div>
+    <div id="quiz"></div>
+    <div class="score idle" id="score" aria-live="polite">5문제 중 0문제를 풀었습니다</div>
+    <button type="button" class="again" id="again">문제 다시 풀기</button>
+
+    <div class="note">
+      <h3>이 문제들은 어디서 나왔나요</h3>
+      <ul>
+        <li>중·고등학교 <b>역사 교과서에 나오는 사건</b>만 골라 만들었습니다.</li>
+        <li>연표 카드와 같은 내용이라, 틀린 문제는 <b>연표 탭에서 다시 찾아</b> 볼 수 있습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <div class="brand">제작: 라이프나침반</div>
+    <p>무료로 쓰는 학습용 연표 · 화면 안에서만 동작합니다</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var ERAS = {
+    samguk: '고조선·삼국',
+    nam: '남북국',
+    goryeo: '고려',
+    joseon: '조선',
+    modern: '근현대'
+  };
+
+  var DATA = [
+    {
+      era:'samguk', year:'기원전 2333년', sy:-2333,
+      title:'고조선, 첫 나라가 서다',
+      what:'단군이 고조선을 세웠다는 이야기가 삼국유사에 전해집니다. 청동기 시대 사람들이 처음으로 나라의 모습을 갖추었습니다.',
+      old:'왕검성(王儉城)', now:'평양 일대 — 오늘날 북한 평양시',
+      point:'우리 역사에서 가장 먼저 나오는 나라. 널리 사람을 이롭게 한다는 홍익인간 뜻을 담았습니다.',
+      keys:'고조선 단군 왕검성 평양 청동기'
+    },
+    {
+      era:'samguk', year:'기원전 108년', sy:-108,
+      title:'고조선의 마지막, 한의 침공',
+      what:'한나라 무제가 대군을 보내 왕검성을 함락했습니다. 오래 이어진 고조선이 막을 내렸습니다.',
+      old:'왕검성 · 낙랑군', now:'평양 일대 — 오늘날 북한 평양시',
+      point:'나라가 망한 뒤에도 철기 문화와 한자가 들어와, 한반도 문화의 밑돌이 되었습니다.',
+      keys:'고조선 멸망 한 무제 낙랑군 한사군 평양'
+    },
+    {
+      era:'samguk', year:'기원전 37년', sy:-37,
+      title:'주몽, 고구려를 세우다',
+      what:'주몽이 졸본에서 고구려를 세웠습니다. 뒤에 국내성, 다시 평양으로 도읍을 옮기며 큰 나라로 자랐습니다.',
+      old:'졸본(卒本)', now:'중국 랴오닝성 환런(훤인) 일대',
+      point:'압록강 중류에서 시작해 만주와 한강 유역까지 영토를 넓혔습니다.',
+      keys:'고구려 주몽 동명성왕 졸본 환런 국내성 지안'
+    },
+    {
+      era:'samguk', year:'기원전 18년', sy:-18,
+      title:'온조, 한강에 백제를 세우다',
+      what:'온조가 한강 유역의 위례성에 백제를 세웠습니다. 부여에서 남쪽으로 내려온 무리가 중심이 되었습니다.',
+      old:'위례성(慰禮城)', now:'서울 송파구 풍납토성·몽촌토성 일대',
+      point:'한강에서 시작한 나라. 도읍을 웅진(공주), 사비(부여)로 옮겼습니다.',
+      keys:'백제 온조 위례성 한강 풍납토성 몽촌토성 웅진 사비'
+    },
+    {
+      era:'samguk', year:'391년', sy:391,
+      title:'광개토대왕, 영락 연호를 쓰다',
+      what:'광개토대왕이 왕위에 올라 영락이라는 연호를 썼습니다. 만주와 한강 유역까지 영토를 넓혔습니다.',
+      old:'국내성(國內城)', now:'중국 지린성 지안(집안)시 일대',
+      point:'아들 장수왕이 414년에 세운 광개토대왕릉비가 이곳에 남아 있습니다.',
+      keys:'광개토대왕 영락 국내성 지안 광개토대왕릉비 장수왕'
+    },
+    {
+      era:'samguk', year:'612년', sy:612,
+      title:'살수대첩, 수나라를 무찌르다',
+      what:'을지문덕이 거짓 항복으로 수나라 군대를 지치게 한 뒤, 강을 건널 때 공격해 크게 이겼습니다.',
+      old:'살수(薩水)', now:'청천강 — 평안북도 박천·안주 일대',
+      point:'수를 이긴 이 싸움으로 수나라는 힘을 잃고 흔들렸습니다.',
+      keys:'살수대첩 을지문덕 수나라 청천강 평안북도'
+    },
+    {
+      era:'samguk', year:'660년', sy:660,
+      title:'황산벌과 백제의 멸망',
+      what:'계백의 5천 결사대가 황산벌에서 김유신의 5만 군과 싸웠습니다. 곧 사비성이 함락되어 백제가 망했습니다.',
+      old:'황산벌(黃山伐) · 사비성(泗沘城)', now:'충남 논산시 연산면 일대 · 충남 부여군',
+      point:'신라와 당이 손잡은 나당연합군이 거둔 첫 큰 승리입니다.',
+      keys:'황산벌 계백 김유신 백제 멸망 논산 연산면 사비성 부여 나당연합군'
+    },
+    {
+      era:'samguk', year:'668년', sy:668,
+      title:'평양성 함락, 고구려의 멸망',
+      what:'나당연합군이 평양성을 함락하고 고구려가 망했습니다. 삼국 가운데 마지막이었습니다.',
+      old:'평양성(平壤城)', now:'북한 평양시 일대',
+      point:'고구려 유민 대조영이 뒤에 발해를 세워, 남북국 시대가 열립니다.',
+      keys:'고구려 멸망 평양성 나당연합군 대조영'
+    },
+    {
+      era:'nam', year:'698년', sy:698,
+      title:'대조영, 발해를 세우다',
+      what:'대조영이 고구려 유민과 말갈 사람들을 모아 동모산에서 발해를 세웠습니다.',
+      old:'동모산(東牟山)', now:'중국 지린성 둔화(돈화)시 일대',
+      point:'스스로 해동성국이라 불린 나라. 고구려를 이었다는 자부심이 컸습니다.',
+      keys:'발해 대조영 동모산 돈화 해동성국 고구려 유민'
+    },
+    {
+      era:'nam', year:'751년', sy:751,
+      title:'불국사와 석굴암을 세우다',
+      what:'경덕왕 때 김대성이 불국사와 석굴암을 세웠습니다. 통일신라 불교 문화의 꽃입니다.',
+      old:'서라벌(徐羅伐) · 토함산', now:'경북 경주시 불국로, 토함산 기슭',
+      point:'두 곳 모두 유네스코 세계유산. 지금도 경주에서 직접 볼 수 있습니다.',
+      keys:'불국사 석굴암 김대성 경덕왕 경주 토함산 서라벌 통일신라'
+    },
+    {
+      era:'nam', year:'828년', sy:828,
+      title:'장보고, 청해진을 세우다',
+      what:'장보고가 완도에 청해진을 세우고 바닷길을 지키며 중국과 일본을 오가는 무역을 했습니다.',
+      old:'청해진(淸海鎭)', now:'전남 완도군 완도읍 장좌리',
+      point:'바다를 지배하는 사람이 나라의 힘도 키운다는 것을 보여 줍니다.',
+      keys:'장보고 청해진 완도 해상무역 통일신라'
+    },
+    {
+      era:'nam', year:'926년', sy:926,
+      title:'거란의 침공, 발해의 멸망',
+      what:'거란의 공격으로 상경성이 함락되어 발해가 망했습니다.',
+      old:'상경성(上京城)', now:'중국 헤이룽장성 닝안(영안)시',
+      point:'발해 유민 가운데 많은 사람이 고려로 내려와 함께 살았습니다.',
+      keys:'발해 멸망 거란 상경성 닝안 영안 발해 유민'
+    },
+    {
+      era:'goryeo', year:'918년', sy:918,
+      title:'왕건, 고려를 세우다',
+      what:'왕건이 송악에서 고려를 세웠습니다. 936년 후백제를 합쳐 후삼국을 통일했습니다.',
+      old:'송악(松嶽)', now:'북한 개성시 일대',
+      point:'고구려를 잇는다는 뜻으로 나라 이름을 고려라고 지었습니다.',
+      keys:'왕건 고려 건국 송악 개성 후삼국 통일 궁예 견훤'
+    },
+    {
+      era:'goryeo', year:'1019년', sy:1019,
+      title:'귀주대첩, 거란을 돌려세우다',
+      what:'강감찬이 이끄는 20만 고려군이 귀주에서 거란의 10만 군대를 무찔렀습니다.',
+      old:'귀주(龜州)', now:'평안북도 구성시 일대',
+      point:'이 승리 뒤로 거란은 다시 고려를 치지 못했습니다.',
+      keys:'귀주대첩 구주 강감찬 거란 구성 평안북도'
+    },
+    {
+      era:'goryeo', year:'1236~1251년', sy:1236,
+      title:'팔만대장경, 16년의 새김',
+      what:'몽골 침입 중에 부처의 힘으로 나라를 지키려고 대장경판 8만여 장을 새겼습니다. 16년이 걸렸습니다.',
+      old:'강화도 · 해인사(海印寺)', now:'인천 강화군(새김) → 경남 합천군 가야면 해인사',
+      point:'장경판전은 유네스코 세계유산. 700년이 넘도록 판이 남아 있습니다.',
+      keys:'팔만대장경 고려대장경 해인사 합천 강화도 몽골 장경판전'
+    },
+    {
+      era:'goryeo', year:'1388년', sy:1388,
+      title:'위화도 회군',
+      what:'요동 정벌에 나섰던 이성계가 위화도에서 군사를 돌려 개경을 장악했습니다.',
+      old:'위화도(威化島)', now:'평안북도 신의주시 압록강 하류의 섬',
+      point:'4년 뒤 조선이 열리는 출발점이 된 사건입니다.',
+      keys:'위화도 회군 이성계 요동 정벌 최영 우왕 개경 신의주 압록강'
+    },
+    {
+      era:'joseon', year:'1392년', sy:1392,
+      title:'이성계, 조선을 열다',
+      what:'이성계가 조선을 세우고 도읍을 한양으로 정했습니다. 유교를 나라의 바탕으로 삼았습니다.',
+      old:'한양(漢陽)', now:'서울 종로구·중구 일대 (경복궁·종묘)',
+      point:'경복궁과 종묘가 지금도 서울 한가운데에 있습니다.',
+      keys:'조선 건국 이성계 한양 서울 경복궁 종묘 유교'
+    },
+    {
+      era:'joseon', year:'1446년', sy:1446,
+      title:'훈민정음, 백성의 글자가 되다',
+      what:'세종이 1443년에 새 글자를 만들고, 1446년에 훈민정음이라는 이름으로 널리 펴냈습니다.',
+      old:'한양 도성 · 집현전', now:'서울 종로구 경복궁 일대',
+      point:'배우기 쉬운 글자 덕분에 백성도 자기 생각을 글로 적을 수 있게 되었습니다.',
+      keys:'훈민정음 한글 세종 집현전 한양 서울 경복궁'
+    },
+    {
+      era:'joseon', year:'1592년', sy:1592,
+      title:'한산도 대첩, 학익진의 승리',
+      what:'이순신이 한산도 앞바다에서 학익진으로 왜군 배를 크게 무찔렀습니다.',
+      old:'한산도(閑山島) · 견내량', now:'경남 통영시 한산면 일대',
+      point:'육지에서 밀리던 때, 바다에서 이긴 싸움으로 흐름을 바꾸었습니다.',
+      keys:'한산도 대첩 이순신 학익진 통영 한산면 견내량 임진왜란'
+    },
+    {
+      era:'joseon', year:'1597년', sy:1597,
+      title:'명량 해전, 12척의 역전',
+      what:'이순신이 배 12척으로 300척이 넘는 왜군 배를 울돌목에서 무찔렀습니다.',
+      old:'울돌목(명량 해협)', now:'전남 진도군과 해남군 사이 좁은 물길',
+      point:'빠른 물살을 이용해 적 배를 몰아붙인 지혜가 빛났습니다.',
+      keys:'명량 해전 이순신 울돌목 진도 해남 12척 정유재란'
+    },
+    {
+      era:'joseon', year:'1637년', sy:1637,
+      title:'병자호란과 남한산성',
+      what:'청군이 쳐들어와 인조가 남한산성에서 47일 동안 버텼지만, 결국 삼전도에서 항복했습니다.',
+      old:'남한산성(南漢山城)', now:'경기 광주시 남한산성면 (유네스코 세계유산)',
+      point:'항복할 것인가 싸울 것인가, 두 갈래 생각이 크게 부딪힌 사건입니다.',
+      keys:'병자호란 남한산성 인조 청 삼전도 광주'
+    },
+    {
+      era:'joseon', year:'1796년', sy:1796,
+      title:'정조, 수원 화성을 쌓다',
+      what:'정조가 1794년부터 1796년까지 수원에 화성을 쌓았습니다. 정약용의 거중기가 힘을 보탰습니다.',
+      old:'화성(華城)', now:'경기 수원시 팔달구 일대',
+      point:'과학적인 설계로 쌓은 성. 유네스코 세계유산입니다.',
+      keys:'수원 화성 정조 정약용 거중기 팔달구 조선 후기'
+    },
+    {
+      era:'modern', year:'1894년', sy:1894,
+      title:'동학농민운동, 백성이 일어나다',
+      what:'고부에서 농민들이 일어나 황토현에서 이겼습니다. 다시 공주 우금치에서 싸웠지만 막혔습니다.',
+      old:'고부(古阜) · 황토현 · 우금치', now:'전북 정읍시(고부·황토현) → 충남 공주시 우금치',
+      point:'평범한 백성의 목소리를 무시할 수 없다는 것을 보여 준 사건입니다.',
+      keys:'동학농민운동 고부 황토현 우금치 정읍 공주 전봉준'
+    },
+    {
+      era:'modern', year:'1919년', sy:1919,
+      title:'3·1 운동, 만세가 퍼지다',
+      what:'전국 곳곳에서 만세를 외쳤습니다. 서울 탑골공원에서 시작해 석 달 넘게 이어졌습니다.',
+      old:'탑골공원(파고다공원)', now:'서울 종로구 종로2가 탑골공원',
+      point:'이 운동을 계기로 대한민국 임시정부가 세워졌습니다.',
+      keys:'3·1 운동 만세 탑골공원 종로 임시정부 1919'
+    },
+    {
+      era:'modern', year:'1920년', sy:1920,
+      title:'봉오동 전투, 첫 큰 승리',
+      what:'홍범도와 최진동이 이끄는 독립군이 봉오동에서 일본군을 처음으로 크게 이겼습니다.',
+      old:'봉오동(鳳梧洞)', now:'중국 지린성 허룽(화룡)시 봉오동 일대',
+      point:'독립군이 일본군을 이길 수 있다는 것을 보여 준 승리입니다.',
+      keys:'봉오동 전투 홍범도 최진동 독립군 지린성 허룽 화룡'
+    },
+    {
+      era:'modern', year:'1920년', sy:1920.5,
+      title:'청산리 대첩, 6일의 싸움',
+      what:'김좌진과 홍범도가 이끄는 독립군이 청산리 골짜기에서 일본군을 크게 무찔렀습니다.',
+      old:'청산리(靑山里)', now:'중국 지린성 허룽(화룡)시 청산리 일대',
+      point:'독립군이 거둔 가장 큰 승리로 꼽힙니다.',
+      keys:'청산리 대첩 김좌진 홍범도 독립군 지린성 허룽 화룡'
+    },
+    {
+      era:'modern', year:'1945년', sy:1945,
+      title:'광복, 경성이 서울이 되다',
+      what:'1945년 8월 15일, 일본의 지배에서 벗어났습니다. 경성이라는 이름도 서울로 바뀌었습니다.',
+      old:'경성(京城)', now:'서울특별시',
+      point:'36년 만에 되찾은 나라. 곧 남과 북이 갈라지는 아픔을 겪습니다.',
+      keys:'광복 8·15 경성 서울 일제강점기 1945'
+    },
+    {
+      era:'modern', year:'1950년', sy:1950,
+      title:'인천상륙작전, 전세를 뒤집다',
+      what:'1950년 9월 15일, 유엔군이 인천 앞바다에 상륙해 전세를 뒤집었습니다.',
+      old:'월미도 · 인천항', now:'인천 중구 월미도 일대',
+      point:'물때와 지형을 계산한 작전으로, 바다를 통한 반격이 성공했습니다.',
+      keys:'인천상륙작전 6·25 한국전쟁 월미도 인천 맥아더 유엔군'
+    },
+    {
+      era:'modern', year:'1960년', sy:1960,
+      title:'4·19 혁명, 거리로 나온 사람들',
+      what:'3·15 부정선거에 분노한 학생과 시민이 거리로 나왔습니다. 4월 19일에 시위가 가장 거세졌고, 곧 대통령이 물러났습니다.',
+      old:'서울 도심 · 명동 · 대학로', now:'서울 종로구·중구 일대, 국립4·19민주묘지(강북구)',
+      point:'평범한 사람들의 힘으로 나라의 주인이 누구인지 다시 확인했습니다.',
+      keys:'4·19 혁명 3·15 부정선거 서울 대학로 명동 이승만 민주묘지'
+    },
+    {
+      era:'modern', year:'1980년', sy:1980,
+      title:'5·18 민주화운동, 열흘의 광주',
+      what:'1980년 5월 18일, 광주에서 시민들이 계엄 확대에 맞서 일어났습니다. 열흘 가까이 이어졌습니다.',
+      old:'광주 · 전남도청 앞', now:'광주 동구 금남로 일대, 국립5·18민주묘지(북구 운정동)',
+      point:'기억하는 일이 역사를 지키는 일이라는 것을 오늘도 되새깁니다.',
+      keys:'5·18 민주화운동 광주 금남로 전남도청 신군부 민주묘지'
+    }
+  ];
+
+  /* ---------- 연표 ---------- */
+  var listEl = document.getElementById('list');
+  var countEl = document.getElementById('count');
+  var qEl = document.getElementById('q');
+  var chips = document.getElementById('chips').querySelectorAll('button');
+  var state = { era:'all', kw:'', open:{} };
+
+  function esc(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function render(){
+    var kw = state.kw.trim().toLowerCase();
+    var rows = DATA.filter(function(d){
+      if (state.era !== 'all' && d.era !== state.era) return false;
+      if (!kw) return true;
+      var hay = (d.year + ' ' + d.title + ' ' + d.what + ' ' + d.old + ' ' + d.now + ' ' + d.point + ' ' + d.keys + ' ' + ERAS[d.era]).toLowerCase();
+      return hay.indexOf(kw) > -1;
+    }).sort(function(a,b){ return a.sy - b.sy; });
+
+    if (rows.length === 0){
+      listEl.innerHTML = '<div class="empty">찾는 사건이 없습니다.<br>다른 지명이나 인물 이름으로 찾아보세요.<br>(예: 황산벌, 을지문덕, 발해, 광주)</div>';
+      countEl.innerHTML = '검색 결과 <b>0</b>개';
+      return;
+    }
+
+    countEl.innerHTML = (kw ? '찾은 사건 <b>' + rows.length + '</b>개' : '사건 <b>' + rows.length + '</b>개 · 카드를 누르면 펼쳐집니다');
+
+    var html = '';
+    for (var i=0;i<rows.length;i++){
+      var d = rows[i];
+      var open = state.open[d.title] ? ' open' : '';
+      html +=
+        '<div class="card' + open + '" data-title="' + esc(d.title) + '">' +
+          '<button type="button" class="head" aria-expanded="' + (state.open[d.title] ? 'true' : 'false') + '">' +
+            '<span class="year">' + esc(d.year) + '</span>' +
+            '<span class="t">' + esc(d.title) + '</span>' +
+            '<span class="chev" aria-hidden="true">▾</span>' +
+          '</button>' +
+          '<div class="body">' +
+            '<span class="label">무슨 일이 있었나</span>' +
+            '<p>' + esc(d.what) + '</p>' +
+            '<span class="label">옛 지명 → 오늘 어디</span>' +
+            '<div class="loc">' +
+              '<div class="old">' + esc(d.old) + '</div>' +
+              '<span class="arrow">▼ 지금은</span>' +
+              '<div class="now">' + esc(d.now) + '</div>' +
+            '</div>' +
+            '<span class="label gold">초등·중등 핵심 포인트</span>' +
+            '<div class="point"><p>' + esc(d.point) + '</p></div>' +
+          '</div>' +
+        '</div>';
+    }
+    listEl.innerHTML = html;
+  }
+
+  listEl.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.head') : null;
+    if (!btn) return;
+    var card = btn.parentNode;
+    var title = card.getAttribute('data-title');
+    var isOpen = card.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (isOpen) { state.open[title] = true; } else { delete state.open[title]; }
+  });
+
+  qEl.addEventListener('input', function(){ state.kw = qEl.value; render(); });
+
+  for (var c=0;c<chips.length;c++){
+    chips[c].addEventListener('click', function(){
+      for (var k=0;k<chips.length;k++){ chips[k].classList.remove('on'); }
+      this.classList.add('on');
+      state.era = this.getAttribute('data-era');
+      render();
+    });
+  }
+
+  render();
+
+  /* ---------- 퀴즈 ---------- */
+  var POOL = [
+    { q:'계백이 황산벌에서 맞선 신라의 장군은?', correct:'김유신', opts:['김유신','을지문덕','강감찬','장보고'],
+      exp:'660년 황산벌에서 계백의 5천 결사대는 김유신이 이끄는 신라군과 싸웠습니다. 황산벌은 지금의 충남 논산시 연산면 일대입니다.' },
+    { q:'살수에서 수나라 군대를 무찌른 고구려 장군은?', correct:'을지문덕', opts:['을지문덕','연개소문','주몽','양만춘'],
+      exp:'612년 을지문덕이 살수(지금의 청천강)에서 수나라 별동대를 무찔렀습니다.' },
+    { q:'1019년 귀주에서 거란군을 크게 물리친 고려의 장군은?', correct:'강감찬', opts:['강감찬','서희','윤관','최영'],
+      exp:'귀주는 지금의 평안북도 구성시 일대입니다. 이 승리 뒤 거란은 다시 고려를 치지 못했습니다.' },
+    { q:'1592년 한산도 앞바다에서 학익진으로 이긴 장군은?', correct:'이순신', opts:['이순신','권율','김시민','곽재우'],
+      exp:'한산도는 지금의 경남 통영시 한산면입니다. 학익진은 학이 날개를 편 모양의 진법입니다.' },
+    { q:'1446년 훈민정음을 반포한 왕은?', correct:'세종', opts:['세종','태종','정조','광해군'],
+      exp:'세종은 1443년에 새 글자를 만들고 1446년에 훈민정음으로 널리 펴냈습니다.' },
+    { q:'고구려를 세운 사람은?', correct:'주몽', opts:['주몽','온조','박혁거세','대조영'],
+      exp:'주몽(동명성왕)이 기원전 37년 졸본에서 고구려를 세웠습니다. 졸본은 지금의 중국 랴오닝성 환런 일대입니다.' },
+    { q:'백제를 세운 사람은?', correct:'온조', opts:['온조','주몽','김수로','왕건'],
+      exp:'온조가 기원전 18년 한강 유역의 위례성에 백제를 세웠습니다.' },
+    { q:'698년 발해를 세운 사람은?', correct:'대조영', opts:['대조영','왕건','궁예','견훤'],
+      exp:'대조영이 고구려 유민과 말갈 사람들을 모아 동모산(지금의 중국 지린성 둔화 일대)에서 발해를 세웠습니다.' },
+    { q:'918년 고려를 세운 사람은?', correct:'왕건', opts:['왕건','이성계','대조영','김유신'],
+      exp:'왕건이 송악(지금의 북한 개성)에서 고려를 세웠고, 936년 후삼국을 통일했습니다.' },
+    { q:'1392년 조선을 세운 사람은?', correct:'이성계', opts:['이성계','왕건','정도전','최영'],
+      exp:'이성계가 1392년 조선을 세우고 도읍을 한양, 지금의 서울로 정했습니다.' },
+    { q:'828년 완도에 청해진을 세운 인물은?', correct:'장보고', opts:['장보고','최무선','김유신','을지문덕'],
+      exp:'청해진은 지금의 전남 완도군 완도읍 일대입니다. 장보고는 이곳에서 해상 무역을 이끌었습니다.' },
+    { q:'1920년 김좌진·홍범도가 이끄는 독립군이 크게 이긴 싸움은?', correct:'청산리 대첩', opts:['청산리 대첩','봉오동 전투','명량 해전','한산도 대첩'],
+      exp:'청산리는 지금의 중국 지린성 허룽(화룡)시 일대입니다. 봉오동 전투도 같은 해 6월에 있었습니다.' },
+    { q:'1919년 3·1 운동이 시작된 서울의 공원은?', correct:'탑골공원', opts:['탑골공원','남산공원','보라매공원','올림픽공원'],
+      exp:'서울 종로구 종로2가의 탑골공원에서 만세 운동이 시작됐습니다. 지금도 그 자리에 있습니다.' },
+    { q:'팔만대장경판이 보관된 사찰은?', correct:'해인사', opts:['해인사','불국사','통도사','송광사'],
+      exp:'경남 합천군 가야면의 해인사 장경판전에 보관되어 있고, 유네스코 세계유산입니다.' },
+    { q:'1597년 배 12척으로 울돌목에서 이긴 해전은?', correct:'명량 해전', opts:['명량 해전','한산도 대첩','노량 해전','옥포 해전'],
+      exp:'울돌목은 전남 진도와 해남 사이의 좁고 물살이 센 물길입니다.' },
+    { q:'수원 화성을 쌓은 왕은?', correct:'정조', opts:['정조','영조','세종','태조'],
+      exp:'정조가 1794년부터 1796년까지 쌓았고, 정약용의 거중기가 쓰였습니다. 유네스코 세계유산입니다.' },
+    { q:'이성계가 위화도에서 군사를 돌린 해는?', correct:'1388년', opts:['1388년','1392년','1377년','1398년'],
+      exp:'위화도 회군은 1388년, 조선 건국은 4년 뒤인 1392년입니다. 위화도는 지금의 평안북도 신의주 압록강 하류 섬입니다.' },
+    { q:'1950년 9월 15일, 전세를 뒤집은 작전은?', correct:'인천상륙작전', opts:['인천상륙작전','낙동강 방어','흥남 철수','서울 수복'],
+      exp:'유엔군이 인천 월미도 일대에 상륙해 전세를 뒤집었습니다. 월미도는 지금의 인천 중구입니다.' }
+  ];
+
+  var quizEl = document.getElementById('quiz');
+  var scoreEl = document.getElementById('score');
+  var againEl = document.getElementById('again');
+  var quizDateEl = document.getElementById('quizDate');
+
+  function todaySeed(){
+    var d = new Date();
+    return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+  }
+  function makeRng(seed){
+    var s = seed % 2147483647;
+    if (s <= 0) s += 2147483646;
+    return function(){
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+  }
+  function shuffle(arr, rnd){
+    var a = arr.slice();
+    for (var i=a.length-1;i>0;i--){
+      var j = Math.floor(rnd()*(i+1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function pad2(n){ return (n<10?'0':'')+n; }
+
+  var built = null;
+
+  function buildQuiz(){
+    var d = new Date();
+    var seed = todaySeed();
+    var rnd = makeRng(seed);
+    var picked = shuffle(POOL, rnd).slice(0,5);
+    var questions = picked.map(function(p){
+      var opts = shuffle(p.opts, rnd);
+      return { q:p.q, opts:opts, correct:p.correct, exp:p.exp, answered:false, ok:false };
+    });
+    built = questions;
+    quizDateEl.textContent = d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일 ' + ['일','월','화','수','목','금','토'][d.getDay()] + '요일';
+
+    var html = '';
+    for (var i=0;i<questions.length;i++){
+      var q = questions[i];
+      html += '<div class="q" data-i="' + i + '">' +
+        '<div class="qn"><span class="num">Q' + (i+1) + '</span><span class="tag">' + esc(ERAS[eraOf(q.q)] || '한국사') + '</span></div>' +
+        '<p class="qt">' + esc(q.q) + '</p>';
+      for (var k=0;k<q.opts.length;k++){
+        html += '<button type="button" class="opt" data-k="' + k + '"><span class="k">' + '①②③④'.charAt(k) + '</span><span>' + esc(q.opts[k]) + '</span></button>';
+      }
+      html += '<div class="exp" id="exp' + i + '"></div>' +
+      '</div>';
+    }
+    quizEl.innerHTML = html;
+    updateScore();
+    againEl.classList.remove('show');
+  }
+
+  function eraOf(text){
+    if (/조선|훈민정음|한산도|명량|울돌목|화성|병자호란/.test(text)) return 'joseon';
+    if (/고구려|백제|신라|황산벌|살수|광개토/.test(text)) return 'samguk';
+    if (/발해|청해진|불국사/.test(text)) return 'nam';
+    if (/고려|귀주|팔만|위화도/.test(text)) return 'goryeo';
+    return 'modern';
+  }
+
+  quizEl.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.opt') : null;
+    if (!btn) return;
+    var card = btn.closest('.q');
+    var i = parseInt(card.getAttribute('data-i'), 10);
+    var q = built[i];
+    if (q.answered) return;
+
+    var k = parseInt(btn.getAttribute('data-k'), 10);
+    var picked = q.opts[k];
+    q.answered = true;
+    q.ok = (picked === q.correct);
+
+    var opts = card.querySelectorAll('.opt');
+    for (var n=0;n<opts.length;n++){
+      var t = opts[n].querySelector('span:last-child').textContent;
+      opts[n].classList.add('done');
+      if (opts[n] === btn){
+        opts[n].classList.add(q.ok ? 'right' : 'wrong');
+      }
+      if (!q.ok && t === q.correct){
+        opts[n].classList.add('right');
+      }
+    }
+
+    var exp = document.getElementById('exp' + i);
+    exp.innerHTML = (q.ok ? '<b>맞았습니다.</b> ' : '<b>정답은 ' + esc(q.correct) + '입니다.</b> ') + esc(q.exp);
+    exp.classList.add('show');
+    updateScore();
+  });
+
+  function updateScore(){
+    if (!built) return;
+    var done = 0, right = 0;
+    for (var i=0;i<built.length;i++){ if (built[i].answered){ done++; if (built[i].ok) right++; } }
+    if (done === 0){
+      scoreEl.className = 'score idle';
+      scoreEl.textContent = '5문제 중 0문제를 풀었습니다';
+    } else if (done < built.length){
+      scoreEl.className = 'score';
+      scoreEl.textContent = done + '문제 풀었습니다 · 지금 ' + right + '문제 맞았습니다';
+    } else {
+      scoreEl.className = 'score';
+      var msg = right === 5 ? '5문제 모두 맞았습니다. 오늘은 한국사 상위 5%입니다!' :
+                right >= 4 ? '5문제 중 ' + right + '문제. 아주 좋습니다.' :
+                right >= 3 ? '5문제 중 ' + right + '문제. 절반은 넘었습니다.' :
+                '5문제 중 ' + right + '문제. 틀린 문제는 연표에서 다시 찾아보세요.';
+      scoreEl.textContent = msg;
+      againEl.classList.add('show');
+    }
+  }
+
+  var tabT = document.getElementById('tabTimeline');
+  var tabQ = document.getElementById('tabQuiz');
+  var paneT = document.getElementById('paneTimeline');
+  var paneQ = document.getElementById('paneQuiz');
+
+  function setTab(name){
+    if (name === 'quiz'){
+      paneT.classList.add('hidden'); paneQ.classList.remove('hidden');
+      tabQ.classList.add('on'); tabT.classList.remove('on');
+      if (!built) buildQuiz();
+      window.scrollTo(0,0);
+    } else {
+      paneQ.classList.add('hidden'); paneT.classList.remove('hidden');
+      tabT.classList.add('on'); tabQ.classList.remove('on');
+      window.scrollTo(0,0);
+    }
+  }
+  tabT.addEventListener('click', function(){ setTab('timeline'); });
+  tabQ.addEventListener('click', function(){ setTab('quiz'); });
+
+  againEl.addEventListener('click', function(){
+    buildQuiz();
+    window.scrollTo(0,0);
+  });
+})();
+</script>
+</body>
+</html>
