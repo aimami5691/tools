@@ -554,7 +554,14 @@
     if (isOpen) { state.open[title] = true; } else { delete state.open[title]; }
   });
 
-  qEl.addEventListener('input', function(){ state.kw = qEl.value; render(); });
+  qEl.addEventListener('input', function(){
+    state.kw = qEl.value;
+    if (state.kw.trim() !== '' && state.era !== 'all'){
+      state.era = 'all';
+      for (var k=0;k<chips.length;k++){ chips[k].classList.toggle('on', chips[k].getAttribute('data-era') === 'all'); }
+    }
+    render();
+  });
 
   for (var c=0;c<chips.length;c++){
     chips[c].addEventListener('click', function(){
