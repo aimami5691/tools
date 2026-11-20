@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<meta name="description" content="2026년 보건복지부 기준으로 기초연금 소득인정액과 예상 월 수령액을 계산하는 큰글씨 안내서입니다. 가입 없이 휴대폰에서 바로 확인하고, 결과를 가족에게 복사해 보낼 수 있습니다.">
+<title>기초연금 소득인정액 계산기 · 큰글씨 판정기 (무료)</title>
+<style>
+  :root{
+    color-scheme:light;
+    --navy:#0B2642;
+    --navy2:#123A5C;
+    --teal:#009991;
+    --teal-d:#00716B;
+    --teal-l:#E3F5F3;
+    --cream:#FDF8EF;
+    --cream2:#F4EBD9;
+    --card:#FFFFFF;
+    --line:#E0D8C6;
+    --text:#12283D;
+    --sub:#3E5670;
+    --warn:#8A4B00;
+    --warn-bg:#FFF4E2;
+    --warn-line:#E0A64B;
+    --ok:#0F6B4A;
+    --ok-bg:#E7F6EE;
+    --no:#8C2B2B;
+    --no-bg:#FCEDED;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR",sans-serif;
+    font-size:19px;
+    line-height:1.68;
+    letter-spacing:-0.01em;
+    word-break:keep-all;
+    overflow-wrap:anywhere;
+  }
+  .wrap{max-width:480px;margin:0 auto;padding:0 16px 72px;}
+
+  /* ── 머리말 ─────────────────────────── */
+  header.hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff;padding:26px 16px 30px;
+  }
+  header.hero .inner{max-width:480px;margin:0 auto;}
+  .kicker{
+    display:inline-block;font-size:18px;font-weight:800;color:#9FE8E2;
+    border:2px solid rgba(159,232,226,.45);border-radius:999px;padding:4px 14px;margin-bottom:12px;
+  }
+  h1{font-size:29px;line-height:1.34;margin:0 0 10px;font-weight:800;letter-spacing:-0.02em;}
+  .hero p{margin:0;font-size:18px;color:#D8E6F2;line-height:1.6;}
+  .hero .stamp{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .hero .stamp span{
+    font-size:18px;font-weight:700;background:rgba(255,255,255,.13);
+    border-radius:10px;padding:6px 12px;color:#fff;
+  }
+
+  /* ── 진행 표시 ──────────────────────── */
+  .progress{margin:20px 0 6px;}
+  .progress .bar{height:10px;border-radius:999px;background:var(--cream2);overflow:hidden;border:1px solid var(--line);}
+  .progress .bar i{display:block;height:100%;width:33%;background:var(--teal);transition:width .25s ease;}
+  .progress .step-text{font-size:18px;font-weight:800;color:var(--teal-d);margin-top:8px;}
+
+  /* ── 카드·공통 ──────────────────────── */
+  .screen{margin-top:8px;}
+  .screen.hidden{display:none;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 18px;}
+  .card + .card{margin-top:16px;}
+  h2{
+    font-size:22px;line-height:1.4;margin:0 0 6px;font-weight:800;color:var(--navy);
+    display:flex;align-items:center;gap:10px;
+  }
+  h2 .num{
+    flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:var(--teal);
+    color:#fff;font-size:19px;display:flex;align-items:center;justify-content:center;font-weight:800;
+  }
+  h3{font-size:20px;margin:20px 0 8px;font-weight:800;color:var(--navy);}
+  p{margin:8px 0;}
+  .lead{font-size:18px;color:var(--sub);margin:0 0 14px;}
+  .hint{font-size:18px;color:#4E6A85;margin:6px 0 0;line-height:1.6;}
+
+  /* ── 선택 버튼 ──────────────────────── */
+  .choice{
+    display:block;width:100%;text-align:left;cursor:pointer;
+    background:#fff;border:2px solid var(--line);border-radius:16px;
+    padding:16px 16px;min-height:72px;color:var(--text);
+    font-family:inherit;font-size:19px;line-height:1.45;font-weight:700;
+    transition:border-color .15s,background .15s,box-shadow .15s;
+  }
+  .choice + .choice{margin-top:12px;}
+  .choice .t{display:flex;align-items:center;gap:12px;}
+  .choice .mark{
+    flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    border:2px solid #C9BFA9;background:#fff;
+  }
+  .choice .d{display:block;font-size:18px;font-weight:600;color:var(--sub);margin-top:6px;padding-left:42px;}
+  .choice[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-l);box-shadow:0 2px 0 rgba(0,153,145,.2);}
+  .choice[aria-pressed="true"] .mark{border-color:var(--teal);background:var(--teal);box-shadow:inset 0 0 0 5px #fff;}
+  .choice:focus-visible{outline:4px solid #7FD3CD;outline-offset:2px;}
+
+  /* ── 입력 ───────────────────────────── */
+  .field{margin-top:18px;}
+  .field:first-of-type{margin-top:8px;}
+  .field label{display:block;font-size:19px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+  .field .unit-note{font-size:18px;font-weight:600;color:var(--sub);margin-left:2px;}
+  .input-box{
+    display:flex;align-items:center;gap:8px;
+    border:2px solid var(--line);border-radius:14px;background:#fff;
+    padding:0 14px;height:66px;
+  }
+  .input-box:focus-within{border-color:var(--teal);box-shadow:0 0 0 4px rgba(0,153,145,.15);}
+  .input-box input{
+    flex:1 1 auto;min-width:0;border:0;outline:0;background:transparent;
+    font-family:inherit;font-size:22px;font-weight:800;color:var(--text);
+    text-align:right;padding:0;height:100%;letter-spacing:0;
+  }
+  .input-box input::placeholder{font-weight:600;color:#9AA9B6;}
+  .input-box .won{flex:0 0 auto;font-size:19px;font-weight:800;color:var(--sub);}
+  .readback{font-size:18px;font-weight:700;color:var(--teal-d);margin-top:6px;min-height:1px;}
+
+  /* ── 버튼 ───────────────────────────── */
+  .btns{display:flex;gap:12px;margin-top:24px;}
+  .btn{
+    flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:8px;
+    min-height:64px;padding:14px 16px;border-radius:16px;border:0;cursor:pointer;
+    font-family:inherit;font-size:20px;font-weight:800;text-align:center;text-decoration:none;
+    transition:transform .08s,filter .15s;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:4px solid #7FD3CD;outline-offset:3px;}
+  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 3px 0 var(--teal-d);}
+  .btn-primary:hover{filter:brightness(1.05);}
+  .btn:disabled{opacity:.45;box-shadow:none;cursor:default;filter:none;}
+  .btn-ghost{background:#fff;color:var(--navy);border:2px solid var(--line);flex:unset;padding:14px 20px;}
+  .btn-copy{background:var(--navy);color:#fff;box-shadow:0 3px 0 #061A2E;width:100%;}
+  .btn-tel{background:#fff;color:var(--navy);border:2px solid var(--navy);width:100%;}
+
+  /* ── 결과 ───────────────────────────── */
+  .verdict{border-radius:18px;padding:20px 18px;border:2px solid;margin-top:4px;}
+  .verdict .vlabel{font-size:19px;font-weight:800;margin:0 0 4px;}
+  .verdict .vtext{font-size:22px;font-weight:900;margin:0;line-height:1.4;}
+  .verdict.ok{background:var(--ok-bg);border-color:#9FD9BE;color:var(--ok);}
+  .verdict.mid{background:var(--warn-bg);border-color:#F0D6AC;color:var(--warn);}
+  .verdict.no{background:var(--no-bg);border-color:#EBB9B9;color:var(--no);}
+  .verdict p.vsub{font-size:18px;font-weight:700;margin:8px 0 0;color:inherit;opacity:.92;}
+
+  .figure{margin-top:16px;}
+  .figure .flabel{font-size:19px;font-weight:800;color:var(--sub);margin:0 0 2px;}
+  .figure .fnum{
+    font-size:44px;line-height:1.2;font-weight:900;color:var(--navy);
+    letter-spacing:-0.02em;font-variant-numeric:tabular-nums;
+  }
+  .figure .fnum .won{font-size:22px;font-weight:800;color:var(--sub);margin-left:4px;}
+  .figure .fnum.teal{color:var(--teal-d);}
+  .figure .fsub{font-size:18px;font-weight:700;color:var(--sub);margin:6px 0 0;}
+  .figure .fman{font-size:22px;font-weight:800;color:var(--sub);margin:2px 0 0;letter-spacing:-0.01em;}
+  .figure .fman.teal{color:var(--teal-d);}
+  .nowrap{white-space:nowrap;}
+
+  .compare{margin-top:14px;}
+  .compare .cbar{height:20px;border-radius:999px;background:var(--cream2);overflow:hidden;border:1px solid var(--line);}
+  .compare .cbar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#3FBDB5);}
+  .compare .cbar.over i{background:linear-gradient(90deg,#C0504D,#DE827F);}
+  .compare .cnote{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 8px;font-size:18px;font-weight:700;color:var(--sub);margin-top:6px;}
+  .compare .cnote span{white-space:nowrap;}
+  .compare .cnote #compare-max{margin-left:auto;}
+
+  table.bd{width:100%;border-collapse:collapse;margin-top:6px;}
+  table.bd caption{text-align:left;font-size:19px;font-weight:800;color:var(--navy);padding:0 0 8px;}
+  table.bd th,table.bd td{
+    font-size:18px;text-align:left;padding:11px 0;border-bottom:1px solid #EEE7D8;
+    vertical-align:top;line-height:1.5;
+  }
+  table.bd th{font-weight:700;color:var(--sub);}
+  table.bd td{font-weight:800;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;}
+  table.bd td .amt{display:block;}
+  table.bd td .amt-man{display:block;font-size:18px;font-weight:700;color:#46617D;margin-top:1px;white-space:nowrap;}
+  table.bd tr.sum th,table.bd tr.sum td{border-bottom:0;padding-top:14px;color:var(--navy);}
+  table.bd tr.minus td{color:#8A4B00;}
+  .why{margin:8px 0 0;padding-left:22px;}
+  .why li{font-size:18px;margin:6px 0;line-height:1.55;color:var(--text);}
+
+  .notice{background:var(--warn-bg);border:1px solid #F0D6AC;border-left:8px solid var(--warn-line);border-radius:14px;padding:16px;margin-top:16px;}
+  .notice strong{display:block;font-size:19px;color:var(--warn);margin-bottom:4px;}
+  .notice p{font-size:18px;margin:0;color:#5C4322;line-height:1.6;}
+
+  .okbox{background:var(--teal-l);border:1px solid #B7E2DE;border-radius:14px;padding:16px;margin-top:16px;}
+  .okbox p{font-size:18px;margin:0;color:#0B4F4A;line-height:1.6;}
+
+  ol.todo{margin:8px 0 0;padding-left:26px;}
+  ol.todo li{font-size:18px;margin:10px 0;line-height:1.6;}
+  ul.plain{margin:8px 0 0;padding-left:24px;}
+  ul.plain li{font-size:18px;margin:8px 0;line-height:1.6;}
+
+  .copybox{
+    width:100%;min-height:180px;border:2px dashed var(--line);border-radius:14px;
+    background:#fff;padding:14px;font-family:inherit;font-size:18px;line-height:1.65;
+    color:var(--text);resize:vertical;
+  }
+  details.more{margin-top:14px;}
+  details.more summary{
+    font-size:18px;font-weight:800;color:var(--teal-d);cursor:pointer;
+    list-style:none;padding:12px 0;
+  }
+  details.more summary::-webkit-details-marker{display:none;}
+  details.more summary::before{content:"＋ ";font-weight:900;}
+  details.more[open] summary::before{content:"－ ";}
+
+  .src{font-size:18px;color:#5A6E82;line-height:1.6;}
+  .src a{color:var(--teal-d);font-weight:800;text-decoration:underline;}
+  footer{margin-top:30px;border-top:2px solid var(--line);padding-top:18px;}
+
+  #toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);
+    background:var(--navy);color:#fff;font-size:19px;font-weight:800;
+    padding:14px 22px;border-radius:14px;box-shadow:0 8px 24px rgba(11,38,66,.3);
+    opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;max-width:92vw;text-align:center;
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0);}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <span class="kicker">2026년 기준 · 보건복지부 고시</span>
+    <h1>기초연금, 내가 받을 수 있을까?</h1>
+    <p>한 달 소득과 재산만 넣으면 <strong>소득인정액</strong>과 <strong>예상 월 수령액</strong>을 바로 알려드려요. 가입도, 엑셀도 필요 없습니다.</p>
+    <div class="stamp">
+      <span>큰 글씨</span>
+      <span>3단계 1분</span>
+      <span>결과 복사해서 가족에게</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="progress" aria-hidden="true">
+    <div class="bar"><i id="pbar"></i></div>
+    <div class="step-text" id="ptext">1단계 · 가구와 사는 곳</div>
+  </div>
+
+  <main>
+    <!-- ════════ 1단계 ════════ -->
+    <section class="screen" id="step1" aria-labelledby="h-step1">
+      <div class="card">
+        <h2 id="h-step1"><span class="num">1</span>누구를 계산하나요?</h2>
+        <p class="lead">해당하는 것을 하나씩 눌러 주세요.</p>
+
+        <h3>가구 유형</h3>
+        <button type="button" class="choice" data-group="household" data-value="single" aria-pressed="false">
+          <span class="t"><span class="mark"></span>혼자 살아요</span>
+          <span class="d">배우자가 없어요</span>
+        </button>
+        <button type="button" class="choice" data-group="household" data-value="coupleOne" aria-pressed="false">
+          <span class="t"><span class="mark"></span>부부인데 나만 받아요</span>
+          <span class="d">배우자는 65세 미만이거나 받지 않아요</span>
+        </button>
+        <button type="button" class="choice" data-group="household" data-value="coupleBoth" aria-pressed="false">
+          <span class="t"><span class="mark"></span>부부가 둘 다 받아요</span>
+          <span class="d">둘 다 65세 이상이에요</span>
+        </button>
+
+        <h3>사는 곳</h3>
+        <button type="button" class="choice" data-group="region" data-value="metro" aria-pressed="false">
+          <span class="t"><span class="mark"></span>대도시</span>
+          <span class="d">서울·부산 등 특별시·광역시의 구, 특례시</span>
+        </button>
+        <button type="button" class="choice" data-group="region" data-value="city" aria-pressed="false">
+          <span class="t"><span class="mark"></span>중소도시</span>
+          <span class="d">도(道) 지역의 시, 세종특별자치시</span>
+        </button>
+        <button type="button" class="choice" data-group="region" data-value="rural" aria-pressed="false">
+          <span class="t"><span class="mark"></span>농어촌</span>
+          <span class="d">도(道) 지역의 군</span>
+        </button>
+        <p class="hint">사는 곳에 따라 재산을 조금 더 쳐주는 금액이 달라요. 잘 모르시면 <strong>대도시</strong>를 골라 주세요.</p>
+      </div>
+
+      <div class="btns">
+        <button type="button" class="btn btn-primary" id="go2">다음 · 소득 넣기</button>
+      </div>
+    </section>
+
+    <!-- ════════ 2단계 ════════ -->
+    <section class="screen hidden" id="step2" aria-labelledby="h-step2">
+      <div class="card">
+        <h2 id="h-step2"><span class="num">2</span>한 달에 들어오는 돈</h2>
+        <p class="lead">세전(공제 전) 금액을 넣으세요. 없으면 비워 두셔도 됩니다.</p>
+
+        <h3 id="h-self">나의 소득</h3>
+        <div class="field">
+          <label for="self-work">일해서 버는 돈 <span class="unit-note">(월급·아르바이트)</span></label>
+          <div class="input-box">
+            <input id="self-work" data-person="self" data-kind="work" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="self-work"></div>
+        </div>
+        <div class="field">
+          <label for="self-np">국민연금 <span class="unit-note">(매달 받는 금액)</span></label>
+          <div class="input-box">
+            <input id="self-np" data-person="self" data-kind="np" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="self-np"></div>
+        </div>
+        <div class="field" data-a-wrap="self" hidden>
+          <label for="self-a">국민연금 A급여액 <span class="unit-note">(모르면 비워 두세요)</span></label>
+          <div class="input-box">
+            <input id="self-a" data-person="self" data-kind="a" type="text" inputmode="numeric" autocomplete="off" placeholder="모르면 비워 두기">
+            <span class="won">원</span>
+          </div>
+          <p class="hint">국민연금공단(<a href="tel:1355">1355</a>)이나 국민연금 홈페이지에서 ‘국민연금 급여액·소득재분배급여금액 조회’로 확인할 수 있어요. 모르면 비워 두셔도 계산은 됩니다.</p>
+        </div>
+        <div class="field">
+          <label for="self-other">그 밖의 소득 <span class="unit-note">(임대·사업·이자 등)</span></label>
+          <div class="input-box">
+            <input id="self-other" data-person="self" data-kind="other" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="self-other"></div>
+        </div>
+      </div>
+
+      <div class="card" id="spouse-card">
+        <h3 id="h-spouse" style="margin-top:0">배우자의 소득</h3>
+        <p class="hint" id="spouse-note">배우자 소득도 함께 더해서 계산해요.</p>
+        <div class="field">
+          <label for="spouse-work">일해서 버는 돈</label>
+          <div class="input-box">
+            <input id="spouse-work" data-person="spouse" data-kind="work" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="spouse-work"></div>
+        </div>
+        <div class="field">
+          <label for="spouse-np">국민연금</label>
+          <div class="input-box">
+            <input id="spouse-np" data-person="spouse" data-kind="np" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="spouse-np"></div>
+        </div>
+        <div class="field" data-a-wrap="spouse" hidden>
+          <label for="spouse-a">국민연금 A급여액 <span class="unit-note">(모르면 비워 두세요)</span></label>
+          <div class="input-box">
+            <input id="spouse-a" data-person="spouse" data-kind="a" type="text" inputmode="numeric" autocomplete="off" placeholder="모르면 비워 두기">
+            <span class="won">원</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="spouse-other">그 밖의 소득</label>
+          <div class="input-box">
+            <input id="spouse-other" data-person="spouse" data-kind="other" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="spouse-other"></div>
+        </div>
+      </div>
+
+      <div class="okbox">
+        <p><strong>일해서 버는 돈</strong>은 한 달 116만 원까지 빼고 계산해요. 116만 원을 넘는 돈도 30%를 더 빼 줍니다.</p>
+      </div>
+
+      <div class="btns">
+        <button type="button" class="btn btn-ghost" data-prev="step1">이전</button>
+        <button type="button" class="btn btn-primary" id="go3">다음 · 재산 넣기</button>
+      </div>
+    </section>
+
+    <!-- ════════ 3단계 ════════ -->
+    <section class="screen hidden" id="step3" aria-labelledby="h-step3">
+      <div class="card">
+        <h2 id="h-step3"><span class="num">3</span>가지고 있는 재산</h2>
+        <p class="lead">대략적인 금액이면 충분해요. 모르면 비워 두세요.</p>
+
+        <div class="field">
+          <label for="as-general">집·땅·건물·전세보증금 <span class="unit-note">합계</span></label>
+          <div class="input-box">
+            <input id="as-general" data-asset="general" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="as-general"></div>
+          <p class="hint" id="base-property-hint"></p>
+        </div>
+        <div class="field">
+          <label for="as-financial">예금·적금·주식·보험</label>
+          <div class="input-box">
+            <input id="as-financial" data-asset="financial" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="as-financial"></div>
+          <p class="hint">2,000만 원까지는 계산에서 빼 줍니다.</p>
+        </div>
+        <div class="field">
+          <label for="as-debt">빚 <span class="unit-note">(대출·카드 미결제)</span></label>
+          <div class="input-box">
+            <input id="as-debt" data-asset="debt" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            <span class="won">원</span>
+          </div>
+          <div class="readback" data-readback="as-debt"></div>
+        </div>
+      </div>
+
+      <div class="btns">
+        <button type="button" class="btn btn-ghost" data-prev="step2">이전</button>
+        <button type="button" class="btn btn-primary" id="calc-btn">결과 보기</button>
+      </div>
+    </section>
+
+    <!-- ════════ 결과 ════════ -->
+    <section class="screen hidden" id="result" aria-labelledby="h-result" aria-live="polite">
+      <div class="card">
+        <h2 id="h-result"><span class="num">✓</span>계산 결과</h2>
+        <p class="lead" id="result-sub"></p>
+
+        <div class="verdict ok" id="verdict">
+          <p class="vlabel">수급 가능성</p>
+          <p class="vtext" id="verdict-text">–</p>
+          <p class="vsub" id="verdict-sub"></p>
+        </div>
+
+        <div class="figure">
+          <p class="flabel">소득인정액 (한 달)</p>
+          <div class="fnum"><span id="out-income">0</span><span class="won">원</span></div>
+          <p class="fman" id="out-income-man"></p>
+          <p class="fsub" id="out-income-sub"></p>
+        </div>
+
+        <div class="compare" id="compare-wrap">
+          <div class="cbar" id="cbar"><i id="cbar-fill" style="width:0%"></i></div>
+          <div class="cnote">
+            <span id="compare-min">소득인정액 0원</span>
+            <span id="compare-max">기준 0원</span>
+          </div>
+        </div>
+
+        <div class="figure" style="margin-top:22px">
+          <p class="flabel" id="out-pay-label">예상 월 수령액</p>
+          <div class="fnum teal"><span id="out-pay">0</span><span class="won">원</span></div>
+          <p class="fman teal" id="out-pay-man"></p>
+          <p class="fsub" id="out-pay-sub"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <table class="bd">
+          <caption>어떻게 계산했나요</caption>
+          <tbody id="bd-body"></tbody>
+        </table>
+        <ul class="why" id="why-list"></ul>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0">가족에게 바로 보내기</h3>
+        <p class="hint">아래 버튼을 누르면 결과가 복사돼요. 카카오톡 가족방에 붙여 넣기만 하면 됩니다.</p>
+        <p class="hint" style="margin-top:8px">복사한 글에는 광고나 상품 링크 없이 계산 결과만 담깁니다.</p>
+        <div class="btns" style="margin-top:12px">
+          <button type="button" class="btn btn-copy" id="copy-btn">결과 복사하기</button>
+        </div>
+        <details class="more">
+          <summary>복사가 안 되면 여기를 눌러 직접 복사하세요</summary>
+          <textarea class="copybox" id="copy-box" readonly aria-label="복사할 결과 글"></textarea>
+        </details>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0">신청은 이렇게 하세요</h3>
+        <p><strong>준비물</strong></p>
+        <ul class="plain">
+          <li>신분증 (주민등록증·운전면허증·여권)</li>
+          <li>본인 명의 통장 (수급자 본인 계좌)</li>
+          <li>배우자가 있으면 배우자 신분증과 금융정보 제공 동의서</li>
+          <li>대리로 신청할 때는 위임장과 대리인 신분증</li>
+          <li>소득·재산 신고서 (주민센터에서 작성할 수 있어요)</li>
+        </ul>
+        <p style="margin-top:14px"><strong>신청할 수 있는 곳</strong></p>        <ol class="todo">
+          <li>가까운 <strong>주민센터(행정복지센터)</strong>에 가서 신청 — 가장 빠르고 간단해요. 주소지가 아니어도 전국 어디서나 됩니다.</li>
+          <li><strong>국민연금공단</strong> 지사에서도 신청할 수 있어요. 거동이 불편하면 전화 <a href="tel:1355">1355</a>로 ‘찾아뵙는 서비스’를 신청하면 집으로 와서 도와줍니다.</li>
+          <li><strong>복지로</strong> 누리집에서 온라인 신청 (bokjiro.go.kr) — 공동인증서가 필요해요.</li>
+        </ol>
+        <p class="hint">만 65세 생일이 있는 달의 한 달 전부터 신청할 수 있어요. 2026년에는 1961년생이 만 65세가 됩니다. 신청한 달부터 매월 25일에 통장으로 들어오고, 늦게 신청하면 그 앞 달 것은 받을 수 없으니 생일 전에 미리 신청하세요.</p>
+        <p class="hint">궁금한 점은 보건복지상담센터 <a href="tel:129">129</a>로 전화하시면 친절하게 알려 줍니다.</p>
+        <div class="btns">
+          <a class="btn btn-tel" href="tel:129">☎ 129 보건복지상담센터</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="hint" style="margin-top:0">
+          본 툴은 보건복지부 고시 기준에 따른 <strong>시뮬레이션 참고용</strong>이며 실제 수급 여부 및 지급액은 주민센터·국민연금공단 심사 결과에 따라 달라질 수 있습니다.
+        </p>
+        <p class="hint">
+          고급 자동차·회원권, 무료임차소득, 이자소득 공제, 임대보증금 일부 제외 같은 세부 항목은 넣지 않았어요. 실제 심사에서는 이런 항목이 더해지거나 빠질 수 있습니다.
+        </p>
+        <div class="btns">
+          <button type="button" class="btn btn-ghost" id="restart">처음부터 다시</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="src">
+      2026년 기준 자료: 보건복지부 고시 제2026-156호(기초연금 지급대상자 선정기준액, 기준연금액 및 소득인정액 산정 세부기준), 「기초연금법」 제5조·제6조·제8조 및 같은 법 시행령 제10조·제11조, 시행규칙 제4조, 정부24·복지로 안내.
+    </p>
+    <p class="src">한 번 열어 둔 화면은 계속 계산돼요. 입력한 내용은 어디에도 저장되거나 전송되지 않아요.</p>
+    <p class="src" style="margin-top:8px;font-weight:800;color:var(--navy);">※ 참고용 계산이며 최종 기준·수급 여부는 해당 공식 기관 안내 및 계약서 확인이 필요합니다.</p>
+  </footer>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script id="calc-core">
+(function (root) {
+  'use strict';
+
+  /* ── 2026년 보건복지부 고시 기준 상수 ───────────────────────── */
+  var RULES = {
+    year: 2026,
+    selStdSingle: 2470000,      // 고시 제2조: 배우자 없는 노인가구
+    selStdCouple: 3952000,      // 고시 제2조: 배우자 있는 노인가구
+    basePension: 349700,        // 고시 제3조: 2026년 기준연금액
+    workBasicDeduction: 1160000,// 고시 제6조: 월 기본공제
+    workExtraRate: 0.30,        // 고시 제6조: 기본공제 차감 후 30% 추가공제
+    propertyRate: 0.04,         // 시행규칙 제4조②: 재산 소득환산율 연 4%
+    financialDeduction: 20000000, // 고시 제9조: 금융재산 2,000만원 공제
+    baseProperty: {             // 고시 제8조: 기본재산한도액
+      metro: 135000000,
+      city: 85000000,
+      rural: 72500000
+    },
+    coupleCutRate: 0.20,        // 법 제8조①: 부부 모두 수급 시 각 20% 감액
+    antiInversionRateSingle: 0.10, // 시행령 제11조①: 기준연금액의 10% 하한
+    antiInversionRateCouple: 0.20, // 시행령 제11조②: 기준연금액의 20% 하한
+    workDeductionLabel: '116만원'
+  };
+
+  function num(v) {
+    var n = Number(v);
+    if (!isFinite(n) || n <= 0) { return 0; }
+    return n;
+  }
+
+  /* 근로소득 평가액 = (근로소득 - 116만원) x 70%
+     = 116만원 공제 후 남은 금액에서 30%를 한 번 더 빼는 것과 같음 */
+  function evalWorkIncome(work) {
+    var over = Math.max(0, num(work) - RULES.workBasicDeduction);
+    return over * (1 - RULES.workExtraRate);
+  }
+
+  /* 재산의 월 소득환산액
+     = [(일반재산 - 기본재산액) + (금융재산 - 2,000만원) - 부채] x 4% ÷ 12  (음수는 0) */
+  function evalProperty(assets, region) {
+    assets = assets || {};
+    var base = RULES.baseProperty[region];
+    if (typeof base !== 'number') { base = RULES.baseProperty.metro; }
+    var general = Math.max(0, num(assets.general) - base);
+    var financial = Math.max(0, num(assets.financial) - RULES.financialDeduction);
+    var net = general + financial - num(assets.debt);
+    if (net < 0) { net = 0; }
+    return net * RULES.propertyRate / 12;
+  }
+
+  /* 국민연금 급여액에 따른 기초연금액 (법 제5조⑤, 제6조, 시행령 제10조)
+     - 급여액 ≤ 기준연금액 150%       : 기준연금액
+     - 150% < 급여액 ≤ 200%          : max(기준연금액x250% - 급여액,
+                                            기준연금액 - 2/3 x A급여액 + 기준연금액x50%)
+     - 급여액 > 200%                 : 기준연금액 - 2/3 x A급여액 + 기준연금액x50%
+       (괄호 값이 음수면 0, 최종 금액은 기준연금액을 넘지 않음) */
+  function pensionWithNational(base, nationalPension, aAmount) {
+    var np = num(nationalPension);
+    var a = num(aAmount);
+    var formula = Math.max(0, base - (2 / 3) * a) + base * 0.5;
+    if (formula > base) { formula = base; }
+    if (np <= 0) { return base; }
+    if (np <= base * 1.5) { return base; }
+    if (np <= base * 2.0) {
+      var alt = base * 2.5 - np;
+      return Math.max(alt, formula);
+    }
+    return formula;
+  }
+
+  function roundWon(v) {
+    if (!isFinite(v) || v <= 0) { return 0; }
+    return Math.round(v);
+  }
+
+  /* 부부 합산 지급액을 각자에게 나눔 (시행령 제11조⑤: 감액 후 금액에 비례) */
+  function splitAmounts(total, limits, floorEach) {
+    var sum = 0, i;
+    for (i = 0; i < limits.length; i++) { sum += limits[i]; }
+    if (sum <= 0) {
+      var zeros = [];
+      for (i = 0; i < limits.length; i++) { zeros.push(0); }
+      return zeros;
+    }
+    var out = [];
+    for (i = 0; i < limits.length; i++) { out.push(total * limits[i] / sum); }
+    if (total >= floorEach * limits.length) {
+      for (i = 0; i < limits.length; i++) {
+        if (out[i] < floorEach) {
+          var need = floorEach - out[i];
+          out[i] = floorEach;
+          var idx = -1, max = -1, j;
+          for (j = 0; j < out.length; j++) {
+            if (j !== i && out[j] > max) { max = out[j]; idx = j; }
+          }
+          if (idx >= 0) { out[idx] = Math.max(floorEach, out[idx] - need); }
+        }
+      }
+    }
+    return out;
+  }
+
+  /* ── 본 계산 ─────────────────────────────────────────────── */
+  function calc(input) {
+    input = input || {};
+    var household = input.household === 'coupleBoth' || input.household === 'coupleOne'
+      ? input.household : 'single';
+    var region = input.region || 'metro';
+    var self = input.self || {};
+    var spouse = input.spouse || {};
+    var assets = input.assets || {};
+    var base = RULES.basePension;
+    var selStd = household === 'single' ? RULES.selStdSingle : RULES.selStdCouple;
+    var couple = household !== 'single';
+
+    var workSelf = evalWorkIncome(self.work);
+    var workSpouse = couple ? evalWorkIncome(spouse.work) : 0;
+    var otherSelf = num(self.other) + num(self.np);
+    var otherSpouse = couple ? num(spouse.other) + num(spouse.np) : 0;
+    var property = evalProperty(assets, region);
+
+    var income = roundWon(workSelf + workSpouse + otherSelf + otherSpouse + property);
+    var qualified = income <= selStd;
+
+    // 사람별 기초연금액 (국민연금 연계감액 → 부부 20% 감액 순서)
+    var persons = [];
+    var selfBase = pensionWithNational(base, self.np, self.a);
+    if (household === 'coupleBoth') {
+      var spouseBase = pensionWithNational(base, spouse.np, spouse.a);
+      persons = [
+        { key: 'self', label: '나', beforeNp: base, afterNp: selfBase, afterCouple: selfBase * (1 - RULES.coupleCutRate) },
+        { key: 'spouse', label: '배우자', beforeNp: base, afterNp: spouseBase, afterCouple: spouseBase * (1 - RULES.coupleCutRate) }
+      ];
+    } else {
+      persons = [
+        { key: 'self', label: '나', beforeNp: base, afterNp: selfBase, afterCouple: selfBase }
+      ];
+    }
+
+    var limitTotal = 0, i;
+    for (i = 0; i < persons.length; i++) { limitTotal += persons[i].afterCouple; }
+
+    var floorEach = household === 'coupleBoth'
+      ? base * RULES.antiInversionRateCouple / 2
+      : base * RULES.antiInversionRateSingle;
+
+    var payEach = [], payTotal = 0, antiCut = 0;
+    if (!qualified) {
+      for (i = 0; i < persons.length; i++) { payEach.push(0); }
+      payTotal = 0;
+      antiCut = 0;
+    } else if (income + limitTotal < selStd) {
+      for (i = 0; i < persons.length; i++) { payEach.push(roundWon(persons[i].afterCouple)); }
+      payTotal = roundWon(limitTotal);
+    } else {
+      // 소득역전방지 감액 (시행령 제11조)
+      var gap = selStd - income;
+      var floorTotal = household === 'coupleBoth'
+        ? base * RULES.antiInversionRateCouple
+        : base * RULES.antiInversionRateSingle;
+      var target = Math.min(limitTotal, Math.max(gap, floorTotal));
+      var limits = [];
+      for (i = 0; i < persons.length; i++) { limits.push(persons[i].afterCouple); }
+      payEach = splitAmounts(target, limits, floorEach);
+      for (i = 0; i < payEach.length; i++) { payEach[i] = roundWon(payEach[i]); }
+      payTotal = 0;
+      for (i = 0; i < payEach.length; i++) { payTotal += payEach[i]; }
+      antiCut = roundWon(limitTotal - target);
+    }
+
+    var totalNpCut = 0;
+    for (i = 0; i < persons.length; i++) { totalNpCut += persons[i].beforeNp - persons[i].afterNp; }
+    var coupleCut = 0;
+    for (i = 0; i < persons.length; i++) { coupleCut += persons[i].afterNp - persons[i].afterCouple; }
+
+    return {
+      year: RULES.year,
+      household: household,
+      region: region,
+      basePension: base,
+      selStd: selStd,
+      selStdLabel: selStd.toLocaleString('ko-KR'),
+      income: income,
+      qualified: qualified,
+      gap: selStd - income,          // 양수면 기준까지 남은 금액
+      excess: Math.max(0, income - selStd),
+      workEval: roundWon(workSelf + workSpouse),
+      workEvalSelf: roundWon(workSelf),
+      workEvalSpouse: roundWon(workSpouse),
+      otherIncome: otherSelf + otherSpouse,
+      propertyMonthly: roundWon(property),
+      propertyRaw: property,
+      npCut: roundWon(totalNpCut),
+      coupleCut: roundWon(coupleCut),
+      antiCut: antiCut,
+      persons: persons.map(function (p, idx) {
+        return {
+          key: p.key,
+          label: p.label,
+          beforeNp: roundWon(p.beforeNp),
+          afterNp: roundWon(p.afterNp),
+          afterCouple: roundWon(p.afterCouple),
+          pay: payEach[idx]
+        };
+      }),
+      payTotal: payTotal,
+      propertyBase: RULES.baseProperty[region] || RULES.baseProperty.metro,
+      warnings: (function () {
+        var w = [];
+        var npSelfOver = num(self.np) > base * 1.5;
+        var npSpouseOver = couple && num(spouse.np) > base * 1.5;
+        if (npSelfOver && num(self.a) <= 0) { w.push('self'); }
+        if (npSpouseOver && num(spouse.a) <= 0) { w.push('spouse'); }
+        return w;
+      })()
+    };
+  }
+
+  root.PensionCalc = { RULES: RULES, calc: calc, evalWorkIncome: evalWorkIncome, evalProperty: evalProperty, pensionWithNational: pensionWithNational, splitAmounts: splitAmounts };
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+</script>
+
+<script id="app-ui">
+(function () {
+  'use strict';
+
+  var R = PensionCalc.RULES;
+  var state = {
+    household: null,
+    region: null,
+    self: { work: 0, np: 0, a: 0, other: 0 },
+    spouse: { work: 0, np: 0, a: 0, other: 0 },
+    assets: { general: 0, financial: 0, debt: 0 }
+  };
+
+  var won = function (n) { return Number(n || 0).toLocaleString('ko-KR'); };
+  // 135000000 → '1억 3,500만원', 3952000 → '395만 2,000원', 34970 → '34,970원'
+  function koreanMoney(v) {
+    v = Math.round(Number(v) || 0);
+    if (v <= 0) { return '0원'; }
+    var eok = Math.floor(v / 100000000);
+    var man = Math.floor((v % 100000000) / 10000);
+    var rest = v % 10000;
+    if (eok > 0) {
+      return eok + '억' + (man ? ' ' + won(man) + '만' : '') + '원';
+    }
+    if (man > 0) {
+      return won(man) + '만' + (rest ? ' ' + won(rest) : '') + '원';
+    }
+    return won(v) + '원';
+  }
+  /* 큰 금액을 읽기 쉬운 한글 단위로: 2,470,000 → '247만 원', 1,025,000 → '102만 5,000원' */
+  function manLabel(v) {
+    v = Math.round(Number(v) || 0);
+    if (v <= 0) { return '0원'; }
+    var eok = Math.floor(v / 100000000);
+    var man = Math.floor((v % 100000000) / 10000);
+    var rest = v % 10000;
+    var head = '';
+    if (eok > 0) { head += eok + '억'; }
+    if (man > 0) { head += (head ? ' ' : '') + won(man) + '만'; }
+    if (!head) { return won(v) + '원'; }
+    if (rest > 0) { return head + ' ' + won(rest) + '원'; }
+    return head + ' 원';
+  }
+  /* 2,470,000 → '2,470,000원(247만 원)' — 0원일 때는 괄호를 붙이지 않음 */
+  function wonMan(v) {
+    return won(v) + '원' + (v > 0 ? '(' + manLabel(v) + ')' : '');
+  }
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ── 화면 전환 ───────────────────── */
+  var STEP_LABEL = {
+    step1: '1단계 · 가구와 사는 곳',
+    step2: '2단계 · 한 달 소득',
+    step3: '3단계 · 재산',
+    result: '결과'
+  };
+  var STEP_PCT = { step1: 33, step2: 66, step3: 90, result: 100 };
+
+  function show(id) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) { screens[i].classList.add('hidden'); }
+    $(id).classList.remove('hidden');
+    $('pbar').style.width = STEP_PCT[id] + '%';
+    $('ptext').textContent = STEP_LABEL[id];
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  /* ── 숫자 입력 ───────────────────── */
+  function parseNum(str) {
+    var digits = String(str == null ? '' : str).replace(/[^0-9]/g, '');
+    if (!digits) { return 0; }
+    if (digits.length > 15) { digits = digits.slice(0, 15); }
+    return parseInt(digits, 10);
+  }
+  function simpleReadback(v) {
+    if (!v) { return ''; }
+    return '= ' + koreanMoney(v);
+  }
+  function bindNumber(el, onChange) {
+    el.addEventListener('input', function () {
+      var v = parseNum(el.value);
+      el.value = v ? won(v) : '';
+      onChange(v);
+    });
+  }
+
+  var inputs = document.querySelectorAll('input[inputmode="numeric"]');
+  for (var i = 0; i < inputs.length; i++) {
+    (function (el) {
+      var person = el.getAttribute('data-person');
+      var kind = el.getAttribute('data-kind');
+      var asset = el.getAttribute('data-asset');
+      bindNumber(el, function (v) {
+        if (asset) {
+          state.assets[asset] = v;
+        } else {
+          state[person][kind] = v;
+        }
+        var rb = document.querySelector('[data-readback="' + el.id + '"]');
+        if (rb) { rb.textContent = simpleReadback(v); }
+        if (kind === 'np') {
+          var wrap = document.querySelector('[data-a-wrap="' + person + '"]');
+          if (wrap) { wrap.hidden = !(v > R.basePension * 1.5); }
+        }
+      });
+    })(inputs[i]);
+  }
+
+  /* ── 선택 버튼 ───────────────────── */
+  var choices = document.querySelectorAll('.choice');
+  for (var c = 0; c < choices.length; c++) {
+    (function (btn) {
+      btn.addEventListener('click', function () {
+        var group = btn.getAttribute('data-group');
+        var same = document.querySelectorAll('[data-group="' + group + '"]');
+        for (var k = 0; k < same.length; k++) { same[k].setAttribute('aria-pressed', 'false'); }
+        btn.setAttribute('aria-pressed', 'true');
+        state[group] = btn.getAttribute('data-value');
+        if (group === 'region') { updateBasePropertyHint(); }
+        checkReady();
+      });
+    })(choices[c]);
+  }
+
+  function updateBasePropertyHint() {
+    var amount = R.baseProperty[state.region] || R.baseProperty.metro;
+    $('base-property-hint').textContent = '이 지역은 ' + koreanMoney(amount) + '까지는 재산으로 치지 않아요.';
+  }
+
+  function checkReady() {
+    $('go2').disabled = !(state.household && state.region);
+  }
+
+  /* ── 단계 이동 ───────────────────── */
+  $('go2').addEventListener('click', function () {
+    if (!(state.household && state.region)) { return; }
+    $('spouse-card').hidden = state.household === 'single';
+    $('h-self').textContent = state.household === 'single' ? '나의 소득' : '나의 소득';
+    $('spouse-note').textContent = state.household === 'coupleBoth'
+      ? '배우자 소득도 함께 더해서 계산해요.'
+      : '배우자 소득도 함께 더해서 계산해요. 배우자도 65세 이상이면 결과에서 함께 계산됩니다.';
+    show('step2');
+  });
+  $('go3').addEventListener('click', function () {
+    updateBasePropertyHint();
+    show('step3');
+  });
+  var prevs = document.querySelectorAll('[data-prev]');
+  for (var p = 0; p < prevs.length; p++) {
+    (function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-prev')); });
+    })(prevs[p]);
+  }
+
+  /* ── 결과 그리기 ─────────────────── */
+  var lastResult = null;
+
+  function verdictOf(r) {
+    if (!r.qualified) {
+      return { cls: 'no', text: '지금은 받기 어려워요', sub: '소득인정액이 선정기준액보다 ' + koreanMoney(r.excess) + ' 많아요.' };
+    }
+    if (r.antiCut > 0) {
+      return { cls: 'mid', text: '받을 수 있어요 (금액이 줄어요)', sub: '기준에 가까워서 받는 금액이 줄어듭니다.' };
+    }
+    return { cls: 'ok', text: '받을 수 있어요', sub: '소득인정액이 기준 안에 들어와요.' };
+  }
+
+  function render(r) {
+    lastResult = r;
+    var householdLabel = r.household === 'single' ? '혼자 살아요'
+      : (r.household === 'coupleBoth' ? '부부가 둘 다 받아요' : '부부인데 나만 받아요');
+    var regionLabel = r.region === 'metro' ? '대도시' : (r.region === 'city' ? '중소도시' : '농어촌');
+    $('result-sub').textContent = householdLabel + ' · ' + regionLabel + ' · 2026년 기준';
+
+    var v = verdictOf(r);
+    var box = $('verdict');
+    box.className = 'verdict ' + v.cls;
+    $('verdict-text').textContent = v.text;
+    $('verdict-sub').textContent = v.sub;
+
+    $('out-income').textContent = won(r.income);
+    $('out-income-man').textContent = r.income > 0 ? '(' + manLabel(r.income) + ')' : '';
+    $('out-income-sub').innerHTML = '선정기준액 ' + won(r.selStd) + '원 '
+      + '<span class="nowrap">(' + manLabel(r.selStd) + ')</span> '
+      + (r.qualified ? '이하 → 기준 안에 들어요' : '초과 → 기준을 넘었어요');
+
+    var pct = Math.round(r.income / r.selStd * 100);
+    $('cbar-fill').style.width = Math.min(100, Math.max(pct, r.income > 0 ? 4 : 0)) + '%';
+    $('cbar').className = 'cbar' + (r.qualified ? '' : ' over');
+    $('compare-min').textContent = '소득인정액 ' + pct + '%';
+    $('compare-max').textContent = '기준 ' + manLabel(r.selStd);
+
+    if (r.household === 'coupleBoth') {
+      $('out-pay-label').textContent = '예상 월 수령액 (부부 합계)';
+      $('out-pay').textContent = won(r.payTotal);
+      $('out-pay-sub').textContent = '나 ' + won(r.persons[0].pay) + '원 + 배우자 '
+        + won(r.persons[1].pay) + '원';
+    } else {
+      $('out-pay-label').textContent = '예상 월 수령액';
+      $('out-pay').textContent = won(r.payTotal);
+      $('out-pay-sub').textContent = r.qualified ? '한 달 기준, 1인 금액' : '선정기준액을 넘어서 지금은 받을 수 없어요';
+    }
+    if (r.warnings && r.warnings.length) {
+      $('out-pay-sub').textContent += ' · 국민연금 연계감액이 들어가면 이보다 적어요';
+    }
+    $('out-pay-man').textContent = r.payTotal > 0 ? '(' + manLabel(r.payTotal) + ')' : '';
+
+    // 계산 내역
+    var amtCell = function (v) {
+      return '<td><span class="amt">' + won(v) + '원</span>'
+        + (v > 0 ? '<span class="amt-man">(' + manLabel(v) + ')</span>' : '') + '</td>';
+    };
+    var rows = [
+      ['일해서 버는 돈 평가액', r.workEval],
+      ['그 밖의 소득 (국민연금 포함)', r.otherIncome],
+      ['재산을 월 소득으로 환산', r.propertyMonthly]
+    ];
+    var body = '';
+    for (var i = 0; i < rows.length; i++) {
+      body += '<tr><th>' + rows[i][0] + '</th>' + amtCell(rows[i][1]) + '</tr>';
+    }
+    body += '<tr class="sum"><th>소득인정액 합계</th>' + amtCell(r.income) + '</tr>';
+    body += '<tr><th>선정기준액 (2026년)</th>' + amtCell(r.selStd) + '</tr>';
+
+    if (r.npCut > 0) {
+      body += '<tr class="minus"><th>국민연금 연계 감액</th><td>− ' + won(r.npCut) + '원</td></tr>';
+    }
+    if (r.coupleCut > 0) {
+      body += '<tr class="minus"><th>부부 감액 (각 20%)</th><td>− ' + won(r.coupleCut) + '원</td></tr>';
+    }
+    if (r.antiCut > 0) {
+      body += '<tr class="minus"><th>소득역전방지 감액</th><td>− ' + won(r.antiCut) + '원</td></tr>';
+    }
+    body += '<tr class="sum"><th>예상 월 수령액</th>' + amtCell(r.payTotal) + '</tr>';
+    $('bd-body').innerHTML = body;
+
+    // 설명 목록
+    var why = [];
+    why.push('기준연금액은 2026년 ' + won(r.basePension) + '원(' + manLabel(r.basePension) + ')이에요.');
+    if (r.propertyMonthly > 0) {
+      why.push('재산은 ' + koreanMoney(r.propertyBase) + '을 빼고 남은 금액의 연 4%를 12달로 나눠 한 달치로 계산했어요.');
+    } else {
+      why.push('재산은 ' + koreanMoney(r.propertyBase) + '까지는 소득으로 치지 않아서 0원으로 계산됐어요.');
+    }
+    if (r.coupleCut > 0) {
+      why.push('부부가 둘 다 받으면 각자 금액에서 20%가 줄어요. 그래서 한 사람당 '
+        + won(Math.round(r.basePension * 0.8)) + '원이 기준이에요.');
+    }
+    if (r.antiCut > 0) {
+      why.push('받는 금액을 더해도 기준금액을 살짝 넘지 않게 조정하는 규칙(소득역전방지)이 적용됐어요.');
+    }
+    if (r.npCut > 0) {
+      why.push('국민연금을 기준연금액의 150%(52만4,550원)보다 많이 받아서 국민연금 연계 감액이 들어갔어요.');
+    }
+    if (r.qualified && r.gap > 0 && r.antiCut === 0) {
+      why.push('선정기준액까지 ' + koreanMoney(r.gap) + ' 여유가 있어요.');
+    }
+    var whyHtml = '';
+    for (var j = 0; j < why.length; j++) { whyHtml += '<li>' + why[j] + '</li>'; }
+    $('why-list').innerHTML = whyHtml;
+
+    // 경고: A급여액 미입력
+    var notice = document.getElementById('np-notice');
+    if (notice) { notice.parentNode.removeChild(notice); }
+    if (r.warnings && r.warnings.length) {
+      var names = [];
+      for (var w = 0; w < r.warnings.length; w++) {
+        if (r.warnings[w] === 'self' && r.household !== 'single') { names.push('나'); }
+        if (r.warnings[w] === 'self' && r.household === 'single') { names.push('본인'); }
+        if (r.warnings[w] === 'spouse') { names.push('배우자'); }
+      }
+      var nBox = document.createElement('div');
+      nBox.className = 'notice';
+      nBox.id = 'np-notice';
+      nBox.innerHTML = '<strong>국민연금을 많이 받고 있어요</strong><p>' + names.join('·')
+        + '의 국민연금이 기준연금액의 150%(52만4,550원)를 넘습니다. 실제로는 국민연금 연계 감액이 들어가서 위 금액보다 적어질 수 있어요(1인당 최소 174,850원까지). 국민연금 A급여액을 아시면 2단계에서 넣어 주세요. 국민연금공단 1355로 전화하면 알려 줍니다.</p>';
+      var figures = document.querySelectorAll('#result .figure');
+      var anchor = figures[figures.length - 1];
+      anchor.parentNode.insertBefore(nBox, anchor.nextSibling);
+    }
+
+    $('copy-box').value = buildCopyText(r);
+    if (moreDet && moreDet.open) { fitCopyBox(); }
+    show('result');
+  }
+
+  function buildCopyText(r) {
+    var householdLabel = r.household === 'single' ? '혼자 살아요'
+      : (r.household === 'coupleBoth' ? '부부 · 둘 다 수급' : '부부 · 한 명만 수급');
+    var regionLabel = r.region === 'metro' ? '대도시' : (r.region === 'city' ? '중소도시' : '농어촌');
+    var lines = [];
+    lines.push('[2026년 기초연금 예상 계산]');
+    lines.push('· 가구: ' + householdLabel + ' / ' + regionLabel);
+    lines.push('· 소득인정액: ' + wonMan(r.income) + ' / 선정기준액 ' + wonMan(r.selStd));
+    lines.push('· 판정: ' + (r.qualified ? '받을 수 있어요' : '지금은 받기 어려워요'));
+    if (r.qualified) {
+      if (r.household === 'coupleBoth') {
+        lines.push('· 예상 월 수령액: 나 ' + wonMan(r.persons[0].pay) + ' + 배우자 '
+          + wonMan(r.persons[1].pay) + ' = 합계 ' + wonMan(r.payTotal));
+      } else {
+        lines.push('· 예상 월 수령액: ' + wonMan(r.payTotal));
+      }
+    } else {
+      lines.push('· 선정기준액보다 ' + wonMan(r.excess) + ' 많아서 지금은 대상이 아니에요');
+    }
+    if (r.warnings && r.warnings.length) {
+      lines.push('· 국민연금을 52만4,550원 넘게 받아서 실제로는 연계감액이 들어갈 수 있어요');
+    }
+    lines.push('· 신청: 주민센터 방문 또는 복지로(bokjiro.go.kr), 국민연금공단 1355');
+    lines.push('※ 보건복지부 고시 기준 참고용 계산입니다. 실제 수급 여부와 금액은 심사 결과에 따라 달라집니다.');
+    return lines.join('\n');
+  }
+
+  $('calc-btn').addEventListener('click', function () {
+    var r = PensionCalc.calc(state);
+    render(r);
+  });
+
+  /* ── 복사 ───────────────────────── */
+  function toast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    window.clearTimeout(toast._timer);
+    toast._timer = window.setTimeout(function () { t.classList.remove('show'); }, 2200);
+  }
+
+  function legacyCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.width = '2em';
+    ta.style.height = '2em';
+    ta.style.opacity = '0';
+    ta.style.pointerEvents = 'none';
+    document.body.appendChild(ta);
+    var ok = false;
+    try {
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      ok = document.execCommand('copy');
+    } catch (e) {
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function fitCopyBox() {
+    var cb = $('copy-box');
+    if (!cb) { return; }
+    cb.style.height = 'auto';
+    var h = cb.scrollHeight + 4;
+    cb.style.height = Math.max(180, Math.min(640, h)) + 'px';
+  }
+
+  var moreDet = document.querySelector('details.more');
+  if (moreDet) {
+    moreDet.addEventListener('toggle', function () {
+      if (moreDet.open) { fitCopyBox(); }
+    });
+  }
+
+  $('copy-btn').addEventListener('click', function () {
+    if (!lastResult) { return; }
+    var text = buildCopyText(lastResult);
+    var done = function () { toast('복사했어요. 카카오톡에 붙여 넣으세요.'); };
+    var fallback = function () {
+      if (legacyCopy(text)) { done(); return; }
+      var d = document.querySelector('details.more');
+      if (d) { d.open = true; fitCopyBox(); }
+      toast('아래 칸의 글을 길게 눌러 복사해 주세요.');
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+
+  $('restart').addEventListener('click', function () {
+    var all = document.querySelectorAll('.choice');
+    for (var i2 = 0; i2 < all.length; i2++) { all[i2].setAttribute('aria-pressed', 'false'); }
+    state = {
+      household: null, region: null,
+      self: { work: 0, np: 0, a: 0, other: 0 },
+      spouse: { work: 0, np: 0, a: 0, other: 0 },
+      assets: { general: 0, financial: 0, debt: 0 }
+    };
+    var ins = document.querySelectorAll('input[inputmode="numeric"]');
+    for (var i3 = 0; i3 < ins.length; i3++) { ins[i3].value = ''; }
+    var rbs = document.querySelectorAll('.readback');
+    for (var i4 = 0; i4 < rbs.length; i4++) { rbs[i4].textContent = ''; }
+    var aWraps = document.querySelectorAll('[data-a-wrap]');
+    for (var i5 = 0; i5 < aWraps.length; i5++) { aWraps[i5].hidden = true; }
+    lastResult = null;
+    show('step1');
+    checkReady();
+  });
+
+  show('step1');
+  checkReady();
+  updateBasePropertyHint();
+})();
+</script>
+
+</body>
+</html>

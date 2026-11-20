@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#0B2642">
+<meta name="description" content="공정거래위원회 소비자분쟁해결기준으로 헬스장·필라테스 중도해지 위약금(총액 10%)과 예상 환급액을 계산하는 큰글씨 계산기. 가입 없이 휴대폰 안에서만 계산합니다.">
+<title>헬스장·필라테스 중도해지 환급 계산기 | 위약금 10% 기준 (무료)</title>
+<style>
+:root{
+  --navy:#0B2642;
+  --navy-soft:#173A5E;
+  --teal:#009991;
+  --teal-dark:#00746D;
+  --teal-pale:#E4F4F2;
+  --cream:#FBF6EA;
+  --card:#FFFFFF;
+  --line:#E2DAC8;
+  --muted:#55616E;
+  --warn-bg:#FFF3DC;
+  --warn-line:#E8B85C;
+  --warn-text:#5B3E05;
+  --radius:18px;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--navy);
+  font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif;
+  font-size:19px;
+  line-height:1.62;
+  letter-spacing:-0.01em;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.wrap{max-width:480px;margin:0 auto;padding:0 1rem 7rem;}
+h1,h2,h3{margin:0;letter-spacing:-0.03em;line-height:1.35;}
+p{margin:0;}
+
+/* 상단 */
+.hero{
+  background:linear-gradient(160deg,#0B2642 0%,#123457 62%,#0E5C5A 100%);
+  color:#FFFDF6;
+  padding:1.6rem 1.15rem 2.2rem;
+  border-radius:0 0 26px 26px;
+}
+.hero__inner{max-width:480px;margin:0 auto;}
+.badge{
+  display:inline-block;
+  background:rgba(0,153,145,0.28);
+  border:1px solid rgba(120,230,220,0.55);
+  color:#D9FBF6;
+  font-size:18px;
+  font-weight:700;
+  padding:0.3rem 0.75rem;
+  border-radius:999px;
+  margin-bottom:0.85rem;
+  white-space:nowrap;
+}
+.hero h1{font-size:31px;font-weight:800;}
+.hero h1 .accent{color:#7DE6DA;}
+.hero__sub{margin-top:0.7rem;font-size:19px;color:#D5E3F0;}
+
+/* 공통 카드 */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:1.15rem 1.05rem 1.25rem;
+  margin-top:1rem;
+  box-shadow:0 2px 0 rgba(11,38,66,0.04);
+}
+.step{
+  display:flex;align-items:center;gap:0.55rem;
+  font-size:18px;font-weight:800;color:var(--teal-dark);
+  margin-bottom:0.35rem;
+}
+.step__num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;
+  background:var(--teal);color:#fff;font-size:18px;font-weight:800;flex:0 0 auto;
+}
+.card h2{font-size:23px;font-weight:800;margin-bottom:0.25rem;}
+.hint{font-size:18px;color:var(--muted);margin-top:0.35rem;}
+
+/* 입력 */
+.field{margin-top:1.05rem;}
+.field__label{display:block;font-size:19px;font-weight:700;margin-bottom:0.45rem;}
+.field__label .unit{font-weight:600;color:var(--muted);font-size:18px;}
+.input{
+  width:100%;min-height:62px;
+  padding:0.7rem 0.95rem;
+  font-size:22px;font-weight:700;color:var(--navy);
+  background:#FFFDF8;
+  border:2px solid var(--line);
+  border-radius:14px;
+  font-family:inherit;
+}
+.input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px rgba(0,153,145,0.16);}
+.input--date{font-size:19px;font-weight:600;}
+.row{display:flex;flex-wrap:wrap;gap:0.6rem;}
+.row > *{flex:1;min-width:0;}
+.chips{display:flex;flex-wrap:wrap;gap:0.45rem;margin-top:0.55rem;}
+.chip{
+  flex:1 1 auto;min-width:74px;min-height:52px;
+  border:2px solid var(--line);
+  background:#FFFDF8;color:var(--navy);
+  border-radius:12px;
+  font-family:inherit;font-size:18px;font-weight:700;
+  cursor:pointer;
+}
+.chip:active,.chip.is-on{background:var(--teal-pale);border-color:var(--teal);color:var(--teal-dark);}
+.seg{display:flex;gap:0.55rem;margin-top:0.4rem;}
+.seg__btn{
+  flex:1;min-height:66px;
+  border:2px solid var(--line);
+  background:#FFFDF8;color:var(--navy);
+  border-radius:14px;
+  font-family:inherit;font-size:19px;font-weight:800;
+  line-height:1.3;
+  cursor:pointer;padding:0.4rem;
+}
+.seg__btn small{display:block;font-size:18px;font-weight:600;color:var(--muted);}
+.seg__btn.is-on{background:var(--teal-pale);border-color:var(--teal);color:var(--teal-dark);}
+.seg__btn.is-on small{color:var(--teal-dark);}
+.check{
+  display:flex;align-items:flex-start;gap:0.6rem;
+  margin-top:0.9rem;font-size:18px;font-weight:600;color:var(--navy);
+  cursor:pointer;
+}
+.check input{width:26px;height:26px;margin:0.15rem 0 0;accent-color:var(--teal);flex:0 0 auto;}
+
+/* 결과 */
+.result{
+  background:linear-gradient(168deg,#0B2642 0%,#123A5C 55%,#0A5B58 100%);
+  color:#FFFDF6;
+  border-radius:22px;
+  padding:1.3rem 1.1rem 1.45rem;
+  margin-top:1.1rem;
+  box-shadow:0 10px 24px rgba(11,38,66,0.16);
+}
+.result__kicker{
+  font-size:18px;font-weight:800;letter-spacing:0.02em;
+  color:#8FE9DF;margin-bottom:0.15rem;
+}
+.result__title{font-size:22px;font-weight:800;color:#FFFFFF;}
+.big-list{margin-top:1rem;display:flex;flex-direction:column;gap:0.7rem;}
+.big-item{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.16);
+  border-radius:16px;
+  padding:0.75rem 0.95rem 0.85rem;
+}
+.big-item--main{
+  background:rgba(0,153,145,0.22);
+  border:2px solid #48D6C8;
+}
+.big-item__label{font-size:18px;font-weight:700;color:#CFE6F2;}
+.big-item__value{
+  display:block;margin-top:0.1rem;
+  font-size:clamp(40px,11.5vw,52px);
+  font-weight:800;letter-spacing:-0.04em;line-height:1.12;
+  color:#FFFFFF;
+  overflow-wrap:anywhere;
+}
+.big-item__value .won{font-size:22px;font-weight:700;color:#CFE6F2;margin-left:0.15rem;letter-spacing:0;}
+.big-item--main .big-item__value{color:#FFFFFF;}
+.big-item__row{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 0.5rem;}
+.big-item__kr{
+  font-size:20px;font-weight:800;letter-spacing:0;
+  color:#8FE9DF;white-space:nowrap;
+}
+.big-item--main .big-item__kr{color:#D6FDF8;}
+.big-item__note{display:block;margin-top:0.2rem;font-size:18px;color:#BFD8E6;font-weight:600;}
+.formula{
+  margin-top:0.95rem;padding-top:0.85rem;
+  border-top:1px dashed rgba(255,255,255,0.28);
+  font-size:18px;color:#D8E8F2;font-weight:600;
+}
+.empty-note{
+  margin-top:1rem;font-size:19px;color:#CFE6F2;font-weight:700;
+}
+
+/* 비교 */
+.cmp{margin-top:1rem;}
+.cmp__grid{margin-top:0.6rem;}
+.cmp__row{
+  border:1px solid var(--line);border-radius:14px;
+  padding:0.65rem 0.75rem 0.7rem;margin-top:0.5rem;
+  background:#FFFDF8;
+}
+.cmp__row:first-child{margin-top:0;}
+.cmp__label{
+  font-size:18px;font-weight:800;color:var(--teal-dark);margin:0 0 0.35rem;
+}
+.cmp__pairs{display:flex;gap:0.5rem;}
+.cmp__pair{
+  flex:1 1 0;min-width:0;
+  background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:0.4rem 0.45rem 0.5rem;text-align:center;
+}
+.cmp__who{display:block;font-size:18px;font-weight:700;color:var(--muted);}
+.cmp__num{
+  display:block;margin-top:0.1rem;
+  font-size:22px;font-weight:800;letter-spacing:-0.02em;
+  color:var(--navy);overflow-wrap:anywhere;
+}
+.cmp__pair--mine{background:var(--teal-pale);border-color:#9FD9D2;}
+.cmp__pair--mine .cmp__num{color:var(--teal-dark);}
+.cmp__kr{display:block;margin-top:0.15rem;font-size:18px;font-weight:700;color:var(--muted);white-space:nowrap;}
+.cmp__pair--mine .cmp__kr{color:var(--teal-dark);}
+.diff{
+  margin-top:0.85rem;background:var(--teal-pale);
+  border:2px solid var(--teal);border-radius:14px;
+  padding:0.8rem 0.9rem;font-size:18px;font-weight:700;color:var(--teal-dark);
+}
+.diff strong{font-size:22px;font-weight:800;}
+.diff__kr{font-size:19px;font-weight:800;color:var(--teal-dark);white-space:nowrap;}
+
+/* 알림 */
+.notice{
+  border-radius:14px;padding:0.85rem 0.95rem;margin-top:0.8rem;
+  font-size:18px;font-weight:600;line-height:1.6;
+}
+.notice--warn{background:var(--warn-bg);border:2px solid var(--warn-line);color:var(--warn-text);}
+.notice--info{background:#EEF3F9;border:2px solid #B9CCE0;color:#1B3A57;}
+
+/* 문자 */
+.letter{
+  width:100%;min-height:390px;
+  margin-top:0.6rem;padding:0.9rem;
+  font-family:inherit;font-size:18px;line-height:1.75;color:var(--navy);
+  background:#FFFDF8;border:2px solid var(--line);border-radius:14px;
+  resize:vertical;
+}
+.btn{
+  display:block;width:100%;min-height:64px;
+  margin-top:0.7rem;border:none;border-radius:14px;
+  font-family:inherit;font-size:21px;font-weight:800;
+  cursor:pointer;
+}
+.btn--primary{background:var(--teal);color:#FFFFFF;}
+.btn--primary:active{background:var(--teal-dark);}
+.btn--ghost{background:#FFFDF8;color:var(--navy);border:2px solid var(--line);font-size:19px;}
+.btn--share{background:#FFFDF6;color:var(--navy);border:2px solid #48D6C8;line-height:1.38;padding:0.5rem 0.6rem;}
+.btn--share:active{background:#C8FBF3;}
+
+/* 공유 */
+.share{margin-top:1.05rem;padding-top:1rem;border-top:1px dashed rgba(255,255,255,0.3);}
+.share__hint{margin-top:0.55rem;font-size:18px;font-weight:600;color:#BFD8E6;}
+.share__link{
+  margin-top:0.65rem;padding:0.7rem 0.85rem;
+  font-size:18px;font-weight:800;color:#0B2642;
+  background:#7DE6DA;border-radius:12px;
+  line-height:1.55;word-break:keep-all;overflow-wrap:anywhere;
+}
+.share__more{margin-top:0.6rem;border:1px solid rgba(255,255,255,0.24);border-radius:14px;background:rgba(255,255,255,0.07);}
+.share__more summary{color:#FFFFFF;}
+.share__more summary::after{color:#7DE6DA;}
+.share__box{
+  display:block;width:calc(100% - 0.6rem);min-height:280px;margin:0 0.3rem 0.8rem;
+  padding:0.8rem;font-family:inherit;font-size:18px;line-height:1.7;color:var(--navy);
+  background:#FFFFFF;border:2px solid var(--line);border-radius:12px;
+  resize:vertical;word-break:keep-all;
+}
+
+/* 안내 목록 */
+.list{margin:0.5rem 0 0;padding-left:1.25rem;font-size:18px;color:var(--navy);}
+.list li{margin-top:0.5rem;}
+.list strong{color:var(--teal-dark);}
+details{margin-top:0.7rem;border:1px solid var(--line);border-radius:14px;background:#FFFDF8;}
+summary{
+  list-style:none;cursor:pointer;padding:0.85rem 0.95rem;
+  font-size:19px;font-weight:800;color:var(--navy);
+}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";float:right;color:var(--teal);font-size:22px;font-weight:800;}
+details[open] summary::after{content:"−";}
+.details__body{padding:0 0.95rem 1rem;font-size:18px;color:var(--navy);}
+.details__body p{margin-top:0.6rem;}
+
+/* 하단 */
+.fine{
+  margin-top:1.2rem;padding:1rem 1.05rem;
+  background:#EFEAD9;border-radius:14px;
+  font-size:18px;color:#3E4A57;line-height:1.65;
+}
+.foot{margin-top:1rem;text-align:center;font-size:18px;color:var(--muted);}
+a{color:var(--teal-dark);font-weight:800;}
+
+/* 하단 고정 요약 */
+.mini{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;gap:0.6rem;
+  padding:0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom));
+  background:var(--navy);color:#FFFFFF;text-decoration:none;
+  border-top:2px solid var(--teal);
+  transform:translateY(135%);transition:transform .24s ease;
+}
+.mini.is-on{transform:translateY(0);}
+.mini__label{display:block;font-size:18px;font-weight:700;color:#CFE6F2;line-height:1.3;}
+.mini__value{display:block;font-size:27px;font-weight:800;letter-spacing:-0.03em;line-height:1.2;}
+.mini__go{
+  font-size:18px;font-weight:800;color:#0B2642;background:#7DE6DA;
+  padding:0.55rem 0.85rem;border-radius:999px;white-space:nowrap;flex:0 0 auto;
+}
+
+/* 토스트 */
+.toast{
+  position:fixed;left:50%;bottom:6.2rem;transform:translate(-50%,200%);
+  background:var(--navy);color:#FFFFFF;
+  padding:0.8rem 1.2rem;border-radius:16px;
+  font-size:18px;font-weight:700;
+  box-shadow:0 8px 20px rgba(11,38,66,0.3);
+  transition:transform .22s ease;
+  z-index:50;width:max-content;max-width:calc(100% - 2rem);text-align:center;
+}
+.toast.is-on{transform:translate(-50%,0);}
+.toast:empty{display:none;}
+.hidden{display:none !important;}
+
+/* 아주 좌은 화면(320px)에서는 비교 칸을 위아래로 */
+@media (max-width:350px){
+  .wrap{padding:0 0.75rem 7rem;}
+  .card{padding:1rem 0.85rem 1.1rem;}
+  .cmp__pairs{flex-direction:column;}
+  .cmp__pair{padding:0.45rem 0.5rem 0.55rem;}
+  .big-item{padding:0.7rem 0.8rem 0.8rem;}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero__inner">
+    <span class="badge">설치·가입 없이 바로</span>
+    <h1>헬스장·필라테스<br><span class="accent">중도해지 환급 계산기</span></h1>
+    <p class="hero__sub">공정거래위원회 <strong>소비자분쟁해결기준</strong>대로<br>이용일수만큼만 내고,<br>위약금은 <strong>총액의 10%</strong>까지만.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="step1">
+    <p class="step"><span class="step__num">1</span> 계약 종류를 골라 주세요</p>
+    <h2 id="step1">어떤 이용권인가요?</h2>
+    <div class="seg" role="group" aria-label="계약 종류">
+      <button type="button" class="seg__btn is-on" id="modePeriod" aria-pressed="true">기간제<small>헬스·필라테스·요가 이용권</small></button>
+      <button type="button" class="seg__btn" id="modeCount" aria-pressed="false">횟수제<small>PT·쿠폰·회차권</small></button>
+    </div>
+    <p class="hint">기간제와 PT 회차를 함께 결제했다면 종류별로 따로 계산해서 더하면 됩니다.</p>
+  </section>
+
+  <section class="card" aria-labelledby="step2">
+    <p class="step"><span class="step__num">2</span> 결제한 금액과 계약 기간</p>
+    <h2 id="step2">얼마를, 얼마나 결제했나요?</h2>
+
+    <div class="field">
+      <label class="field__label" for="total">결제한 총액 <span class="unit">(원)</span></label>
+      <input class="input" id="total" type="number" inputmode="numeric" min="0" step="1000" placeholder="예: 600000">
+      <div class="chips" aria-label="금액 빠른 입력">
+        <button type="button" class="chip" data-amount="300000">30만원</button>
+        <button type="button" class="chip" data-amount="500000">50만원</button>
+        <button type="button" class="chip" data-amount="600000">60만원</button>
+        <button type="button" class="chip" data-amount="1000000">100만원</button>
+      </div>
+      <p class="hint">계약금·입회금·가입비·부대시설 이용료를 모두 더한 <strong>실제 결제 금액</strong>을 적어 주세요. 보증금은 넣지 않습니다.</p>
+    </div>
+
+    <div id="periodBlock">
+      <div class="field">
+        <label class="field__label" for="months">계약 기간 <span class="unit">(개월)</span></label>
+        <input class="input" id="months" type="number" inputmode="numeric" min="0" step="1" placeholder="예: 12">
+        <div class="chips" aria-label="개월 빠른 입력">
+          <button type="button" class="chip" data-months="1">1개월</button>
+          <button type="button" class="chip" data-months="3">3개월</button>
+          <button type="button" class="chip" data-months="6">6개월</button>
+          <button type="button" class="chip" data-months="12">12개월</button>
+        </div>
+        <p class="hint">1개월을 30일로 잡아 총일수를 자동으로 넣어 드립니다. 계약서에 적힌 일수로 고쳐도 됩니다.</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="totalDays">계약 총일수 <span class="unit">(일)</span></label>
+        <input class="input" id="totalDays" type="number" inputmode="numeric" min="0" step="1" placeholder="예: 360">
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="usedDays">실제로 이용한 일수 <span class="unit">(일)</span></label>
+        <input class="input" id="usedDays" type="number" inputmode="numeric" min="0" step="1" placeholder="예: 90">
+        <p class="hint">아직 한 번도 이용하지 않았다면 <strong>0</strong>을 넣으세요. (시작 전 해지는 위약금 10%만 냅니다)</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="startDate">시작일로 자동 계산 <span class="unit">(선택)</span></label>
+        <input class="input input--date" id="startDate" type="date" aria-label="이용 시작일">
+      </div>
+      <div class="field">
+        <label class="field__label" for="endDate">해지 신청일</label>
+        <input class="input input--date" id="endDate" type="date" aria-label="해지 신청일">
+        <p class="hint" id="dateHelper">시작일과 해지 신청일을 넣으면 이용일수를 자동으로 채워 드립니다. (양 끝 날짜 포함)</p>
+      </div>
+    </div>
+
+    <div id="countBlock" class="hidden">
+      <div class="field">
+        <label class="field__label" for="totalSessions">계약한 총 횟수 <span class="unit">(회)</span></label>
+        <input class="input" id="totalSessions" type="number" inputmode="numeric" min="0" step="1" placeholder="예: 20">
+      </div>
+      <div class="field">
+        <label class="field__label" for="usedSessions">실제로 이용한 횟수 <span class="unit">(회)</span></label>
+        <input class="input" id="usedSessions" type="number" inputmode="numeric" min="0" step="1" placeholder="예: 5">
+        <p class="hint">PT·쿠폰·회차권처럼 <strong>횟수로 정한 계약</strong>은 이용한 횟수만큼만 공제합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="step3">
+    <p class="step"><span class="step__num">3</span> 업체가 하는 말과 비교 (선택)</p>
+    <h2 id="step3">업체가 '1일 정상가'를 말했나요?</h2>
+    <p class="hint" id="vendorHint">업체가 할인 전 정상가로 하루 요금을 매겨 공제하겠다고 하면, 그 금액을 적어 보세요. 차액을 바로 보여 드립니다.</p>
+    <div class="field">
+      <label class="field__label" for="vendorRate"><span id="vendorRateLabel">업체가 말하는 1일 정상가</span> <span class="unit">(원)</span></label>
+      <input class="input" id="vendorRate" type="number" inputmode="numeric" min="0" step="1000" placeholder="예: 10000">
+      <p class="hint" id="vendorRateHint">비워 두면 비교하지 않습니다.</p>
+    </div>
+    <label class="check" for="vendorPenalty">
+      <input type="checkbox" id="vendorPenalty">
+      <span>업체가 위약금(10%)도 함께 공제한다고 했어요</span>
+    </label>
+  </section>
+
+  <section class="result" aria-live="polite" aria-labelledby="resultTitle">
+    <p class="result__kicker">공정거래위원회 기준</p>
+    <h2 class="result__title" id="resultTitle">돌려받을 수 있는 예상 금액</h2>
+
+    <p class="empty-note" id="emptyNote">금액과 기간을 넣으면 바로 계산됩니다.</p>
+
+    <div class="big-list hidden" id="bigList">
+      <div class="big-item big-item--main">
+        <span class="big-item__label">돌려받을 수 있는 예상 금액</span>
+        <span class="big-item__row">
+          <span class="big-item__value" id="outRefund">0<span class="won">원</span></span>
+          <span class="big-item__kr" id="outRefundKr"></span>
+        </span>
+        <span class="big-item__note" id="outRefundNote">결제 총액에서 이용한 만큼과 위약금 10%를 뺀 금액</span>
+      </div>
+      <div class="big-item">
+        <span class="big-item__label">결제한 총액</span>
+        <span class="big-item__row">
+          <span class="big-item__value" id="outTotal">0<span class="won">원</span></span>
+          <span class="big-item__kr" id="outTotalKr"></span>
+        </span>
+        <span class="big-item__note">계약금·입회금·가입비까지 더한 실제 결제 금액</span>
+      </div>
+      <div class="big-item">
+        <span class="big-item__label" id="outDeductLabel">이용일수만큼 빼는 금액</span>
+        <span class="big-item__row">
+          <span class="big-item__value" id="outDeduct">0<span class="won">원</span></span>
+          <span class="big-item__kr" id="outDeductKr"></span>
+        </span>
+        <span class="big-item__note" id="outDeductNote">쓰지 않은 기간의 돈은 돌려받는 것이 원칙</span>
+      </div>
+      <div class="big-item">
+        <span class="big-item__label">위약금 (총액의 10%)</span>
+        <span class="big-item__row">
+          <span class="big-item__value" id="outPenalty">0<span class="won">원</span></span>
+          <span class="big-item__kr" id="outPenaltyKr"></span>
+        </span>
+        <span class="big-item__note">10%를 넘는 위약금은 기준을 벗어납니다</span>
+      </div>
+    </div>
+
+    <p class="formula hidden" id="formulaLine"></p>
+    <div id="noticeBox"></div>
+
+    <div class="share hidden" id="shareBlock">
+      <button type="button" class="btn btn--share" id="shareBtn">내 계산 결과<br>친구·가족에게 공유 복사</button>
+      <p class="share__hint">가족·지인에게 보낼 요약 문구만 복사됩니다. 광고나 상품 링크는 들어가지 않고, 업체에 보내는 해지 요청문과도 별개입니다.</p>
+      <details class="share__more" id="shareMore">
+        <summary>공유 문구 미리 보기</summary>
+        <textarea class="share__box" id="shareText" readonly aria-label="공유 문구"></textarea>
+      </details>
+    </div>
+  </section>
+
+  <section class="card cmp hidden" id="cmpCard" aria-labelledby="cmpTitle">
+    <p class="step"><span class="step__num">⇄</span> 한눈에 비교</p>
+    <h2 id="cmpTitle">법 기준 vs 업체 주장</h2>
+    <div class="cmp__grid">
+      <div class="cmp__row">
+        <p class="cmp__label" id="cmpRowDeduct">이용일수 공제</p>
+        <div class="cmp__pairs">
+          <div class="cmp__pair cmp__pair--mine">
+            <span class="cmp__who">공정위 기준</span>
+            <span class="cmp__num" id="cmpMine">0원</span>
+            <span class="cmp__kr" id="cmpMineKr"></span>
+          </div>
+          <div class="cmp__pair">
+            <span class="cmp__who">업체 주장</span>
+            <span class="cmp__num" id="cmpTheirs">0원</span>
+            <span class="cmp__kr" id="cmpTheirsKr"></span>
+          </div>
+        </div>
+      </div>
+      <div class="cmp__row">
+        <p class="cmp__label">위약금</p>
+        <div class="cmp__pairs">
+          <div class="cmp__pair cmp__pair--mine">
+            <span class="cmp__who">공정위 기준</span>
+            <span class="cmp__num" id="cmpMineFee">0원</span>
+          </div>
+          <div class="cmp__pair">
+            <span class="cmp__who">업체 주장</span>
+            <span class="cmp__num" id="cmpTheirsFee">0원</span>
+          </div>
+        </div>
+      </div>
+      <div class="cmp__row">
+        <p class="cmp__label">돌려받을 금액</p>
+        <div class="cmp__pairs">
+          <div class="cmp__pair cmp__pair--mine">
+            <span class="cmp__who">공정위 기준</span>
+            <span class="cmp__num" id="cmpMineRefund">0원</span>
+            <span class="cmp__kr" id="cmpMineRefundKr"></span>
+          </div>
+          <div class="cmp__pair">
+            <span class="cmp__who">업체 주장</span>
+            <span class="cmp__num" id="cmpTheirsRefund">0원</span>
+            <span class="cmp__kr" id="cmpTheirsRefundKr"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="diff" id="diffBox">업체 기준 금액을 넣으면 차액이 표시됩니다.</div>
+  </section>
+
+  <section class="card" aria-labelledby="letterTitle">
+    <p class="step"><span class="step__num">✎</span> 바로 보낼 수 있어요</p>
+    <h2 id="letterTitle">해지 요청문 1초 복사</h2>
+    <p class="hint">계산한 금액이 그대로 들어간 정중한 요청문입니다. 카카오톡·문자·이메일에 붙여 넣으세요.</p>
+    <p class="hint">업체에 보내는 공식 요청문이라 광고·홍보 문구는 넣지 않았습니다.</p>
+    <div class="field">
+      <label class="field__label" for="place">업체 이름 <span class="unit">(선택)</span></label>
+      <input class="input" id="place" type="text" placeholder="예: ○○휘트니스">
+    </div>
+    <textarea class="letter" id="letterText" readonly aria-label="해지 요청문"></textarea>
+    <button type="button" class="btn btn--primary" id="copyBtn">요청문 복사하기</button>
+    <button type="button" class="btn btn--ghost" id="editLetterBtn">요청문 직접 고치기</button>
+    <p class="hint" id="editLetterHint">이름이나 환급받을 계좌를 넣고 싶다면 직접 고칠 수 있어요.</p>
+    <button type="button" class="btn btn--ghost" id="resetBtn">입력 지우고 처음부터</button>
+  </section>
+
+  <section class="card" aria-labelledby="helpTitle">
+    <p class="step"><span class="step__num">?</span> 막혔을 때</p>
+    <h2 id="helpTitle">1372 · 카드 할부항변권</h2>
+    <ul class="list">
+      <li><strong>1372 소비자상담센터</strong> — 국번 없이 <a href="tel:1372">1372</a>. 평일 09:00~18:00(점심 12:00~13:00), 통화료는 거는 사람 부담. 인터넷 상담은 소비자24(consumer.go.kr)·1372 홈페이지(ccn.go.kr)에서 됩니다.</li>
+      <li><strong>상담 → 피해구제 신청</strong> — 상담으로 해결되지 않으면 한국소비자원에 피해구제를 신청합니다. 접수 후 30일 안에 처리하고, 사안에 따라 90일까지 늘어납니다. 합의 권고가 되고, 합의가 안 되면 소비자분쟁조정위원회 조정으로 넘어갑니다.</li>
+      <li><strong>카드 할부항변권</strong> — 신용카드로 <strong>3개월 이상·20만원 이상</strong> 할부로 결제했고 계약이 해지·해제되었는데 업체가 환급을 거부한다면, 남은 할부금 지급을 거절할 수 있는 권리입니다(할부거래법 제16조). 카드사에 지급거절 의사를 서면(내용증명 권장)으로 알리면 되고, 서면을 보낸 날에 효력이 생깁니다.</li>
+      <li><strong>증거 남기기</strong> — 해지 요청은 문자·카카오톡처럼 날짜가 남는 방법으로 보내고 화면을 캡처해 두세요. 계약서·결제 내역·영수증도 함께 보관합니다.</li>
+    </ul>
+  </section>
+
+  <section class="card" aria-labelledby="tipTitle">
+    <p class="step"><span class="step__num">!</span> 알아 두면 좋아요</p>
+    <h2 id="tipTitle">이런 요구는 기준을 벗어납니다</h2>
+    <ul class="list">
+      <li><strong>할인 전 '정상가'로 공제</strong> — 환급은 <strong>실제로 결제한 금액</strong>을 기준으로 계산하는 게 원칙입니다. 공정위는 요가·필라테스 표준약관(2026.7)에서 실제 결제금액 기준과 위약금 10%를 분명히 했습니다.</li>
+      <li><strong>'중도 환급 불가' 약관</strong> — 1개월 이상 계속거래는 계약기간 중 언제든 해지할 수 있고(방문판매법 제31조), 해지로 생기는 손실을 크게 넘는 위약금을 청구할 수 없습니다(같은 법 제32조). 이런 약관은 효력을 인정받기 어렵습니다.</li>
+      <li><strong>카드 수수료 공제</strong> — 카드사에 내는 수수료를 소비자에게 떠넘겨 공제하는 것은 부당하다는 것이 소비자원 사례의 설명입니다.</li>
+      <li><strong>사은품</strong> — 내가 사정으로 해지하면 사은품은 미사용 시 반환하고, 이미 쓰면 같은 종류로 돌려주거나 계약서에 적힌 가격에서 감가한 금액을 내고 반환합니다(단순 포장 개봉은 사용으로 보지 않음).</li>
+      <li><strong>안 간 날도 지나간 날</strong> — 실제로 가지 않았어도 날짜가 지나 이용할 수 있었던 기간은 공급된 것으로 봅니다. 그래서 해지는 빨리, 날짜가 남는 방법으로 알리는 게 유리합니다.</li>
+    </ul>
+
+    <details>
+      <summary>1개월 미만 단기권은 어떻게 되나요?</summary>
+      <div class="details__body">
+        <p>방문판매법이 말하는 '계속거래'는 <strong>1개월 이상</strong> 계속 공급하는 계약입니다. 그래서 1개월 미만 단기 이용권은 중도해지 환급을 요구할 권리가 약해질 수 있습니다.</p>
+        <p>다만 소비자분쟁해결기준의 체육시설업 기준(이용일수 공제 + 총액 10%)을 적용해 볼 여지는 있고, 업체 약관·계약 형태에 따라 다투어질 수 있습니다. 금액이 크다면 1372 상담에서 계약서를 두고 확인해 보세요.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>특약이 있거나 PT 회차가 섞여 있으면?</summary>
+      <div class="details__body">
+        <p>계약서에 환급 방식을 따로 정한 특약이 있으면 그 내용과 이 기준을 비교해 보세요. 특약이라도 실제 결제금액보다 훨씬 비싼 1일·1회 정상가를 기준으로 공제한다면 원상회복 의무를 부당하게 줄이는 것으로 볼 수 있습니다.</p>
+        <p>기간제 이용권과 PT 회차권을 함께 결제했다면, 이 계산기에서 <strong>기간제로 한 번, 횟수제로 한 번</strong> 계산해 두 금액을 더하면 됩니다.</p>
+      </div>
+    </details>
+    <details>
+      <summary>이 계산 결과는 얼마나 힘이 있나요?</summary>
+      <div class="details__body">
+        <p>소비자분쟁해결기준은 분쟁 당사자 사이에 다른 약속이 없을 때 <strong>합의나 권고의 기준</strong>이 되는 고시입니다. 법원 판결처럼 강제력이 있지는 않습니다.</p>
+        <p>그래도 업체가 기준보다 과도한 위약금을 매기면 공정거래위원회의 행정처분 대상이 될 수 있고, 1372 상담과 소비자원 피해구제에서도 이 기준으로 판단합니다. 협상할 때는 “이 기준대로 계산하면 이만큼입니다”라고 숫자를 먼저 제시하는 것이 가장 빠릅니다.</p>
+      </div>
+    </details>
+  </section>
+
+  <p class="fine">
+    본 툴은 공정거래위원회 소비자분쟁해결기준에 따른 참고용 계산기이며 실제 계약 조건에 따라 달라질 수 있습니다. 표시된 금액은 청약 철회나 법적 판단을 대신하지 않으며, 분쟁이 생기면 1372 소비자상담센터 상담을 권합니다. 입력한 내용은 어디에도 저장되거나 전송되지 않고 이 휴대폰 안에서만 계산됩니다.
+  </p>
+  <p class="foot" style="font-weight:800;color:var(--navy);">※ 참고용 계산이며 최종 기준·수급 여부는 해당 공식 기관 안내 및 계약서 확인이 필요합니다.</p>
+  <p class="foot">소비자분쟁해결기준(공정거래위원회 고시) 체육시설업 기준 · 2026.11</p>
+</main>
+
+<a class="mini" id="miniBar" href="#resultTitle">
+  <span>
+    <span class="mini__label">돌려받을 예상 금액</span>
+    <span class="mini__value" id="miniValue">0원</span>
+  </span>
+  <span class="mini__go">결과 보기</span>
+</a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /*==ENGINE_START==*/
+  var PENALTY_RATE = 0.1;
+  var MONTH_DAYS = 30;
+  var SHORT_TERM_DAYS = 30;
+
+  function toNumber(value) {
+    var num = Number(value);
+    if (!isFinite(num)) { return 0; }
+    return num;
+  }
+
+  function formatNumber(value) {
+    var num = Math.round(toNumber(value));
+    return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function formatWon(value) {
+    return formatNumber(value) + '원';
+  }
+
+  // 0의 개수를 헷갈리지 않게 읽어 주는 한글 만원 단위 (60만 원, 39만 원 …)
+  function formatKoreanUnit(value) {
+    var num = Math.round(toNumber(value));
+    if (!isFinite(num) || num === 0) { return ''; }
+    var sign = num < 0 ? '-' : '';
+    num = Math.abs(num);
+    if (num < 10000) { return ''; }
+    var eok = Math.floor(num / 100000000);
+    var man = Math.floor((num % 100000000) / 10000);
+    var rest = num % 10000;
+    var parts = [];
+    if (eok > 0) { parts.push(formatNumber(eok) + '억'); }
+    if (man > 0) { parts.push(formatNumber(man) + '만'); }
+    if (rest > 0) { parts.push(formatNumber(rest) + '원'); }
+    var text = parts.join(' ');
+    if (rest === 0) { text = text + ' 원'; }
+    return sign + text;
+  }
+
+  function krNote(value) {
+    var text = formatKoreanUnit(value);
+    return text ? '(' + text + ')' : '';
+  }
+
+  function withKr(value) {
+    var text = formatKoreanUnit(value);
+    return text ? formatWon(value) + ' (' + text + ')' : formatWon(value);
+  }
+
+  function parseDateParts(text) {
+    if (!text || typeof text !== 'string') { return null; }
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+    if (!m) { return null; }
+    var y = Number(m[1]);
+    var mo = Number(m[2]);
+    var d = Number(m[3]);
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) { return null; }
+    return { y: y, m: mo, d: d };
+  }
+
+  function daysInclusive(startText, endText) {
+    var a = parseDateParts(startText);
+    var b = parseDateParts(endText);
+    if (!a || !b) { return null; }
+    var start = Date.UTC(a.y, a.m - 1, a.d);
+    var end = Date.UTC(b.y, b.m - 1, b.d);
+    var diff = end - start;
+    if (!isFinite(diff)) { return null; }
+    if (diff < 0) { return -1; }
+    return Math.round(diff / 86400000) + 1;
+  }
+
+  function calc(input) {
+    var out = {
+      ok: false,
+      mode: (input && input.mode === 'count') ? 'count' : 'period',
+      total: 0,
+      penalty: 0,
+      usedDeduct: 0,
+      refund: 0,
+      totalUnits: 0,
+      usedUnits: 0,
+      ratio: 0,
+      vendor: { applied: false, rate: 0, deduct: 0, penalty: 0, refund: 0, diff: 0, overRate: 0 },
+      flags: { capped: false, ratioHigh: false, shortTerm: false, started: false, refundZero: false }
+    };
+    var total = Math.round(toNumber(input ? input.total : 0));
+    if (total <= 0) { return out; }
+    out.total = total;
+    out.penalty = Math.round(total * PENALTY_RATE);
+
+    var totalUnits;
+    var usedUnits;
+    if (out.mode === 'count') {
+      totalUnits = Math.round(toNumber(input.totalSessions));
+      usedUnits = Math.round(toNumber(input.usedSessions));
+    } else {
+      totalUnits = Math.round(toNumber(input.totalDays));
+      usedUnits = Math.round(toNumber(input.usedDays));
+    }
+    if (!isFinite(totalUnits) || totalUnits <= 0) { return out; }
+    if (!isFinite(usedUnits) || usedUnits < 0) { usedUnits = 0; }
+    if (usedUnits > totalUnits) {
+      usedUnits = totalUnits;
+      out.flags.capped = true;
+    }
+    out.totalUnits = totalUnits;
+    out.usedUnits = usedUnits;
+    out.ratio = usedUnits / totalUnits;
+    out.usedDeduct = Math.round(total * out.ratio);
+    if (out.usedDeduct > total) { out.usedDeduct = total; }
+    out.refund = total - out.usedDeduct - out.penalty;
+    if (out.refund < 0) { out.refund = 0; }
+    out.flags.started = usedUnits > 0;
+    out.flags.ratioHigh = out.ratio >= 0.9;
+    out.flags.refundZero = out.refund === 0;
+    if (out.mode === 'period' && totalUnits < SHORT_TERM_DAYS) { out.flags.shortTerm = true; }
+
+    var rate = toNumber(input.vendorRate);
+    if (rate > 0 && usedUnits > 0) {
+      out.vendor.applied = true;
+      out.vendor.rate = rate;
+      out.vendor.deduct = Math.round(rate * usedUnits);
+      if (out.vendor.deduct > total) { out.vendor.deduct = total; }
+      out.vendor.penalty = input.vendorPenalty ? out.penalty : 0;
+      out.vendor.refund = total - out.vendor.deduct - out.vendor.penalty;
+      if (out.vendor.refund < 0) { out.vendor.refund = 0; }
+      out.vendor.diff = out.refund - out.vendor.refund;
+      var contractUnit = total / totalUnits;
+      out.vendor.overRate = contractUnit > 0 ? rate / contractUnit : 0;
+    }
+    out.ok = true;
+    return out;
+  }
+
+  function buildPeriodText(input) {
+    var months = Math.round(toNumber(input.months));
+    var days = Math.round(toNumber(input.totalDays));
+    if (input.mode === 'count') {
+      return 'PT·회차권 ' + Math.round(toNumber(input.totalSessions)) + '회';
+    }
+    if (months > 0) {
+      return '이용권 ' + months + '개월(총 ' + days + '일)';
+    }
+    return '이용권 총 ' + days + '일';
+  }
+
+  function buildLetter(data) {
+    var lines = [];
+    var place = (data.place || '').trim();
+    var total = Math.round(toNumber(data.total));
+    var deduct = Math.round(toNumber(data.deduct));
+    var penalty = Math.round(toNumber(data.penalty));
+    var refund = Math.round(toNumber(data.refund));
+    var unitWord = data.mode === 'count' ? '횟수' : '일수';
+    var usedUnits = Math.round(toNumber(data.usedUnits));
+    var unitSuffix = data.mode === 'count' ? '회' : '일';
+
+    lines.push(place ? ('안녕하세요. ' + place + ' 회원입니다.') : '안녕하세요. 회원입니다.');
+    lines.push('');
+    lines.push(data.today + '자로 개인 사정으로 중도 해지를 요청드립니다.');
+    lines.push('이 메시지가 도착한 날을 해지 신청일로 보고 있습니다.');
+    lines.push('');
+    lines.push('· 계약 내용: ' + data.periodText);
+    lines.push('· 결제한 금액: ' + formatWon(total));
+    lines.push('· 이용한 ' + unitWord + ': ' + usedUnits + unitSuffix);
+    lines.push('');
+    lines.push('「소비자분쟁해결기준」(공정거래위원회 고시) 체육시설업 기준에 따라, 해지일까지의 이용' + unitWord + '에 해당하는 금액과 총 이용금액의 10%에 해당하는 위약금을 공제한 나머지 금액의 환급을 요청드립니다.');
+    lines.push('');
+    lines.push('· 결제 총액: ' + formatWon(total));
+    lines.push('· 이용' + unitWord + ' 공제: ' + formatWon(deduct));
+    lines.push('· 위약금(10%): ' + formatWon(penalty));
+    lines.push('· 환급 요청 금액: ' + formatWon(refund));
+    lines.push('');
+    lines.push('결제하신 카드로 부분취소하거나 계좌로 환급해 주시기 부탁드립니다.');
+    lines.push('처리 일정과 방법을 7일 이내에 회신해 주시면 감사하겠습니다.');
+    lines.push('');
+    lines.push('회신이 없거나 환급이 어렵다는 답변을 받으면 1372 소비자상담센터 상담을 통해 안내를 받겠습니다.');
+    lines.push('');
+    lines.push('그동안 신경 써 주셔서 감사합니다.');
+    return lines.join('\n');
+  }
+
+  function buildShare(data) {
+    var unitSuffix = data.mode === 'count' ? '회' : '일';
+    var usedUnits = Math.round(toNumber(data.usedUnits));
+    var diff = Math.round(toNumber(data.diff));
+    var lines = [];
+    lines.push('헬스장·필라테스 중도해지, 이렇게 계산했어요.');
+    lines.push('');
+    lines.push('· 결제한 금액: ' + withKr(data.total));
+    lines.push('· 이용 ' + usedUnits + unitSuffix + ' 공제: ' + withKr(data.deduct));
+    lines.push('· 위약금(총액 10%): ' + withKr(data.penalty));
+    lines.push('· 돌려받을 예상 금액: ' + withKr(data.refund));
+    if (diff > 0) {
+      lines.push('');
+      lines.push('· 업체가 말한 금액보다 ' + withKr(diff) + ' 더 받을 수 있어요.');
+    }
+    lines.push('');
+    lines.push('공정거래위원회 소비자분쟁해결기준(체육시설업)으로 계산한 참고 금액이에요. 실제 계약 조건에 따라 달라질 수 있습니다.');
+    return lines.join('\n');
+  }
+
+  function formatKoreanDate(date) {
+    return date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월 ' + date.getDate() + '일';
+  }
+  /*==ENGINE_END==*/
+
+  if (typeof document === 'undefined') { return; }
+
+  var state = { mode: 'period', letterManual: false };
+
+  function $(id) { return document.getElementById(id); }
+
+  function readInputs() {
+    return {
+      mode: state.mode,
+      total: $('total').value,
+      months: $('months').value,
+      totalDays: $('totalDays').value,
+      usedDays: $('usedDays').value,
+      totalSessions: $('totalSessions').value,
+      usedSessions: $('usedSessions').value,
+      vendorRate: $('vendorRate').value,
+      vendorPenalty: $('vendorPenalty').checked
+    };
+  }
+
+  function setValueText(node, value) {
+    node.textContent = formatNumber(value);
+    var suffix = document.createElement('span');
+    suffix.className = 'won';
+    suffix.textContent = '원';
+    node.appendChild(suffix);
+  }
+
+  function setKr(id, value) {
+    var node = document.getElementById(id);
+    if (node) { node.textContent = krNote(value); }
+  }
+
+  function addNotice(kind, html) {
+    var box = document.getElementById('noticeBox');
+    var div = document.createElement('div');
+    div.className = 'notice notice--' + kind;
+    div.innerHTML = html;
+    box.appendChild(div);
+  }
+
+  function renderMini(result) {
+    var bar = document.getElementById('miniBar');
+    if (!result || !result.ok) {
+      bar.classList.remove('is-on');
+      return;
+    }
+    document.getElementById('miniValue').textContent = formatWon(result.refund);
+    bar.classList.add('is-on');
+  }
+
+  function renderEmpty() {
+    renderMini(null);
+    renderShare(null);
+    document.getElementById('emptyNote').classList.remove('hidden');
+    document.getElementById('bigList').classList.add('hidden');
+    document.getElementById('formulaLine').classList.add('hidden');
+    document.getElementById('cmpCard').classList.add('hidden');
+    document.getElementById('noticeBox').innerHTML = '';
+    renderLetter(null);
+  }
+
+  function renderNumbers(result) {
+    document.getElementById('emptyNote').classList.add('hidden');
+    document.getElementById('bigList').classList.remove('hidden');
+    var isCount = result.mode === 'count';
+    document.getElementById('outDeductLabel').textContent = isCount ? '이용 횟수만큼 빼는 금액' : '이용일수만큼 빼는 금액';
+    document.getElementById('outDeductNote').textContent = isCount
+      ? '쓰지 않은 회차의 돈은 돌려받는 것이 원칙'
+      : '쓰지 않은 기간의 돈은 돌려받는 것이 원칙';
+    setValueText(document.getElementById('outRefund'), result.refund);
+    setKr('outRefundKr', result.refund);
+    setValueText(document.getElementById('outTotal'), result.total);
+    setKr('outTotalKr', result.total);
+    setValueText(document.getElementById('outDeduct'), result.usedDeduct);
+    setKr('outDeductKr', result.usedDeduct);
+    setValueText(document.getElementById('outPenalty'), result.penalty);
+    setKr('outPenaltyKr', result.penalty);
+
+    var refundNote = document.getElementById('outRefundNote');
+    if (result.refund === 0) {
+      refundNote.textContent = '계산상으로는 0원입니다. 이용일수 산정이 다르면 달라질 수 있어요.';
+    } else if (!result.flags.started) {
+      refundNote.textContent = '시작 전 해지라서 위약금 10%만 뺀 금액이에요.';
+    } else {
+      refundNote.textContent = '결제 총액에서 이용한 만큼과 위약금 10%를 뺀 금액';
+    }
+
+    var unitText = isCount ? ('이용 ' + result.usedUnits + '회') : ('이용 ' + result.usedUnits + '일');
+    var line = formatWon(result.total) + ' − ' + formatWon(result.usedDeduct) + '(' + unitText + ') − '
+      + formatWon(result.penalty) + '(위약금 10%) = ' + formatWon(result.refund);
+    var formula = document.getElementById('formulaLine');
+    formula.textContent = line;
+    formula.classList.remove('hidden');
+  }
+
+  function renderVendor(result, input) {
+    var card = document.getElementById('cmpCard');
+    var isCount = result.mode === 'count';
+    document.getElementById('cmpRowDeduct').textContent = isCount ? '이용 횟수 공제' : '이용일수 공제';
+    if (!result.vendor.applied) {
+      card.classList.add('hidden');
+      if (result.ok && result.flags.started) {
+        var contractUnit = result.total / result.totalUnits;
+        document.getElementById('vendorRateHint').textContent =
+          '계약 기준 ' + (isCount ? '1회' : '1일') + ' 요금은 ' + formatWon(contractUnit) + '입니다. 업체가 말한 금액을 적어 보세요.';
+      } else {
+        document.getElementById('vendorRateHint').textContent = '비워 두면 비교하지 않습니다.';
+      }
+      return;
+    }
+    card.classList.remove('hidden');
+    document.getElementById('cmpMine').textContent = formatWon(result.usedDeduct);
+    setKr('cmpMineKr', result.usedDeduct);
+    document.getElementById('cmpTheirs').textContent = formatWon(result.vendor.deduct);
+    setKr('cmpTheirsKr', result.vendor.deduct);
+    document.getElementById('cmpMineFee').textContent = formatWon(result.penalty);
+    document.getElementById('cmpTheirsFee').textContent = result.vendor.penalty > 0 ? formatWon(result.vendor.penalty) : '없음';
+    document.getElementById('cmpMineRefund').textContent = formatWon(result.refund);
+    setKr('cmpMineRefundKr', result.refund);
+    document.getElementById('cmpTheirsRefund').textContent = formatWon(result.vendor.refund);
+    setKr('cmpTheirsRefundKr', result.vendor.refund);
+
+    var diffBox = document.getElementById('diffBox');
+    var diff = result.vendor.diff;
+    var over = result.vendor.overRate;
+    var overText = '';
+    if (over > 0) {
+      overText = ' 업체가 쓰는 금액은 계약 기준의 ' + (Math.round(over * 10) / 10) + '배입니다.';
+    }
+    var diffKr = krNote(Math.abs(diff));
+    var diffKrHtml = diffKr ? '<span class="diff__kr">' + diffKr + '</span> ' : '';
+    if (diff > 0) {
+      diffBox.innerHTML = '<strong>' + formatWon(diff) + '</strong> ' + diffKrHtml + '더 받을 수 있는 차액입니다.' + overText;
+    } else if (diff === 0) {
+      diffBox.innerHTML = '두 방식의 금액이 같습니다.' + overText;
+    } else {
+      diffBox.innerHTML = '업체 방식이 ' + formatWon(-diff) + ' ' + diffKrHtml + '더 많습니다. 계약서와 기준을 다시 확인해 보세요.' + overText;
+    }
+  }
+
+  function renderNotices(result) {
+    if (!result.ok) { return; }
+    if (result.flags.capped) {
+      addNotice('warn', '이용한 일수·횟수가 계약한 것보다 커서 <strong>계약한 만큼</strong>으로 계산했습니다.');
+    }
+    if (result.flags.shortTerm) {
+      addNotice('info', '계약 기간이 <strong>1개월(30일) 미만</strong>입니다. 방문판매법의 계속거래는 1개월 이상 계약이라 중도해지 환급을 요구할 권리가 약해질 수 있어요. 1372 상담에서 계약서를 두고 확인해 보시길 권합니다.');
+    }
+    if (result.flags.ratioHigh) {
+      addNotice('warn', '계약 기간의 <strong>90% 이상</strong>을 지나 계산상 환급액이 0원이 되었습니다. 이용일수를 어떻게 세는지에 따라 달라질 수 있으니, 계약서와 함께 1372 상담을 받아 보세요.');
+    }
+    if (!result.flags.started) {
+      addNotice('info', '아직 이용을 시작하지 않았다면 <strong>위약금 10%만</strong> 빼고 돌려받는 것이 기준입니다. (개시일 이전 해지)');
+    }
+  }
+
+  function renderLetter(result) {
+    var box = document.getElementById('letterText');
+    if (state.letterManual) { return; }
+    if (!result || !result.ok) {
+      box.value = '금액과 기간을 넣으면 요청문이 자동으로 만들어집니다.';
+      return;
+    }
+    box.value = buildLetter({
+      place: document.getElementById('place').value,
+      today: formatKoreanDate(new Date()),
+      mode: result.mode,
+      periodText: buildPeriodText(readInputs()),
+      total: result.total,
+      usedUnits: result.usedUnits,
+      deduct: result.usedDeduct,
+      penalty: result.penalty,
+      refund: result.refund
+    });
+  }
+
+  function renderShare(result) {
+    var block = document.getElementById('shareBlock');
+    var box = document.getElementById('shareText');
+    if (!block || !box) { return; }
+    if (!result || !result.ok) {
+      block.classList.add('hidden');
+      box.value = '';
+      return;
+    }
+    block.classList.remove('hidden');
+    var buddy = document.getElementById('buddyCard');
+    if (buddy) { buddy.classList.remove('hidden'); }
+    box.value = buildShare({
+      mode: result.mode,
+      total: result.total,
+      usedUnits: result.usedUnits,
+      deduct: result.usedDeduct,
+      penalty: result.penalty,
+      refund: result.refund,
+      diff: result.vendor.applied ? result.vendor.diff : 0
+    });
+  }
+
+  function render() {
+    var input = readInputs();
+    var result = calc(input);
+    if (!result.ok) {
+      renderEmpty();
+      document.getElementById('vendorRateHint').textContent = '비워 두면 비교하지 않습니다.';
+      return;
+    }
+    document.getElementById('noticeBox').innerHTML = '';
+    renderNumbers(result);
+    renderVendor(result, input);
+    renderNotices(result);
+    renderLetter(result);
+    renderShare(result);
+    renderMini(result);
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    var isPeriod = mode === 'period';
+    document.getElementById('periodBlock').classList.toggle('hidden', !isPeriod);
+    document.getElementById('countBlock').classList.toggle('hidden', isPeriod);
+    document.getElementById('modePeriod').classList.toggle('is-on', isPeriod);
+    document.getElementById('modeCount').classList.toggle('is-on', !isPeriod);
+    document.getElementById('modePeriod').setAttribute('aria-pressed', isPeriod ? 'true' : 'false');
+    document.getElementById('modeCount').setAttribute('aria-pressed', isPeriod ? 'false' : 'true');
+    document.getElementById('vendorRateLabel').textContent = isPeriod ? '업체가 말하는 1일 정상가' : '업체가 말하는 1회 정상가';
+    document.getElementById('vendorHint').textContent = isPeriod
+      ? '업체가 할인 전 정상가로 하루 요금을 매겨 공제하겠다고 하면, 그 금액을 적어 보세요. 차액을 바로 보여 드립니다.'
+      : '업체가 할인 전 정상가로 회차 요금을 매겨 공제하겠다고 하면, 그 금액을 적어 보세요. 차액을 바로 보여 드립니다.';
+    render();
+  }
+
+  function syncMonthsToDays() {
+    var months = toNumber(document.getElementById('months').value);
+    if (months > 0) {
+      document.getElementById('totalDays').value = String(Math.round(months * MONTH_DAYS));
+    }
+  }
+
+  function syncDates() {
+    var start = document.getElementById('startDate').value;
+    var end = document.getElementById('endDate').value;
+    var helper = document.getElementById('dateHelper');
+    if (!start || !end) {
+      helper.textContent = '시작일과 해지 신청일을 넣으면 이용일수를 자동으로 채워 드립니다. (양 끝 날짜 포함)';
+      return;
+    }
+    var days = daysInclusive(start, end);
+    if (days === null) {
+      helper.textContent = '날짜를 다시 확인해 주세요.';
+      return;
+    }
+    if (days < 0) {
+      helper.textContent = '해지 신청일이 시작일보다 빠릅니다. 날짜를 확인해 주세요.';
+      return;
+    }
+    document.getElementById('usedDays').value = String(days);
+    helper.textContent = '시작일부터 해지 신청일까지 ' + days + '일로 계산했습니다. 직접 고쳐도 됩니다.';
+  }
+
+  var toastTimer = null;
+  function showToast(message) {
+    var toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('is-on');
+    if (toastTimer) { clearTimeout(toastTimer); }
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('is-on');
+    }, 2600);
+  }
+
+  function fallbackCopy(text) {
+    var area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.top = '0';
+    area.style.left = '-9999px';
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    if (area.setSelectionRange) { area.setSelectionRange(0, text.length); }
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(area);
+    return ok;
+  }
+
+  function copyLetter() {
+    var text = document.getElementById('letterText').value;
+    if (!text || text.indexOf('금액과 기간을 넣으면') === 0) {
+      showToast('먼저 금액과 기간을 입력해 주세요');
+      return;
+    }
+    function done(ok) {
+      showToast(ok ? '복사했어요. 카톡·문자에 붙여 넣으세요' : '복사가 안 되면 요청문을 길게 눌러 직접 복사해 주세요');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallbackCopy(text)); });
+    } else {
+      done(fallbackCopy(text));
+    }
+  }
+
+  function copyShare() {
+    var text = document.getElementById('shareText').value;
+    if (!text) {
+      showToast('먼저 금액과 기간을 입력해 주세요');
+      return;
+    }
+    function done(ok) {
+      showToast(ok ? '공유 문구를 복사했어요. 친구·가족에게 붙여 넣으세요' : '복사가 안 되면 미리 보기를 길게 눌러 직접 복사해 주세요');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallbackCopy(text)); });
+    } else {
+      done(fallbackCopy(text));
+    }
+  }
+
+  function toggleLetterEdit() {
+    var box = document.getElementById('letterText');
+    var btn = document.getElementById('editLetterBtn');
+    var hint = document.getElementById('editLetterHint');
+    state.letterManual = !state.letterManual;
+    box.readOnly = !state.letterManual;
+    if (state.letterManual) {
+      btn.textContent = '자동 계산으로 되돌리기';
+      hint.textContent = '직접 고친 내용은 금액을 바꿔도 그대로 남습니다.';
+      box.focus();
+    } else {
+      btn.textContent = '요청문 직접 고치기';
+      hint.textContent = '이름이나 환급받을 계좌를 넣고 싶다면 직접 고칠 수 있어요.';
+      render();
+    }
+  }
+
+  function resetAll() {
+    state.letterManual = false;
+    document.getElementById('letterText').readOnly = true;
+    document.getElementById('editLetterBtn').textContent = '요청문 직접 고치기';
+    document.getElementById('editLetterHint').textContent = '이름이나 환급받을 계좌를 넣고 싶다면 직접 고칠 수 있어요.';
+    var ids = ['total', 'months', 'totalDays', 'usedDays', 'totalSessions', 'usedSessions', 'vendorRate', 'startDate', 'endDate', 'place'];
+    for (var i = 0; i < ids.length; i++) {
+      document.getElementById(ids[i]).value = '';
+    }
+    document.getElementById('vendorPenalty').checked = false;
+    setMode('period');
+    document.getElementById('dateHelper').textContent = '시작일과 해지 신청일을 넣으면 이용일수를 자동으로 채워 드립니다. (양 끝 날짜 포함)';
+    render();
+    showToast('처음 상태로 돌아갔어요');
+  }
+
+  function bind() {
+    var liveIds = ['total', 'totalDays', 'usedDays', 'totalSessions', 'usedSessions', 'vendorRate'];
+    for (var i = 0; i < liveIds.length; i++) {
+      document.getElementById(liveIds[i]).addEventListener('input', render);
+    }
+    document.getElementById('vendorPenalty').addEventListener('change', render);
+    document.getElementById('place').addEventListener('input', render);
+    document.getElementById('months').addEventListener('input', function () {
+      syncMonthsToDays();
+      render();
+    });
+    document.getElementById('startDate').addEventListener('change', function () {
+      syncDates();
+      render();
+    });
+    document.getElementById('endDate').addEventListener('change', function () {
+      syncDates();
+      render();
+    });
+    document.getElementById('modePeriod').addEventListener('click', function () { setMode('period'); });
+    document.getElementById('modeCount').addEventListener('click', function () { setMode('count'); });
+    document.getElementById('copyBtn').addEventListener('click', copyLetter);
+    document.getElementById('shareBtn').addEventListener('click', copyShare);
+    document.getElementById('editLetterBtn').addEventListener('click', toggleLetterEdit);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+    var amountChips = document.querySelectorAll('[data-amount]');
+    for (var a = 0; a < amountChips.length; a++) {
+      amountChips[a].addEventListener('click', function () {
+        document.getElementById('total').value = this.getAttribute('data-amount');
+        render();
+      });
+    }
+    var monthChips = document.querySelectorAll('[data-months]');
+    for (var b = 0; b < monthChips.length; b++) {
+      monthChips[b].addEventListener('click', function () {
+        document.getElementById('months').value = this.getAttribute('data-months');
+        syncMonthsToDays();
+        render();
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    bind();
+    setMode('period');
+  });
+})();
+</script>
+</body>
+</html>
