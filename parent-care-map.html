@@ -209,6 +209,8 @@
     .mobhint{
       display:block; position:absolute; left:12px; bottom:14px; max-width:calc(100% - 146px);
       font-size:10px; line-height:1.55; color:var(--ink3); pointer-events:none;
+      background:rgba(8,16,26,.62); border:1px solid rgba(255,255,255,.07); border-radius:8px;
+      padding:4px 8px; transition:opacity .5s;
     }
     /* 바텀시트 */
     #panel{
@@ -1464,6 +1466,7 @@ function boot(){
   buildChips();
   fitToScreen();
   paint();
+  setTimeout(hideMobHint, 7000);
 }
 window.addEventListener("resize", function(){
   clearTimeout(resizeTimer);
