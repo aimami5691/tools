@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>2026 대한민국 부모님 돌봄·복지 전체 지도 | 라이프나침반</title>
-<meta name="description" content="2026년 부모님 돌봄·복지 4대 분과 48개 항목을 한눈에. 기초연금, 본인부담상한제, 실손, 장기요양, 치매, 대리신청, 세금, 명의도용까지 클릭 한 번에 핵심·함정·서류·팁을 확인하고 PNG로 저장하세요.">
+<meta name="description" content="2026년 부모님 돌봄·복지 4대 분과 48개 항목을 방사형 마인드맵 한 장에. 기초연금, 본인부담상한제, 실손, 장기요양, 치매, 대리신청, 세금, 명의도용까지 클릭 한 번에 핵심·함정·서류·팁을 확인하고 PNG로 저장하세요.">
 <meta property="og:title" content="2026 대한민국 부모님 돌봄·복지 전체 지도">
 <meta property="og:description" content="4대 분과 · 48개 팩트체크 · 0원 PNG 저장 · 무료 공개">
 <style>
@@ -46,7 +46,7 @@
   .tools{display:flex; align-items:center; gap:9px; flex-wrap:wrap}
   .search{position:relative}
   .search input{
-    width:268px; height:42px; padding:0 14px 0 38px; border-radius:12px;
+    width:258px; height:42px; padding:0 14px 0 38px; border-radius:12px;
     background:rgba(255,255,255,.06); border:1px solid var(--line); color:var(--ink);
     font-size:14px; font-family:inherit; outline:none; transition:.16s;
   }
@@ -59,6 +59,12 @@
     font-weight:700; padding:0 14px; border-radius:9px; cursor:pointer; transition:.15s;
   }
   .seg button.on{background:linear-gradient(180deg,#EFF6FF,#D9E8F8); color:#0D1B2A}
+  .expando{display:flex; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:12px; padding:3px; height:42px}
+  .expando button{
+    border:0; background:transparent; color:var(--ink2); font-family:inherit; font-size:12.5px;
+    font-weight:700; padding:0 11px; border-radius:9px; cursor:pointer; transition:.15s; white-space:nowrap;
+  }
+  .expando button:hover{background:rgba(255,255,255,.09); color:var(--ink)}
   .pngbtn{
     height:42px; padding:0 17px; border-radius:12px; border:0; cursor:pointer; font-family:inherit;
     font-size:13.5px; font-weight:800; color:#12202F;
@@ -87,27 +93,30 @@
     position:relative; border:1px solid var(--line); border-radius:18px; overflow:hidden;
     background:linear-gradient(160deg,#0C1A29 0%,#12263A 55%,#0C1A29 100%);
     box-shadow:0 24px 60px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.05);
+    height:clamp(460px, calc(100vh - 232px), 880px);
   }
-  #map{display:block; width:100%; height:auto; touch-action:none; cursor:default}
+  #map{display:block; width:100%; height:100%; touch-action:none; cursor:default}
   #map.pointer{cursor:pointer}
   #map.grabbing{cursor:grabbing}
   .hint{
-    position:absolute; right:14px; top:12px; font-size:11.5px; color:var(--ink3);
-    background:rgba(8,16,26,.72); border:1px solid var(--line); padding:6px 10px; border-radius:9px;
-    backdrop-filter:blur(6px); pointer-events:none;
+    position:absolute; left:50%; transform:translateX(-50%); top:12px; font-size:11.5px; color:var(--ink3);
+    background:rgba(8,16,26,.66); border:1px solid var(--line); padding:6px 12px; border-radius:9px;
+    backdrop-filter:blur(6px); pointer-events:none; white-space:nowrap;
   }
   .zoombox{position:absolute; right:12px; bottom:12px; display:flex; gap:6px; align-items:center;
     background:rgba(8,16,26,.72); border:1px solid var(--line); padding:5px; border-radius:11px; backdrop-filter:blur(6px)}
   .zoombox button{
-    width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.06);
-    color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; line-height:1;
+    width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.06);
+    color:var(--ink); font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; line-height:1;
   }
   .zoombox button:hover{background:rgba(255,255,255,.13)}
-  .zoombox span{font-size:11px;color:var(--ink3); padding:0 4px; min-width:38px; text-align:center}
+  .zoombox button.wide{width:auto; padding:0 9px; font-size:11.5px}
+  .zoombox span{font-size:11px;color:var(--ink3); padding:0 4px; min-width:40px; text-align:center}
   .count{
     position:absolute; left:14px; top:12px; font-size:12px; font-weight:700; color:#12202F;
     background:var(--gold); padding:6px 11px; border-radius:999px; display:none;
   }
+  .mobhint{display:none}
 
   /* ── 리스트 보기 ── */
   #listWrap{display:none; grid-template-columns:repeat(4,1fr); gap:14px}
@@ -162,9 +171,6 @@
   }
   .pn-cta a:hover{background:linear-gradient(180deg,rgba(234,181,95,.26),rgba(234,181,95,.12))}
   .pn-cta a span.price{font-size:12.5px; color:var(--gold); font-weight:800; white-space:nowrap}
-  .pn-cta a.ghost{
-    background:rgba(255,255,255,.05); border-color:var(--line); color:var(--ink2); font-weight:700;
-  }
 
   footer{margin:24px 0 30px; font-size:11.5px; line-height:1.75; color:var(--ink3); border-top:1px solid rgba(255,255,255,.07); padding-top:14px}
   footer b{color:var(--ink2)}
@@ -190,18 +196,27 @@
     .search input{width:100%; height:40px; font-size:15px}
     .seg{height:38px; flex:1}
     .seg button{flex:1; padding:0 8px; font-size:13px}
-    .pngbtn{height:38px; padding:0 13px; font-size:12.5px; flex:0 0 auto}
+    .expando{height:38px; padding:2px}
+    .expando button{padding:0 9px; font-size:12px}
+    .pngbtn{height:38px; padding:0 12px; font-size:12.5px; flex:1 1 100%; justify-content:center}
     .chips{margin:12px 0 9px}
     .chip{height:33px; font-size:12.5px; padding:0 11px}
     #listWrap{grid-template-columns:1fr}
+    .stage{height:calc(100vh - 290px); min-height:320px}
     .hint{display:none}
     .zoombox{bottom:10px; right:10px}
+    .zoombox button{width:34px;height:34px}
+    .mobhint{
+      display:block; position:absolute; left:12px; bottom:14px; max-width:calc(100% - 146px);
+      font-size:10px; line-height:1.55; color:var(--ink3); pointer-events:none;
+    }
     /* 바텀시트 */
     #panel{
       top:auto; left:0; right:0; bottom:0; width:100%; max-width:none; max-height:84vh;
       border-left:0; border-top:1px solid rgba(234,181,95,.28); border-radius:20px 20px 0 0;
       transform:translateY(103%);
-    }    #panel.on{transform:translateY(0)}
+    }
+    #panel.on{transform:translateY(0)}
     #panel::before{
       content:""; position:absolute; left:50%; top:8px; width:42px; height:4px; border-radius:2px;
       background:rgba(255,255,255,.24); transform:translateX(-50%);
@@ -219,7 +234,7 @@
     <div class="brand">
       <div class="kicker"><i></i>2026 · 무료 공개 · 48개 팩트체크</div>
       <h1>2026 대한민국 <span class="g">부모님 돌봄·복지</span> 전체 지도</h1>
-      <p class="sub">검색하고 누르면 <b>핵심 요약 · 함정 · 서류 · 실전 팁</b>이 바로 나옵니다 · 원하는 화면은 <b>PNG로 저장</b>하세요</p>
+      <p class="sub">가운데에서 네 갈래로 뻗는 <b>방사형 마인드맵</b> · 항목을 누르면 <b>핵심 요약 · 함정 · 서류 · 실전 팁</b>이 바로 나옵니다</p>
     </div>
     <div class="tools">
       <div class="search">
@@ -229,6 +244,10 @@
       <div class="seg" id="seg">
         <button data-view="map" class="on">마인드맵</button>
         <button data-view="list">리스트 보기</button>
+      </div>
+      <div class="expando" id="expando">
+        <button data-act="expand" title="네 분과를 모두 펼칩니다">전체 펼치기</button>
+        <button data-act="collapse" title="네 분과를 모두 접습니다">전체 접기</button>
       </div>
       <button class="pngbtn" id="pngBtn" title="전체 지도를 고화질 PNG로 저장">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#12202F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 21h16"></path></svg>
@@ -241,13 +260,14 @@
 
   <div class="stage" id="stage">
     <div class="count" id="count"></div>
-    <canvas id="map" aria-label="2026 부모님 돌봄 복지 마인드맵"></canvas>
-    <div class="hint" id="hint">항목을 누르면 해설이 열립니다 · 드래그 이동 · 휠 확대</div>
+    <canvas id="map" aria-label="2026 부모님 돌봄 복지 방사형 마인드맵"></canvas>
+    <div class="hint" id="hint">항목을 누르면 해설 · 드래그 이동 · 휠 확대 · 분과 −/+ 접기</div>
+    <div class="mobhint">두 손가락으로 벌려 확대<br>드래그 이동 · 분과 누르면 확대</div>
     <div class="zoombox">
       <button id="zout" aria-label="축소">−</button>
       <span id="zval">100%</span>
       <button id="zin" aria-label="확대">+</button>
-      <button id="zfit" aria-label="화면 맞춤" style="width:auto;padding:0 8px;font-size:11px">맞춤</button>
+      <button id="zfit" class="wide" aria-label="화면 맞춤">맞춤</button>
     </div>
   </div>
 
@@ -281,7 +301,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* 2026 대한민국 부모님 돌봄·복지 전체 지도 — 데이터 48항목 */
+/* 2026 대한민국 부모 돌봄·복지 전체 지도 — 데이터 48항목 (팩트체크 원문 유지) */
 const BRANCHES = [
   { no: "1", name: "연금·감면", color: "#2CC5B4", note: "매달 들어오는 돈과 고지서 깎기" },
   { no: "2", name: "병원비·실손", color: "#EAB55F", note: "병원비 새는 구멍 막기" },
@@ -583,62 +603,79 @@ const ITEMS = [
   p:"채무가 의심되면 3개월 기한을 달력에 표시하고 바로 법원이나 법률구조공단에 상담하세요. 포기와 한정승인은 상속인 전원이 함께 해야 합니다." }
 ];
 
-
 /* ────────── 상태 ────────── */
-var state = { q: "", branch: -1, view: "map", sel: null, hover: null };
+var state = { q:"", branch:-1, view:"map", sel:null, hover:null, hoverToggle:-1,
+              collapsed:[false,false,false,false] };
 var canvas = document.getElementById("map");
 var ctx = canvas.getContext("2d");
 var stageEl = document.getElementById("stage");
-var view = { s: 1, fit: 1, ox: 0, oy: 0 };
+var view = { s:1, fit:1, ox:0, oy:0 };
 var LAYOUT = null;
 var matchSet = null;
 
 var FONT = '"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans CJK KR","Noto Sans KR",system-ui,sans-serif';
 
+/* 방사형 지도 치수 (월드 좌표) */
+var GEO = {
+  coreW:380, coreH:142,
+  hubW:212, hubH:74,
+  leafW:292, leafH:38, pitch:40,
+  gapGroup:88, gapCore:80, gapHub:88,
+  padX:88, padY:46
+};
+var SIDES = [[0,1],[2,3]];   /* 왼쪽 1·2 분과, 오른쪽 3·4 분과 */
+
 function isMobile(){ return window.innerWidth < 860; }
-
-/* ────────── 레이아웃 ────────── */
+function hideMobHint(){
+  var el = document.querySelector(".mobhint");
+  if (el) el.style.display = "none";
+}
 function leavesOf(bi){ return ITEMS.filter(function(it){ return it.b === bi; }); }
+function groupHeight(bi){ return state.collapsed[bi] ? 108 : (11*GEO.pitch + GEO.leafH); }
 
+/* ────────── 방사형 레이아웃 ────────── */
 function buildLayout(){
-  var mob = isMobile();
-  var L = { mob: mob, leaves: [], headers: [], root: null, W: 0, H: 0 };
-  if (!mob){
-    var margin = 24, colW = 352, gap = 70, leafH = 54, vgap = 8;
-    L.W = margin*2 + colW*4 + gap*3;
-    L.root = { x: (L.W - 560)/2, y: 24, w: 560, h: 76 };
-    var headY = 176, headH = 54, leafTop = 252;
-    for (var b = 0; b < 4; b++){
-      var x = margin + b*(colW + gap);
-      L.headers.push({ bi: b, x: x, y: headY, w: colW, h: headH });
-      var y = leafTop;
-      leavesOf(b).forEach(function(it){
-        L.leaves.push({ item: it, bi: it.b, x: x, y: y, w: colW, h: leafH });
-        y += leafH + vgap;
-      });
+  var half = GEO.coreW/2 + GEO.gapCore + GEO.hubW + GEO.gapHub + GEO.leafW;
+  var W = half*2 + GEO.padX*2;
+  var H = 2*(11*GEO.pitch + GEO.leafH) + GEO.gapGroup + GEO.padY*2;
+  var cx = W/2, cy = H/2;
+  var L = { W:W, H:H, cx:cx, cy:cy,
+    core:{ x:cx - GEO.coreW/2, y:cy - GEO.coreH/2, w:GEO.coreW, h:GEO.coreH },
+    hubs:[], leaves:[], toggles:[] };
+
+  SIDES.forEach(function(group, si){
+    var side = si === 0 ? -1 : 1;          /* -1 = 왼쪽, +1 = 오른쪽 */
+    var hs = group.map(groupHeight);
+    var total = hs[0] + hs[1] + GEO.gapGroup;
+    var y = (H - total)/2;
+    var blocks = [];
+    for (var i = 0; i < group.length; i++){
+      blocks.push({ bi: group[i], top: y, h: hs[i] });
+      y += hs[i] + GEO.gapGroup;
     }
-    L.H = leafTop + 12*leafH + 11*vgap + 46;
-  } else {
-    var m = 10, cw = 404, lh = 50, g = 6, headH2 = 46, groupGap = 30;
-    L.W = m*2 + cw;
-    L.root = { x: m, y: 14, w: cw, h: 62 };
-    var yy = 14 + 62 + 26;
-    var list = (state.branch === -1) ? [0,1,2,3] : [state.branch];
-    list.forEach(function(b){
-      L.headers.push({ bi: b, x: m, y: yy, w: cw, h: headH2 });
-      yy += headH2 + 10;
-      leavesOf(b).forEach(function(it){
-        L.leaves.push({ item: it, bi: b, x: m, y: yy, w: cw, h: lh });
-        yy += lh + g;
-      });
-      yy += groupGap;
+    blocks.forEach(function(bl){
+      var bi = bl.bi;
+      var hubCY = bl.top + bl.h/2;
+      var hubX = side < 0 ? (cx - GEO.coreW/2 - GEO.gapCore - GEO.hubW)
+                          : (cx + GEO.coreW/2 + GEO.gapCore);
+      L.hubs.push({ bi:bi, side:side, x:hubX, y:hubCY - GEO.hubH/2, w:GEO.hubW, h:GEO.hubH, cy:hubCY });
+      L.toggles.push({ bi:bi, side:side, x: side < 0 ? hubX - 19 : hubX + GEO.hubW + 19, y:hubCY, r:15 });
+
+      if (!state.collapsed[bi]){
+        var leafX = side < 0
+          ? (cx - GEO.coreW/2 - GEO.gapCore - GEO.hubW - GEO.gapHub - GEO.leafW)
+          : (cx + GEO.coreW/2 + GEO.gapCore + GEO.hubW + GEO.gapHub);
+        leavesOf(bi).forEach(function(it, k){
+          L.leaves.push({ item:it, bi:bi, side:side, x:leafX, y:bl.top + k*GEO.pitch,
+                          w:GEO.leafW, h:GEO.leafH, cy:bl.top + k*GEO.pitch + GEO.leafH/2 });
+        });
+      }
     });
-    L.H = yy + 46;
-  }
+  });
   return L;
 }
 
-/* ────────── 그리기 유틸 ────────── */
+/* ────────── 그리기 도구 ────────── */
 function rr(c, x, y, w, h, r){
   var rad = Math.min(r, w/2, h/2);
   c.beginPath();
@@ -655,265 +692,445 @@ function hexA(hex, a){
   var n = parseInt(h, 16);
   return "rgba(" + ((n>>16)&255) + "," + ((n>>8)&255) + "," + (n&255) + "," + a + ")";
 }
-function wrap(c, text, maxW, maxLines){
-  var words = text.split(" ");
-  var lines = [], cur = "";
+function clipText(c, text, maxW){
+  if (c.measureText(text).width <= maxW) return text;
+  var out = text;
+  while (out.length > 1 && c.measureText(out + "…").width > maxW) out = out.slice(0, -1);
+  return out + "…";
+}
+function wrapLines(c, text, maxW, maxLines){
+  if (c.measureText(text).width <= maxW) return [text];
+  var words = text.split(" "), out = [], cur = "";
   for (var i = 0; i < words.length; i++){
-    var test = cur ? cur + " " + words[i] : words[i];
-    if (c.measureText(test).width <= maxW){ cur = test; continue; }
-    if (cur){ lines.push(cur); cur = words[i]; }
-    else {
-      var piece = "";
-      for (var k = 0; k < words[i].length; k++){
-        var t2 = piece + words[i][k];
-        if (c.measureText(t2).width > maxW && piece){ lines.push(piece); piece = words[i][k]; }
-        else piece = t2;
-      }
-      cur = piece;
-    }
-    if (lines.length >= maxLines){ break; }
+    var t = cur ? cur + " " + words[i] : words[i];
+    if (c.measureText(t).width <= maxW || !cur){ cur = t; continue; }
+    out.push(cur); cur = words[i];
+    if (out.length >= maxLines - 1) break;
   }
-  if (cur && lines.length < maxLines) lines.push(cur);
-  else if (cur && lines.length >= maxLines) lines[lines.length-1] = lines[lines.length-1].replace(/.$/,"…");
-  return lines.slice(0, maxLines);
+  if (cur) out.push(cur);
+  if (out.length > maxLines) out = out.slice(0, maxLines);
+  out[out.length-1] = clipText(c, out[out.length-1], maxW);
+  return out;
+}
+function strokeWidth(px, scale, minScreen){
+  return Math.max(px, (minScreen || 1.1) / scale);
 }
 
-/* ────────── 렌더 ────────── */
-function drawScene(c, scale, opts){
-  var L = opts.layout;
-  var exporting = !!opts.exporting;
-  var ox = opts.ox || 0, oy = opts.oy || 0;
+/* ────────── 장면 그리기 ────────── */
+function drawScene(c, scale, o){
+  var L = o.layout, exporting = !!o.exporting;
+  var ox = o.ox || 0, oy = o.oy || 0;
+
   c.setTransform(1, 0, 0, 1, 0, 0);
-  c.clearRect(0, 0, c.canvas.width, c.canvas.height);
   c.fillStyle = "#0A1522";
   c.fillRect(0, 0, c.canvas.width, c.canvas.height);
   c.setTransform(scale, 0, 0, scale, ox, oy);
 
-  // 배경
-  var bg = c.createLinearGradient(0, 0, L.W*0.85, L.H);
+  /* 배경 */
+  var bg = c.createLinearGradient(0, 0, L.W*0.9, L.H);
   bg.addColorStop(0, "#0B1826");
-  bg.addColorStop(0.5, "#12253A");
+  bg.addColorStop(0.52, "#13273C");
   bg.addColorStop(1, "#0A1522");
   c.fillStyle = bg;
   c.fillRect(0, 0, L.W, L.H);
 
-  // 은은한 격자 점
-  c.fillStyle = "rgba(255,255,255,.045)";
-  for (var gy = 40; gy < L.H; gy += 46){
-    for (var gx = 34; gx < L.W; gx += 46){
-      c.fillRect(gx, gy, 1.6, 1.6);
-    }
+  /* 은은한 점 격자 */
+  c.fillStyle = "rgba(255,255,255,.05)";
+  for (var gy = 34; gy < L.H; gy += 44){
+    for (var gx = 30; gx < L.W; gx += 44) c.fillRect(gx, gy, 1.5, 1.5);
   }
-  // 상단 골드 글로우
-  var gl = c.createRadialGradient(L.W*0.5, -40, 10, L.W*0.5, -40, L.W*0.55);
-  gl.addColorStop(0, "rgba(234,181,95,.16)");
-  gl.addColorStop(1, "rgba(234,181,95,0)");
+  /* 중앙 코어 발광 */
+  var gl = c.createRadialGradient(L.cx, L.cy, 20, L.cx, L.cy, L.W*0.46);
+  gl.addColorStop(0, "rgba(234,181,95,.13)");
+  gl.addColorStop(0.42, "rgba(44,197,180,.05)");
+  gl.addColorStop(1, "rgba(0,0,0,0)");
   c.fillStyle = gl;
-  c.fillRect(0, 0, L.W, L.H*0.5);
+  c.fillRect(0, 0, L.W, L.H);
 
-  var dimBranch = function(bi){ return !exporting && state.branch !== -1 && state.branch !== bi; };
-  var match = function(it){
-    if (exporting || !matchSet) return true;
-    return matchSet.has(it);
-  };
-
-  // 루트 → 분과 연결선 (데스크톱)
-  var r = L.root;
-  if (!L.mob) L.headers.forEach(function(hd){
-    var br = BRANCHES[hd.bi];
-    var x1 = r.x + r.w*(0.16 + 0.226*hd.bi);
-    var y1 = r.y + r.h;
-    var x2 = hd.x + hd.w/2;
-    var y2 = hd.y - 2;
+  /* 동심원 (방사형 느낌) */
+  [226, 372, 540, 700].forEach(function(rad, k){
     c.beginPath();
-    c.moveTo(x1, y1);
-    c.bezierCurveTo(x1, y1 + 58, x2, y2 - 52, x2, y2);
-    c.strokeStyle = hexA(br.color, dimBranch(hd.bi) ? 0.13 : 0.55);
-    c.lineWidth = 2.4;
+    c.arc(L.cx, L.cy, rad, 0, Math.PI*2);
+    c.strokeStyle = "rgba(255,255,255," + (0.045 - k*0.008) + ")";
+    c.lineWidth = 1 / scale + 0.6;
+    if (k === 1) c.setLineDash([3, 9]);
     c.stroke();
-    // 시작점 점
-    c.beginPath();
-    c.arc(x1, y1, 3, 0, Math.PI*2);
-    c.fillStyle = hexA(br.color, dimBranch(hd.bi) ? 0.2 : 0.9);
-    c.fill();
-    // 화살촉 느낌 점
-    c.beginPath();
-    c.arc(x2, y2 - 4, 4.2, 0, Math.PI*2);
-    c.fillStyle = hexA(br.color, dimBranch(hd.bi) ? 0.2 : 0.95);
-    c.fill();
+    c.setLineDash([]);
   });
 
-  // 분과 세로 척추 + 스텁 (데스크톱만)
-  if (!L.mob) L.headers.forEach(function(hd){
-    var br = BRANCHES[hd.bi];
-    var mine = L.leaves.filter(function(lf){ return lf.bi === hd.bi; });
-    if (!mine.length) return;
-    var spineX = (L.mob ? hd.x + 16 : hd.x - 16);
-    var top = hd.y + hd.h;
-    var last = mine[mine.length - 1];
+  var dim = function(bi){ return !exporting && state.branch !== -1 && state.branch !== bi; };
+  var matched = function(it){ return exporting || !matchSet || matchSet.has(it); };
+
+  /* ── 코어 → 분과 연결 (굵은 곡선 다리) ── */
+  L.hubs.forEach(function(hub){
+    var br = BRANCHES[hub.bi];
+    var a = dim(hub.bi) ? 0.14 : 1;
+    var sx = hub.side < 0 ? (L.core.x) : (L.core.x + L.core.w);
+    var sy = L.cy;
+    var ex = hub.side < 0 ? (hub.x + hub.w) : hub.x;
+    var ey = hub.cy;
+    var dx = (ex - sx);
     c.beginPath();
-    c.moveTo(spineX, top);
-    c.lineTo(spineX, last.y + last.h/2);
-    c.strokeStyle = hexA(br.color, dimBranch(hd.bi) ? 0.10 : 0.30);
-    c.lineWidth = 1.6;
-    c.stroke();
-    mine.forEach(function(lf){
-      c.beginPath();
-      c.moveTo(spineX, lf.y + lf.h/2);
-      c.lineTo(lf.x, lf.y + lf.h/2);
-      c.strokeStyle = hexA(br.color, dimBranch(hd.bi) ? 0.10 : 0.34);
-      c.lineWidth = 1.4;
-      c.stroke();
-    });
-  });
-
-  // 루트 카드
-  c.save();
-  c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 26; c.shadowOffsetY = 10;
-  var rg = c.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h);
-  rg.addColorStop(0, "#16324C");
-  rg.addColorStop(1, "#12283E");
-  rr(c, r.x, r.y, r.w, r.h, 16);
-  c.fillStyle = rg; c.fill();
-  c.restore();
-  rr(c, r.x + 0.75, r.y + 0.75, r.w - 1.5, r.h - 1.5, 15);
-  c.strokeStyle = "rgba(234,181,95,.55)"; c.lineWidth = 1.5; c.stroke();
-
-  c.textAlign = "left"; c.textBaseline = "middle";
-  c.fillStyle = "#F3D8A5";
-  c.font = "800 " + (L.mob ? 18 : 28) + "px " + FONT;
-  c.fillText("2026 부모님 돌봄·복지 전체 지도", r.x + 18, r.y + r.h/2 - 7);
-  c.fillStyle = "rgba(220,231,243,.62)";
-  c.font = "600 " + (L.mob ? 11 : 13.5) + "px " + FONT;
-  c.fillText("4대 분과 · 48개 항목 · 항목을 누르면 실전 해설", r.x + 18, r.y + r.h/2 + (L.mob ? 12 : 16));
-
-  // 분과 헤더
-  L.headers.forEach(function(hd){
-    var br = BRANCHES[hd.bi];
-    var dim = dimBranch(hd.bi);
-    var a = dim ? 0.24 : 1;
-    c.save();
-    c.globalAlpha = a;
-    rr(c, hd.x, hd.y, hd.w, hd.h, 12);
-    var hg = c.createLinearGradient(hd.x, hd.y, hd.x + hd.w, hd.y);
-    hg.addColorStop(0, hexA(br.color, 0.28));
-    hg.addColorStop(1, hexA(br.color, 0.10));
-    c.fillStyle = hg; c.fill();
-    c.strokeStyle = hexA(br.color, 0.62); c.lineWidth = 1.3; c.stroke();
-
-    // 번호 원
-    c.beginPath();
-    c.arc(hd.x + 26, hd.y + hd.h/2, 14, 0, Math.PI*2);
-    c.fillStyle = br.color; c.fill();
-
-    c.textAlign = "center"; c.textBaseline = "middle";
-    c.fillStyle = "#0B1826";
-    c.font = "800 14px " + FONT;
-    c.fillText(br.no, hd.x + 26, hd.y + hd.h/2 + 0.5);
-
-    c.textAlign = "left";
-    c.fillStyle = "#F1F7FF";
-    c.font = "800 " + (L.mob ? 16 : 18) + "px " + FONT;
-    c.fillText(br.name, hd.x + 50, hd.y + hd.h/2 - (L.mob ? 0 : 0));
-    c.restore();
-  });
-
-  // 항목 카드
-  L.leaves.forEach(function(lf){
-    var it = lf.item;
-    var br = BRANCHES[it.b];
-    var dim = dimBranch(it.b);
-    var isSel = !!(state.sel && state.sel === it);
-    var isHover = !!(state.hover && state.hover === it);
-    var ok = match(it);
-    var a = dim ? 0.16 : (ok ? 1 : 0.22);
-
-    c.save();
-    c.globalAlpha = a;
-
-    rr(c, lf.x, lf.y, lf.w, lf.h, 11);
-    var fg = c.createLinearGradient(lf.x, lf.y, lf.x, lf.y + lf.h);
-    if (isSel){
-      fg.addColorStop(0, hexA(br.color, 0.34));
-      fg.addColorStop(1, hexA(br.color, 0.18));
-    } else if (isHover){
-      fg.addColorStop(0, "rgba(255,255,255,.13)");
-      fg.addColorStop(1, "rgba(255,255,255,.07)");
-    } else {
-      fg.addColorStop(0, "rgba(255,255,255,.075)");
-      fg.addColorStop(1, "rgba(255,255,255,.035)");
-    }
-    c.fillStyle = fg; c.fill();
-
-    c.strokeStyle = isSel ? hexA(br.color, 0.95) : (isHover ? hexA(br.color, 0.55) : "rgba(255,255,255,.10)");
-    c.lineWidth = isSel ? 1.8 : 1.2;
-    c.stroke();
-
-    // 왼쪽 색 인덱스
-    c.beginPath();
-    c.moveTo(lf.x + 9, lf.y + 12);
-    c.lineTo(lf.x + 9, lf.y + lf.h - 12);
-    c.strokeStyle = hexA(br.color, 0.85);
-    c.lineWidth = 2.6;
+    c.moveTo(sx, sy);
+    c.bezierCurveTo(sx + dx*0.42, sy, ex - dx*0.42, ey, ex, ey);
+    c.strokeStyle = hexA(br.color, 0.10 * a);
+    c.lineWidth = strokeWidth(16, scale, 8);
     c.lineCap = "round";
     c.stroke();
-    c.lineCap = "butt";
+    c.strokeStyle = hexA(br.color, 0.42 * a);
+    c.lineWidth = strokeWidth(4.2, scale, 2.2);
+    c.stroke();
+    c.strokeStyle = hexA(br.color, 0.92 * a);
+    c.lineWidth = strokeWidth(1.4, scale, 0.9);
+    c.stroke();
+    /* 코어 쪽 시작점 */
+    c.beginPath();
+    c.arc(sx, sy, 5.5, 0, Math.PI*2);
+    c.fillStyle = hexA(br.color, 0.95 * a);
+    c.fill();
+  });
 
-    var tx = lf.x + 22, maxW = lf.w - 34;
-    c.font = "700 " + (L.mob ? 15 : 15.5) + "px " + FONT;
-    c.fillStyle = isSel ? "#FFFFFF" : "#E7EFF8";
-    c.textAlign = "left";
-    var lines = wrap(c, it.t, maxW, 2);
-    var lh = (L.mob ? 17 : 19);
-    var startY = lf.y + lf.h/2 - (lines.length - 1)*lh/2;
-    c.textBaseline = "middle";
-    lines.forEach(function(ln, i){ c.fillText(ln, tx, startY + i*lh); });
+  /* ── 분과 → 항목 곡선 가지 ── */
+  L.leaves.forEach(function(lf){
+    var br = BRANCHES[lf.bi];
+    var hub = null;
+    for (var i = 0; i < L.hubs.length; i++) if (L.hubs[i].bi === lf.bi) hub = L.hubs[i];
+    if (!hub) return;
+    var a = dim(lf.bi) ? 0.10 : 1;
+    var ok = matched(lf.item);
+    var alpha = a * (ok ? 0.42 : 0.16);
+    var sx = lf.side < 0 ? hub.x : hub.x + hub.w;
+    var sy = hub.cy;
+    var ex = lf.side < 0 ? lf.x + lf.w : lf.x;
+    var ey = lf.cy;
+    var dx = ex - sx;
+    c.beginPath();
+    c.moveTo(sx, sy);
+    c.bezierCurveTo(sx + dx*0.55, sy, ex - dx*0.5, ey, ex, ey);
+    c.strokeStyle = hexA(br.color, alpha);
+    c.lineWidth = strokeWidth(1.7, scale, 1.0);
+    c.lineCap = "round";
+    c.stroke();
+    /* 항목 쪽 끝점 */
+    c.beginPath();
+    c.arc(ex, ey, 2.6, 0, Math.PI*2);
+    c.fillStyle = hexA(br.color, Math.min(1, alpha + 0.4));
+    c.fill();
+  });
 
+  /* ── 중앙 코어 카드 ── */
+  var r = L.core;
+  c.save();
+  c.shadowColor = "rgba(0,0,0,.55)"; c.shadowBlur = 30; c.shadowOffsetY = 12;
+  var cg = c.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h);
+  cg.addColorStop(0, "#17344F");
+  cg.addColorStop(1, "#112539");
+  rr(c, r.x, r.y, r.w, r.h, 22);
+  c.fillStyle = cg; c.fill();
+  c.restore();
+  rr(c, r.x + 0.8, r.y + 0.8, r.w - 1.6, r.h - 1.6, 21.5);
+  c.strokeStyle = "rgba(234,181,95,.68)"; c.lineWidth = 1.7; c.stroke();
+  /* 금색 상단 라인 */
+  var tg = c.createLinearGradient(r.x, r.y, r.x + r.w, r.y);
+  tg.addColorStop(0, "rgba(234,181,95,0)");
+  tg.addColorStop(.5, "rgba(234,181,95,.85)");
+  tg.addColorStop(1, "rgba(234,181,95,0)");
+  c.beginPath(); c.moveTo(r.x + 26, r.y + 1.5); c.lineTo(r.x + r.w - 26, r.y + 1.5);
+  c.strokeStyle = tg; c.lineWidth = 2; c.stroke();
+
+  c.textAlign = "center"; c.textBaseline = "middle";
+  c.fillStyle = "rgba(234,181,95,.95)";
+  c.font = "800 11.5px " + FONT;
+  c.fillText("2 0 2 6   대 한 민 국", r.x + r.w/2, r.y + 36);
+  c.fillStyle = "#F2F7FC";
+  c.font = "800 26px " + FONT;
+  c.fillText("부모님 돌봄·복지", r.x + r.w/2, r.y + 70);
+  c.fillStyle = "#F3D8A5";
+  c.fillText("전체 지도", r.x + r.w/2, r.y + 101);
+  c.fillStyle = "rgba(220,231,243,.62)";
+  c.font = "700 11.5px " + FONT;
+  c.fillText("4대 분과 · 48개 항목 · 누르면 해설", r.x + r.w/2, r.y + r.h - 18);
+
+  /* ── 분과 허브 ── */
+  L.hubs.forEach(function(hub){
+    var br = BRANCHES[hub.bi];
+    var dimmed = dim(hub.bi);
+    var hovered = (state.hoverToggle === hub.bi);
+    c.save();
+    c.globalAlpha = dimmed ? 0.22 : 1;
+    if (!exporting){
+      c.shadowColor = hexA(br.color, hovered ? .35 : .18);
+      c.shadowBlur = hovered ? 26 : 16;
+    }
+    rr(c, hub.x, hub.y, hub.w, hub.h, 15);
+    var hgd = c.createLinearGradient(hub.x, hub.y, hub.x + hub.w, hub.y + hub.h);
+    hgd.addColorStop(0, hexA(br.color, 0.34));
+    hgd.addColorStop(1, hexA(br.color, 0.11));
+    c.fillStyle = hgd; c.fill();
+    c.restore();
+
+    c.save();
+    c.globalAlpha = dimmed ? 0.22 : 1;
+    rr(c, hub.x + 0.7, hub.y + 0.7, hub.w - 1.4, hub.h - 1.4, 14.4);
+    c.strokeStyle = hexA(br.color, 0.72); c.lineWidth = 1.5; c.stroke();
+    /* 바깥쪽 색 띠 */
+    c.beginPath();
+    if (hub.side < 0){ c.moveTo(hub.x + 1.2, hub.y + 16); c.lineTo(hub.x + 1.2, hub.y + hub.h - 16); }
+    else { c.moveTo(hub.x + hub.w - 1.2, hub.y + 16); c.lineTo(hub.x + hub.w - 1.2, hub.y + hub.h - 16); }
+    c.strokeStyle = hexA(br.color, 0.95); c.lineWidth = 3; c.lineCap = "round"; c.stroke(); c.lineCap = "butt";
+
+    /* 번호 원 — 코어 쪽 */
+    var ncx = hub.side < 0 ? hub.x + hub.w - 32 : hub.x + 32;
+    c.beginPath(); c.arc(ncx, hub.cy, 16, 0, Math.PI*2);
+    c.fillStyle = br.color; c.fill();
+    c.beginPath(); c.arc(ncx, hub.cy, 16, 0, Math.PI*2);
+    c.strokeStyle = hexA("#FFFFFF", .35); c.lineWidth = 1; c.stroke();
+    c.textAlign = "center"; c.textBaseline = "middle";
+    c.fillStyle = "#0B1826"; c.font = "800 15px " + FONT;
+    c.fillText(br.no, ncx, hub.cy + 0.5);
+
+    /* 이름 */
+    var tx = hub.side < 0 ? hub.x + 14 : hub.x + 58;
+    var maxW = hub.w - 62;
+    c.font = "800 16px " + FONT;
+    var lines = wrapLines(c, br.name, maxW, 2);
+    c.textAlign = hub.side < 0 ? "right" : "left";
+    var anchorX = hub.side < 0 ? hub.w + hub.x - 58 : tx;
+    if (lines.length === 1){
+      c.textBaseline = "middle";
+      c.fillStyle = "#F4F9FF";
+      c.fillText(lines[0], anchorX, hub.cy - 7);
+    } else {
+      c.textBaseline = "middle";
+      c.fillStyle = "#F4F9FF";
+      c.fillText(lines[0], anchorX, hub.cy - 17);
+      c.fillText(lines[1], anchorX, hub.cy + 2);
+    }
+    c.font = "700 11px " + FONT;
+    c.fillStyle = hexA(br.color, .92);
+    c.fillText((state.collapsed[hub.bi] ? "12개 접힘" : "12개 항목"), anchorX, hub.cy + 19);
     c.restore();
   });
 
-  // 워터마크 (PNG 저장본에만)
+  /* ── 항목 카드 ── */
+  L.leaves.forEach(function(lf){
+    var it = lf.item, br = BRANCHES[it.b];
+    var dimmed = dim(it.b);
+    var ok = matched(it);
+    var isSel = !!(state.sel === it);
+    var isHover = !!(state.hover === it);
+    var a = dimmed ? 0.16 : (ok ? 1 : 0.2);
+
+    c.save();
+    c.globalAlpha = a;
+    rr(c, lf.x, lf.y, lf.w, lf.h, 11);
+    var fg = c.createLinearGradient(lf.x, lf.y, lf.x, lf.y + lf.h);
+    if (isSel){ fg.addColorStop(0, hexA(br.color, .40)); fg.addColorStop(1, hexA(br.color, .20)); }
+    else if (isHover){ fg.addColorStop(0, "rgba(255,255,255,.15)"); fg.addColorStop(1, "rgba(255,255,255,.08)"); }
+    else { fg.addColorStop(0, "rgba(255,255,255,.075)"); fg.addColorStop(1, "rgba(255,255,255,.035)"); }
+    c.fillStyle = fg; c.fill();
+    c.strokeStyle = isSel ? hexA(br.color, .95) : (isHover ? hexA(br.color, .62) : "rgba(255,255,255,.11)");
+    c.lineWidth = isSel ? 1.9 : 1.2;
+    c.stroke();
+
+    /* 안쪽 색 인덱스 */
+    var barX = lf.side < 0 ? lf.x + lf.w - 7 : lf.x + 7;
+    c.beginPath();
+    c.moveTo(barX, lf.y + 10); c.lineTo(barX, lf.y + lf.h - 10);
+    c.strokeStyle = hexA(br.color, .88); c.lineWidth = 2.8; c.lineCap = "round"; c.stroke(); c.lineCap = "butt";
+
+    c.font = "700 13.5px " + FONT;
+    c.fillStyle = isSel ? "#FFFFFF" : "#E7EFF8";
+    var txc = lf.side < 0 ? lf.x + 13 : lf.x + 20;
+    var tw = lf.w - 32;
+    c.textAlign = "left"; c.textBaseline = "middle";
+    var lns = wrapLines(c, it.t, tw, 2);
+    if (lns.length === 1) c.fillText(lns[0], txc, lf.cy);
+    else {
+      c.font = "700 12.5px " + FONT;
+      c.fillText(lns[0], txc, lf.cy - 9);
+      c.fillText(lns[1], txc, lf.cy + 8);
+    }
+    c.restore();
+  });
+
+  /* ── 접기/펼치기 토글 ── */
+  L.toggles.forEach(function(tg){
+    var br = BRANCHES[tg.bi];
+    var collapsed = state.collapsed[tg.bi];
+    var dimmed = dim(tg.bi);
+    var hov = state.hoverToggle === tg.bi;
+    c.save();
+    c.globalAlpha = dimmed ? 0.3 : 1;
+    c.beginPath(); c.arc(tg.x, tg.y, tg.r, 0, Math.PI*2);
+    c.fillStyle = hov ? hexA(br.color, .30) : "#0B1826";
+    c.fill();
+    c.strokeStyle = hexA(br.color, hov ? 1 : .8); c.lineWidth = 1.6; c.stroke();
+    c.textAlign = "center"; c.textBaseline = "middle";
+    c.fillStyle = br.color; c.font = "800 17px " + FONT;
+    c.fillText(collapsed ? "+" : "−", tg.x, tg.y + 0.5);
+    c.restore();
+  });
+
+  /* ── 내보내기용 하단 문구 ── */
   if (exporting){
-    c.textAlign = "right"; c.textBaseline = "bottom";
-    c.fillStyle = "rgba(220,231,243,.55)";
-    c.font = "700 12px " + FONT;
-    c.fillText("제작 · 라이프나침반 · litt.ly/lifenavigator", L.W - 22, L.H - 16);
+    c.textAlign = "left"; c.textBaseline = "alphabetic";
+    c.fillStyle = "rgba(200,214,230,.62)";
+    c.font = "600 12px " + FONT;
+    c.fillText("본 지도는 2026년 공개자료 기준 참고자료입니다 · 지원 여부·금액은 소득·재산·심사 기준에 따라 달라집니다.", GEO.padX, L.H - 18);
+    c.textAlign = "right";
+    c.fillStyle = "rgba(220,231,243,.72)";
+    c.font = "700 12.5px " + FONT;
+    c.fillText("제작 · 라이프나침반 · litt.ly/lifenavigator", L.W - GEO.padX, L.H - 18);
   }
 }
 
 /* ────────── 화면 그리기 ────────── */
-var resizeTimer = null;
 function paint(){
   if (!LAYOUT) LAYOUT = buildLayout();
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
   var cssW = stageEl.clientWidth || 800;
-  var cssH = Math.max(120, LAYOUT.H * view.s);
+  var cssH = stageEl.clientHeight || 500;
   var pxW = Math.round(cssW * dpr), pxH = Math.round(cssH * dpr);
-  if (canvas.width !== pxW || canvas.height !== pxH){
-    canvas.width = pxW; canvas.height = pxH;
-    canvas.style.width = cssW + "px";
-    canvas.style.height = cssH + "px";
-  }
+  if (canvas.width !== pxW || canvas.height !== pxH){ canvas.width = pxW; canvas.height = pxH; }
   drawScene(ctx, view.s * dpr, { layout: LAYOUT, ox: view.ox * dpr, oy: view.oy * dpr });
   zlabel();
 }
 
-/* ────────── 이벤트 ────────── */
+/* ────────── 줌 / 팬 ────────── */
+function zlabel(){
+  var v = document.getElementById("zval");
+  if (v) v.textContent = Math.round((view.s / view.fit) * 100) + "%";
+}
+function sizeStage(){
+  if (!isMobile()){ stageEl.style.height = ""; return; }
+  var cssW = stageEl.clientWidth || (window.innerWidth - 26);
+  var fitW = Math.max(0.05, (cssW - 16) / LAYOUT.W);
+  var need = Math.round(LAYOUT.H * fitW + 116);
+  var maxH = Math.max(330, window.innerHeight - 330);
+  stageEl.style.height = Math.min(Math.max(need, 310), maxH) + "px";
+}
+/* 보이는 노드(코어·분과·항목)만 감싸는 범위 */
+function contentBox(){
+  var L = LAYOUT;
+  var x1 = L.core.x - 8, y1 = L.core.y - 8;
+  var x2 = L.core.x + L.core.w + 8, y2 = L.core.y + L.core.h + 8;
+  L.hubs.forEach(function(h){
+    x1 = Math.min(x1, h.x - 38); y1 = Math.min(y1, h.y);
+    x2 = Math.max(x2, h.x + h.w + 38); y2 = Math.max(y2, h.y + h.h);
+  });
+  L.leaves.forEach(function(l){
+    x1 = Math.min(x1, l.x); y1 = Math.min(y1, l.y);
+    x2 = Math.max(x2, l.x + l.w); y2 = Math.max(y2, l.y + l.h);
+  });
+  if (!L.leaves.length){
+    L.hubs.forEach(function(h){ y1 = Math.min(y1, h.y - 8); y2 = Math.max(y2, h.y + h.h + 8); });
+  }
+  return { x:x1, y:y1, w:x2-x1, h:y2-y1 };
+}
+function fitToScreen(){
+  if (!LAYOUT) LAYOUT = buildLayout();
+  sizeStage();
+  var cssW = stageEl.clientWidth || 800;
+  var cssH = stageEl.clientHeight || 500;
+  var pad = isMobile() ? 8 : 14;
+  var box = contentBox();
+  var s = Math.min((cssW - pad*2) / box.w, (cssH - pad*2) / box.h);
+  s = Math.max(0.05, s);
+  view.s = s;
+  view.fit = s;
+  view.ox = (cssW - box.w * s) / 2 - box.x * s;
+  view.oy = (cssH - box.h * s) / 2 - box.y * s;
+}
+function clampPan(){
+  var cssW = stageEl.clientWidth || 800;
+  var cssH = stageEl.clientHeight || 500;
+  var box = contentBox();
+  var M = isMobile() ? 12 : 20;
+  var w = box.w * view.s, h = box.h * view.s;
+  if (w <= cssW - M*2) view.ox = (cssW - w) / 2 - box.x * view.s;
+  else view.ox = Math.min(-box.x * view.s + M, Math.max(cssW - (box.x + box.w) * view.s - M, view.ox));
+  if (h <= cssH - M*2) view.oy = (cssH - h) / 2 - box.y * view.s;
+  else view.oy = Math.min(-box.y * view.s + M, Math.max(cssH - (box.y + box.h) * view.s - M, view.oy));
+}
+function setZoom(mult, ax, ay){
+  var cssW = stageEl.clientWidth || 800;
+  var cssH = stageEl.clientHeight || 500;
+  if (ax === undefined){ ax = cssW/2; ay = cssH/2; }
+  hideMobHint();
+  var wx = (ax - view.ox) / view.s, wy = (ay - view.oy) / view.s;
+  var ns = Math.min(3.4, Math.max(view.fit * 0.55, view.s * mult));
+  view.s = ns;
+  view.ox = ax - wx * ns;
+  view.oy = ay - wy * ns;
+  clampPan();
+  paint();
+}
+function focusBranch(bi){
+  var hub = null;
+  LAYOUT.hubs.forEach(function(h){ if (h.bi === bi) hub = h; });
+  if (!hub) return;
+  hideMobHint();
+  var lvs = LAYOUT.leaves.filter(function(lf){ return lf.bi === bi; });
+  var cssW = stageEl.clientWidth || 800, cssH = stageEl.clientHeight || 500;
+  var s = Math.max(view.fit * 3, 0.92);
+  var ax = hub.x + hub.w/2, ay = hub.cy;
+  if (lvs.length){
+    var x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
+    lvs.forEach(function(lf){
+      x1 = Math.min(x1, lf.x); y1 = Math.min(y1, lf.y);
+      x2 = Math.max(x2, lf.x + lf.w); y2 = Math.max(y2, lf.y + lf.h);
+    });
+    var leafCX = (x1 + x2)/2, leafCY = (y1 + y2)/2;
+    var bx1 = Math.min(x1, hub.x), bx2 = Math.max(x2, hub.x + hub.w);
+    var by1 = Math.min(y1, hub.y), by2 = Math.max(y2, hub.y + hub.h);
+    var sFit = Math.min((cssW - 24) / (bx2 - bx1), (cssH - 24) / (by2 - by1));
+    s = Math.max(0.92, Math.min(sFit, 1.7));
+    var fitsW = (bx2 - bx1) * s <= cssW - 12;
+    var fitsH = (by2 - by1) * s <= cssH - 12;
+    if (fitsW && fitsH){ ax = (bx1 + bx2)/2; ay = (by1 + by2)/2; }
+    else {
+      ax = leafCX;
+      ay = fitsH ? (by1 + by2)/2 : (y1 + (cssH / s)/2 - 6);
+    }
+  }
+  view.s = s;
+  view.ox = cssW/2 - ax * s;
+  view.oy = cssH/2 - ay * s;
+  clampPan();
+  paint();
+  toast(BRANCHES[bi].no + ". " + BRANCHES[bi].name + " 확대 · 맞춤을 누르면 전체 보기");
+}
+
+/* ────────── 히트 테스트 ────────── */
+function localPoint(e){
+  var rect = canvas.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
 function hitTest(cssX, cssY){
   if (!LAYOUT) return null;
   var wx = (cssX - view.ox) / view.s;
   var wy = (cssY - view.oy) / view.s;
-  for (var i = 0; i < LAYOUT.leaves.length; i++){
-    var lf = LAYOUT.leaves[i];
-    if (wx >= lf.x && wx <= lf.x + lf.w && wy >= lf.y && wy <= lf.y + lf.h) return lf.item;
+  var hit = { leaf:null, toggle:-1, hub:-1 };
+  var rHit = Math.max(17, 22 / view.s);
+  for (var i = 0; i < LAYOUT.toggles.length; i++){
+    var tg = LAYOUT.toggles[i];
+    var dx = wx - tg.x, dy = wy - tg.y;
+    if (dx*dx + dy*dy <= rHit*rHit){ hit.toggle = tg.bi; return hit; }
   }
-  return null;
+  var hPad = Math.max(6, 10 / view.s);
+  for (var j = 0; j < LAYOUT.hubs.length; j++){
+    var h = LAYOUT.hubs[j];
+    if (wx >= h.x - hPad && wx <= h.x + h.w + hPad && wy >= h.y - hPad && wy <= h.y + h.h + hPad){ hit.hub = h.bi; return hit; }
+  }
+  for (var k = 0; k < LAYOUT.leaves.length; k++){
+    var lf = LAYOUT.leaves[k];
+    if (wx >= lf.x && wx <= lf.x + lf.w && wy >= lf.y && wy <= lf.y + lf.h){ hit.leaf = lf.item; return hit; }
+  }
+  return hit;
 }
 
-document.getElementById("pnClose").addEventListener("click", closePanel);
-document.getElementById("scrim").addEventListener("click", closePanel);
-document.addEventListener("keydown", function(e){ if (e.key === "Escape") closePanel(); });
-
+/* ────────── 상세 패널 ────────── */
 function openPanel(it){
   state.sel = it;
   if (!isMobile()){
@@ -946,6 +1163,30 @@ function closePanel(){
   state.sel = null;
   paint();
 }
+document.getElementById("pnClose").addEventListener("click", closePanel);
+document.getElementById("scrim").addEventListener("click", closePanel);
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") closePanel(); });
+
+/* ────────── 접기/펼치기 ────────── */
+function setCollapsed(bi, val){
+  state.collapsed[bi] = val;
+  LAYOUT = buildLayout();
+  fitToScreen();
+  paint();
+}
+function allCollapsed(val){
+  state.collapsed = [val, val, val, val];
+  LAYOUT = buildLayout();
+  fitToScreen();
+  paint();
+}
+document.getElementById("expando").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-act]");
+  if (!b) return;
+  var expand = b.dataset.act === "expand";
+  allCollapsed(!expand);
+  toast(expand ? "네 분과 48개 항목을 모두 펼쳤습니다" : "네 분과를 모두 접었습니다 — 다시 누르면 펼쳐집니다");
+});
 
 /* ────────── 검색 ────────── */
 var qEl = document.getElementById("q");
@@ -964,23 +1205,30 @@ function applyFilter(){
     if (hay.indexOf(q) !== -1) set.add(it);
   });
   matchSet = set;
+  /* 검색 결과가 숨은 분과에 있으면 자동으로 펼친다 */
+  var changed = false;
+  BRANCHES.forEach(function(br, bi){
+    if (state.collapsed[bi] && ITEMS.some(function(it){ return it.b === bi && set.has(it); })){
+      state.collapsed[bi] = false; changed = true;
+    }
+  });
+  if (changed){ LAYOUT = buildLayout(); fitToScreen(); }
   box.textContent = "검색 결과 " + set.size + "개";
   box.style.display = "inline-block";
   filterList(q);
 }
 function filterList(q){
   var rows = document.querySelectorAll("#listWrap .row");
-  rows.forEach(function(row){
-    var it = row._item;
-    if (!q){ row.classList.remove("hide"); return; }
+  for (var i = 0; i < rows.length; i++){
+    var row = rows[i], it = row._item;
+    if (!it) continue;
+    if (!q){ row.classList.remove("hide"); continue; }
     var hay = (it.t + " " + it.s + " " + it.h + " " + it.d + " " + it.p).toLowerCase();
     row.classList.toggle("hide", hay.indexOf(q) === -1);
-  });
+  }
 }
 qEl.addEventListener("keydown", function(e){
-  if (e.key === "Enter" && matchSet && matchSet.size >= 1){
-    openPanel(matchSet.values().next().value);
-  }
+  if (e.key === "Enter" && matchSet && matchSet.size >= 1) openPanel(matchSet.values().next().value);
 });
 
 /* ────────── 칩 ────────── */
@@ -997,13 +1245,8 @@ function buildChips(){
     box.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("on"); });
     btn.classList.add("on");
     state.branch = parseInt(btn.dataset.b, 10);
-    if (state.view === "list"){ renderList(); }
-    LAYOUT = buildLayout();
-    view.fit = stageEl.clientWidth / LAYOUT.W;
-    view.s = view.fit; view.ox = 0; view.oy = 0;
-    applyFilter();
+    if (state.view === "list") renderList();
     paint();
-    if (isMobile()) window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 
@@ -1014,7 +1257,7 @@ function renderList(){
   BRANCHES.forEach(function(br, i){
     html += '<div class="lcol" data-bi="' + i + '"><h3><i style="background:' + br.color + '"></i>' + br.no + '. ' + br.name + '<span class="n">12개</span></h3>';
     leavesOf(i).forEach(function(it){
-      html += '<div class="row"><div class="t">' + it.t + '</div><div class="d">' + it.s.split(".")[0] + '.</div></div>';
+      html += '<div class="row"><div class="t">' + it.t + '</div><div class="d">' + it.s.split(". ")[0] + '</div></div>';
     });
     html += '</div>';
   });
@@ -1041,130 +1284,212 @@ document.getElementById("seg").addEventListener("click", function(e){
   var isList = state.view === "list";
   document.getElementById("listWrap").classList.toggle("on", isList);
   stageEl.style.display = isList ? "none" : "block";
-  document.getElementById("hint").textContent = isList ? "" : "항목을 누르면 해설이 열립니다 · 드래그 이동 · 휠 확대";
   if (isList) renderList();
+  else {
+    LAYOUT = buildLayout();
+    fitToScreen();
+    paint();
+  }
 });
 
-/* ────────── 줌 / 팬 ────────── */
-function zlabel(){
-  var v = document.getElementById("zval");
-  if (v) v.textContent = Math.round((view.s / view.fit) * 100) + "%";
-}
-function setZoom(mult){
-  var target = view.fit * mult;
-  var cx = stageEl.clientWidth / 2;
-  var wx = (cx - view.ox) / view.s;
-  view.s = target;
-  view.ox = cx - wx * view.s;
-  view.oy = 0;
-  clampPan();
-  paint();
-}
-function clampPan(){
-  var cssW = stageEl.clientWidth;
-  var wpx = LAYOUT.W * view.s;
-  if (wpx <= cssW + 1) view.ox = 0;
-  else view.ox = Math.min(0, Math.max(cssW - wpx, view.ox));
-  view.oy = 0;
-}
-document.getElementById("zin").addEventListener("click", function(){ setZoom(Math.min(3.2, (view.s/view.fit) * 1.25)); });
-document.getElementById("zout").addEventListener("click", function(){ setZoom(Math.max(0.72, (view.s/view.fit) / 1.25)); });
-document.getElementById("zfit").addEventListener("click", function(){
-  view.s = view.fit; view.ox = 0; view.oy = 0; paint(); zlabel();
-});
+/* ────────── 포인터 (팬 / 핀치 / 탭) ────────── */
+var pointers = {};
+var pCount = 0, dragging = false, moved = false, lastX = 0, lastY = 0;
+var pinchStart = null, hoverThrottle = 0;
 
-var dragging = false, moved = false, lastX = 0, lastY = 0;
 canvas.addEventListener("pointerdown", function(e){
-  dragging = true; moved = false; lastX = e.clientX; lastY = e.clientY;
-  canvas.classList.add("grabbing");
+  hideMobHint();
+  pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+  pCount = Object.keys(pointers).length;
   try { canvas.setPointerCapture(e.pointerId); } catch(err){}
+  if (pCount === 1){
+    dragging = true; moved = false; lastX = e.clientX; lastY = e.clientY;
+    canvas.classList.add("grabbing");
+  } else if (pCount === 2){
+    dragging = false;
+    var ids = Object.keys(pointers);
+    var a = pointers[ids[0]], b = pointers[ids[1]];
+    var rect = canvas.getBoundingClientRect();
+    pinchStart = {
+      dist: Math.hypot(a.x - b.x, a.y - b.y),
+      s: view.s,
+      ox: view.ox, oy: view.oy,
+      mx: (a.x + b.x)/2 - rect.left,
+      my: (a.y + b.y)/2 - rect.top,
+      wx: ((a.x + b.x)/2 - rect.left - view.ox) / view.s,
+      wy: ((a.y + b.y)/2 - rect.top - view.oy) / view.s
+    };
+  }
 });
+
 canvas.addEventListener("pointermove", function(e){
-  var rect = canvas.getBoundingClientRect();
+  if (pointers[e.pointerId]) { pointers[e.pointerId].x = e.clientX; pointers[e.pointerId].y = e.clientY; }
+  pCount = Object.keys(pointers).length;
+
+  if (pCount >= 2 && pinchStart){
+    var ids = Object.keys(pointers);
+    var a = pointers[ids[0]], b = pointers[ids[1]];
+    var rect = canvas.getBoundingClientRect();
+    var dist = Math.hypot(a.x - b.x, a.y - b.y);
+    var mx = (a.x + b.x)/2 - rect.left, my = (a.y + b.y)/2 - rect.top;
+    var ns = Math.min(3.4, Math.max(0.05, pinchStart.s * (dist / (pinchStart.dist || 1))));
+    view.s = ns;
+    view.ox = mx - pinchStart.wx * ns;
+    view.oy = my - pinchStart.wy * ns;
+    clampPan();
+    paint();
+    moved = true;
+    return;
+  }
+
   if (dragging){
     var dx = e.clientX - lastX, dy = e.clientY - lastY;
-    if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+    if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
     view.ox += dx; view.oy += dy;
     lastX = e.clientX; lastY = e.clientY;
     clampPan();
     paint();
     return;
   }
-  var it = hitTest(e.clientX - rect.left, e.clientY - rect.top);
-  if (it !== state.hover){
-    state.hover = it;
-    canvas.classList.toggle("pointer", !!it);
+
+  /* 마우스 호버 */
+  if (e.pointerType === "mouse"){
+    var now = Date.now();
+    if (now - hoverThrottle < 40) return;
+    hoverThrottle = now;
+    var p = localPoint(e);
+    var h = hitTest(p.x, p.y);
+    var hv = h.leaf, ht = h.toggle, hb = h.hub;
+    if (hv !== state.hover || ht !== state.hoverToggle){
+      state.hover = hv;
+      state.hoverToggle = ht;
+      canvas.classList.toggle("pointer", !!(hv || ht !== -1 || hb !== -1));
+      paint();
+    }
+  }
+});
+
+function endPointer(e){
+  delete pointers[e.pointerId];
+  pCount = Object.keys(pointers).length;
+  if (pCount < 2) pinchStart = null;
+  if (pCount === 1 && dragging === false){
+    var ids = Object.keys(pointers);
+    if (ids.length){ lastX = pointers[ids[0]].x; lastY = pointers[ids[0]].y; dragging = true; }
+  }
+  if (pCount === 0){
+    canvas.classList.remove("grabbing");
+    if (!dragging) return;
+    dragging = false;
+    if (moved) return;
+    var p = localPoint(e);
+    var h = hitTest(p.x, p.y);
+    if (h.toggle !== -1){ setCollapsed(h.toggle, !state.collapsed[h.toggle]); return; }
+    if (h.leaf){ openPanel(h.leaf); return; }
+    if (h.hub !== -1){ focusBranch(h.hub); }
+  }
+}
+canvas.addEventListener("pointerup", endPointer);
+canvas.addEventListener("pointercancel", function(e){
+  delete pointers[e.pointerId];
+  pCount = Object.keys(pointers).length;
+  if (pCount < 2) pinchStart = null;
+  if (pCount === 0){ dragging = false; canvas.classList.remove("grabbing"); }
+});
+canvas.addEventListener("pointerleave", function(){
+  if (state.hover || state.hoverToggle !== -1){
+    state.hover = null; state.hoverToggle = -1;
+    canvas.classList.remove("pointer");
     paint();
   }
 });
-canvas.addEventListener("pointerup", function(e){
-  canvas.classList.remove("grabbing");
-  dragging = false;
-  if (moved) return;
-  var rect = canvas.getBoundingClientRect();
-  var it = hitTest(e.clientX - rect.left, e.clientY - rect.top);
-  if (it) openPanel(it);
+canvas.addEventListener("wheel", function(e){
+  e.preventDefault();
+  var p = localPoint(e);
+  setZoom(e.deltaY < 0 ? 1.12 : 0.89, p.x, p.y);
+}, { passive: false });
+canvas.addEventListener("dblclick", function(e){
+  var p = localPoint(e);
+  setZoom(1.6, p.x, p.y);
 });
-canvas.addEventListener("pointerleave", function(){
-  if (state.hover){ state.hover = null; canvas.classList.remove("pointer"); paint(); }
-});
+
+/* 줌 버튼 */
+document.getElementById("zin").addEventListener("click", function(){ setZoom(1.3); });
+document.getElementById("zout").addEventListener("click", function(){ setZoom(1/1.3); });
+document.getElementById("zfit").addEventListener("click", function(){ fitToScreen(); paint(); });
 
 /* ────────── PNG 저장 ────────── */
 function toast(msg){
   var t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("on");
-  setTimeout(function(){ t.classList.remove("on"); }, 2200);
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ t.classList.remove("on"); }, 2400);
 }
 document.getElementById("pngBtn").addEventListener("click", function(){
   try {
+    var saved = state.collapsed.slice();
+    var savedSel = state.sel, savedHover = state.hover;
+    state.collapsed = [false, false, false, false];
+    state.sel = null; state.hover = null; state.hoverToggle = -1;
+    var L = buildLayout();
     var mult = 2.4;
     var out = document.createElement("canvas");
-    out.width = Math.round(LAYOUT.W * mult);
-    out.height = Math.round(LAYOUT.H * mult);
+    out.width = Math.round(L.W * mult);
+    out.height = Math.round(L.H * mult);
     var oc = out.getContext("2d");
-    var savedSel = state.sel, savedHover = state.hover;
-    state.sel = null; state.hover = null;
-    drawScene(oc, mult, { layout: LAYOUT, exporting: true });
-    state.sel = savedSel; state.hover = savedHover;
+    drawScene(oc, mult, { layout: L, exporting: true });
+    state.collapsed = saved; state.sel = savedSel; state.hover = savedHover;
     out.toBlob(function(blob){
       if (!blob){ toast("저장에 실패했습니다. 다시 시도해 주세요."); return; }
       var url = URL.createObjectURL(blob);
       var a = document.createElement("a");
       a.href = url;
-      a.download = "2026_부모님_돌봄복지_전체지도_라이프나침반.png";
+      a.download = "2026_부모님_돌봄복지_마인드맵_라이프나침반.png";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
       toast("PNG로 저장했습니다 (" + out.width + "×" + out.height + ")");
     }, "image/png");
+    paint();
   } catch (err){
     toast("이 브라우저에서는 저장이 제한됩니다. 화면 캡처를 이용해 주세요.");
   }
 });
 
 /* ────────── 시작 ────────── */
+var resizeTimer = null;
 function boot(){
   LAYOUT = buildLayout();
-  view.fit = (stageEl.clientWidth || 800) / LAYOUT.W;
-  view.s = view.fit;
   buildChips();
+  fitToScreen();
   paint();
 }
 window.addEventListener("resize", function(){
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(function(){
+    if (state.view !== "map") return;
     LAYOUT = buildLayout();
-    view.fit = (stageEl.clientWidth || 800) / LAYOUT.W;
-    view.s = view.fit;
-    view.ox = 0; view.oy = 0;
+    fitToScreen();
     paint();
-  }, 180);
+  }, 160);
+});
+window.addEventListener("orientationchange", function(){
+  setTimeout(function(){
+    if (state.view !== "map") return;
+    LAYOUT = buildLayout(); fitToScreen(); paint();
+  }, 320);
 });
 boot();
 
 /* 디버그용 (콘솔 오류 점검) */
-window.__mapDebug = { items: ITEMS.length, branches: BRANCHES.length, layout: function(){ return LAYOUT; } };
+window.__mapDebug = {
+  items: ITEMS.length,
+  branches: BRANCHES.length,
+  layout: function(){ return LAYOUT; },
+  view: function(){ return view; },
+  state: function(){ return state; }
+};
 </script>
 </body>
 </html>
