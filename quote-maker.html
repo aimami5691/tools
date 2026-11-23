@@ -38,7 +38,8 @@
   .freeStrip a{color:#065F46;font-weight:800;text-decoration:underline;margin-left:5px}
 
   .layout{display:grid;grid-template-columns:minmax(0,470px) minmax(0,1fr);gap:18px;padding-top:18px;padding-bottom:40px;align-items:start}
-  .panel{background:#fff;border:1px solid var(--line);border-radius:18px;
+  .layout > *{min-width:0}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:18px;min-width:0;overflow-x:hidden;
          box-shadow:0 1px 2px rgba(15,23,42,.04), 0 10px 28px -22px rgba(15,23,42,.35)}
 
   .panel.form{padding:4px 18px 18px}
@@ -75,21 +76,27 @@
   .hint b{color:#0B6C63;font-weight:800}
 
   .items{display:grid;gap:8px}
-  .irow{display:grid;gap:6px;align-items:center;
-        grid-template-columns:30px minmax(0,1fr) 122px 84px 112px 118px 34px;
-        grid-template-areas:"no name spec qty price amt act";
-        border:1px solid #E6EBF2;border-radius:12px;padding:7px 9px;background:#FCFDFE}
-  .irow.head{background:#F1F5F9;border-color:#E2E8F0;padding:6px 9px;font-size:12px;font-weight:800;color:#64748B;text-align:center}
+  /* 품목 한 줄 = 2단 카드(1줄: 번호·품명·삭제 / 2줄: 규격·수량·단가·금액)
+     좌측 패널 폭이 400~480px이라 어떤 화면 폭에서도 칸이 잘리지 않게 카드형으로 배치한다. */
+  .irow{display:grid;gap:7px 8px;align-items:center;
+        grid-template-columns:26px minmax(0,1fr) auto;
+        grid-template-areas:"no name act" "meta meta meta";
+        border:1px solid #E6EBF2;border-radius:12px;padding:9px 10px;background:#FCFDFE}
+  .irow.head{display:none}
   .ino{grid-area:no;font-size:12px;font-weight:800;color:#94A3B8;text-align:center}
-  .if{display:contents}
-  .fl{display:none}
-  .in-name{grid-area:name}
-  .in-spec{grid-area:spec}
-  .in-qty{grid-area:qty;text-align:right}
-  .in-price{grid-area:price;text-align:right}
-  .iamt{grid-area:amt;text-align:right;font-size:14.5px;font-weight:800;color:#0F1B26;font-variant-numeric:tabular-nums;
-        overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-  .iact{grid-area:act;display:flex;justify-content:flex-end}
+  .if{display:block;min-width:0}
+  .fl{display:block;font-size:11px;font-weight:800;color:#7C8B9E;margin:0 0 3px 2px;letter-spacing:-.01em}
+  .if.f-name{grid-area:name}
+  .in-name,.in-spec,.in-qty,.in-price{width:100%;min-width:0}
+  .in-qty{text-align:right}
+  .in-price{text-align:right}
+  .imeta{grid-area:meta;display:grid;gap:6px;align-items:end;min-width:0;
+         grid-template-columns:minmax(0,1.15fr) minmax(0,.55fr) minmax(0,.95fr) minmax(0,1.05fr)}
+  .iamt{min-width:0;overflow:hidden}
+  .iamt-v{display:flex;align-items:center;justify-content:flex-end;min-height:39px;background:#F1F5F9;border-radius:9px;
+          padding:0 10px;line-height:1.4;font-size:14px;font-weight:800;color:#0F1B26;font-variant-numeric:tabular-nums;
+          text-align:right;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .iact{grid-area:act;display:flex;justify-content:flex-end;align-self:end}
   .iact button{border:1px solid #E2E8F0;background:#fff;border-radius:8px;width:30px;height:30px;cursor:pointer;
                font-size:13px;line-height:1;color:#64748B;padding:0}
   .iact button:hover{background:#FEF2F2;border-color:#FCA5A5;color:#B91C1C}
@@ -97,24 +104,19 @@
   .itemsFoot{display:flex;align-items:center;gap:10px;margin-top:10px}
   .cnt{font-size:13px;font-weight:800;color:#7C8B9E;margin-left:auto}
   @media (max-width:760px){
-    .irow{grid-template-columns:1fr 1fr 1fr;
-          grid-template-areas:
-            "no no act"
-            "name name name"
-            "spec spec spec"
-            "qty qty price"
-            "amt amt amt";
-          padding:10px;gap:7px}
-    .irow.head{display:none}
+    .irow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+          grid-template-areas:"no no act" "name name name" "meta meta meta";
+          padding:11px;gap:8px}
+    .imeta{grid-template-columns:1fr 1fr;gap:7px;
+           grid-template-areas:"spec spec" "qty price" "amt amt"}
+    .imeta .f-spec{grid-area:spec}
+    .imeta .f-qty{grid-area:qty}
+    .imeta .f-price{grid-area:price}
+    .imeta .iamt{grid-area:amt}
     .ino{text-align:left;font-size:12.5px}
-    .iamt{background:#F1F5F9;border-radius:8px;padding:6px 10px;font-size:15px}
+    .iamt-v{font-size:15px}
     .in-qty,.in-price{text-align:left}
-    .if{display:block}
-    .fl{display:block;font-size:11.5px;font-weight:800;color:#7C8B9E;margin:0 0 3px 2px;letter-spacing:-.01em}
-    .if.f-name{grid-area:name}
-    .if.f-spec{grid-area:spec}
-    .if.f-qty{grid-area:qty}
-    .if.f-price{grid-area:price}
+    .fl{font-size:11.5px}
     .iact button{width:38px;height:38px;font-size:16px}
   }
 
@@ -124,6 +126,9 @@
   .genDone{display:none;padding:11px 14px;background:#ECFDF5;border-bottom:1px solid #A7F3D0;color:#065F46;
            font-size:14px;font-weight:800;text-align:center}
   .genDone.on{display:block}
+  .warnBox{display:none;margin:0 0 10px;padding:11px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:11px;
+           font-size:13.5px;font-weight:700;color:#7C5A08;line-height:1.5;letter-spacing:-.01em}
+  .warnBox.on{display:block}
   .actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
   .btn{font-size:16px;font-weight:800;border-radius:12px;border:1.5px solid #DCE3EC;background:#fff;color:#334155;
        padding:11px 15px;cursor:pointer;min-height:50px;letter-spacing:-.02em;transition:.15s}
@@ -267,7 +272,7 @@
         <button type="button" data-vat="none"><b>없음</b><small>면세·간이</small></button>
       </div>
       <div class="pair" style="margin-top:10px">
-        <div class="field"><label>세율</label><input type="text" id="f-rate" data-f="rate" inputmode="decimal" placeholder="10"></div>
+        <div class="field"><label>세율</label><input type="text" id="f-rate" data-f="rate" inputmode="decimal" placeholder="10" min="0" max="100"></div>
         <div class="field"><label>끝전 처리</label>
           <div class="seg two" id="roundSeg" style="gap:6px">
             <button type="button" data-round="floor" class="on" style="min-height:48px"><b>원 단위 절사</b></button>
@@ -299,6 +304,7 @@
       <button type="button" class="btn primary" id="dlPngTop">PNG 저장</button>
     </div>
     <div class="genDone" id="genDone">✅ 견적서 이미지가 생성되었습니다! 아래에서 확인 후 저장하세요.</div>
+    <div class="warnBox" id="warnSup" role="status">공급자 상호를 입력하면 더 완성도 높은 문서가 됩니다</div>
     <div class="canvasBox" id="canvasBox">
       <div id="pvWrap"></div>
     </div>
@@ -395,6 +401,42 @@
     if (!isFinite(r) || r < 0) r = 0;
     if (r > 100) r = 100;
     return r;
+  }
+  /* 세율 입력칸 : 0~100 밖의 값은 입력 즉시 칸 값 자체를 클램핑한다. */
+  function cleanRate(v){
+    var raw = String(v == null ? '' : v).trim();
+    var neg = raw.charAt(0) === '-';
+    var s = raw.replace(/[^0-9.]/g, '');
+    s = s.replace(/(\..*)\./g, '$1');
+    if (s.indexOf('.') === 0) s = '0' + s;
+    if (neg) s = '0';
+    return s;
+  }
+  function applyRateInput(el, isBlur){
+    var neg = String(el.value == null ? '' : el.value).trim().charAt(0) === '-';
+    var cleaned = cleanRate(el.value);
+    if (cleaned !== el.value) el.value = cleaned;
+    var n = parseFloat(cleaned);
+    var clamped = neg;
+    if (!isFinite(n)) n = 0;
+    if (n < 0){ n = 0; clamped = true; }
+    if (n > 100){ n = 100; clamped = true; }
+    if (clamped){
+      el.value = String(n);
+      var now = Date.now();
+      if (!el._rateNotice || now - el._rateNotice > 1800){
+        el._rateNotice = now;
+        toast('세율은 0~100% 범위만 입력됩니다');
+      }
+    } else if (isBlur && cleaned === ''){
+      el.value = '0';
+    }
+    state.vatRate = n;
+    return clamped;
+  }
+  function hideWarnSup(v){
+    var el = document.getElementById('warnSup');
+    if (el && String(v == null ? '' : v).trim()) el.classList.remove('on');
   }
   function qtyText(q){
     var n = num(q);
@@ -782,7 +824,7 @@
   function syncAmounts(){
     var els = document.querySelectorAll('#items .irow:not(.head)');
     for (var i = 0; i < els.length; i++){
-      var amtEl = els[i].querySelector('.iamt');
+      var amtEl = els[i].querySelector('.iamt-v') || els[i].querySelector('.iamt');
       var it = state.f.items[i];
       if (!amtEl || !it) continue;
       amtEl.textContent = comma(R(num(it.qty) * num(it.price))) + '원';
@@ -868,16 +910,19 @@
     [].forEach.call(document.querySelectorAll('[data-f]'), function(el){
       var k = el.getAttribute('data-f');
       fieldEls[k] = el;
-      if (k === 'rate') el.value = String(state.vatRate);
+      if (k === 'rate') el.value = String(rateVal());
       else if (k in state.f) el.value = state.f[k] == null ? '' : state.f[k];
       el.addEventListener('input', function(){
         if (k === 'rate'){
-          var r = num(el.value);
-          state.vatRate = isFinite(r) ? r : 0;
+          applyRateInput(el, false);
         } else {
           state.f[k] = el.value;
+          if (k === 'supName') hideWarnSup(el.value);
         }
         scheduleRender();
+      });
+      el.addEventListener('blur', function(){
+        if (k === 'rate'){ if (applyRateInput(el, true)) render(); }
       });
       el.addEventListener('change', function(){
         if (k === 'date' && el.value && !state.f.valid){
@@ -892,7 +937,7 @@
     Object.keys(state.f).forEach(function(k){
       if (fieldEls[k]) fieldEls[k].value = state.f[k] == null ? '' : state.f[k];
     });
-    if (fieldEls.rate) fieldEls.rate.value = String(state.vatRate);
+    if (fieldEls.rate) fieldEls.rate.value = String(state.vatRate = rateVal());
     document.querySelectorAll('#docSeg button').forEach(function(b){
       b.classList.toggle('on', b.getAttribute('data-doc') === state.doc);
     });
@@ -912,10 +957,6 @@
   function renderItems(){
     var box = document.getElementById('items');
     box.innerHTML = '';
-    var head = document.createElement('div');
-    head.className = 'irow head';
-    head.innerHTML = '<span>번호</span><span>품명</span><span>규격</span><span>수량</span><span>단가</span><span>금액</span><span></span>';
-    box.appendChild(head);
     state.f.items.forEach(function(it, i){
       var row = document.createElement('div');
       row.className = 'irow';
@@ -923,11 +964,13 @@
       row.innerHTML =
         '<span class="ino">' + (i + 1) + '</span>' +
         '<span class="if f-name"><span class="fl">품명</span><input class="in-name" type="text" autocomplete="off" placeholder="예: 친환경 종이쇼핑백" value="' + esc(it.name) + '"></span>' +
-        '<span class="if f-spec"><span class="fl">규격 (선택)</span><input class="in-spec" type="text" autocomplete="off" placeholder="규격" value="' + esc(it.spec) + '"></span>' +
-        '<span class="if f-qty"><span class="fl">수량</span><input class="in-qty" type="text" inputmode="decimal" autocomplete="off" placeholder="1" value="' + esc(qtyText(it.qty)) + '"></span>' +
-        '<span class="if f-price"><span class="fl">단가 (원)</span><input class="in-price" type="text" inputmode="numeric" autocomplete="off" placeholder="0" value="' + esc(it.price ? comma(it.price) : '') + '"></span>' +
-        '<span class="iamt">0원</span>' +
-        '<span class="iact"><button type="button" class="del" title="이 줄 삭제">✕</button></span>';
+        '<span class="iact"><button type="button" class="del" title="이 줄 삭제">✕</button></span>' +
+        '<span class="imeta">' +
+          '<span class="if f-spec"><span class="fl">규격 (선택)</span><input class="in-spec" type="text" autocomplete="off" placeholder="규격" value="' + esc(it.spec) + '"></span>' +
+          '<span class="if f-qty"><span class="fl">수량</span><input class="in-qty" type="text" inputmode="decimal" autocomplete="off" placeholder="1" value="' + esc(qtyText(it.qty)) + '"></span>' +
+          '<span class="if f-price"><span class="fl">단가 (원)</span><input class="in-price" type="text" inputmode="numeric" autocomplete="off" placeholder="0" value="' + esc(it.price ? comma(it.price) : '') + '"></span>' +
+          '<span class="iamt"><span class="fl">금액</span><span class="iamt-v">0원</span></span>' +
+        '</span>';
       var nameEl = row.querySelector('.in-name');
       var specEl = row.querySelector('.in-spec');
       var qtyEl = row.querySelector('.in-qty');
@@ -1024,6 +1067,8 @@
 
   document.getElementById('btnGen').addEventListener('click', function(){
     render();
+    var warn = document.getElementById('warnSup');
+    if (warn) warn.classList.toggle('on', !String(state.f.supName || '').trim());
     document.getElementById('genDone').classList.add('on');
     if (window.innerWidth <= 1024){
       document.body.classList.remove('view-form');
