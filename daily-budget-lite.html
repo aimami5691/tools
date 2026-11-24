@@ -679,6 +679,7 @@
       $("gaugeFill").style.width = "0%";
       $("gaugeFill").className = "gauge-fill";
       $("gaugePct").textContent = "0%";
+      $("gauge").setAttribute("aria-label", "예산 소진율 0%");
       $("gaugeRest").textContent = "남은 예산 -";
       $("overBanner").hidden = true;
       $("kBudget").textContent = r.budget > 0 ? fmt(r.budget) + "원" : "-";
