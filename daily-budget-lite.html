@@ -202,6 +202,12 @@
     background:#E6F6F4;color:var(--teal-d);border:2px solid var(--teal);
     font-size:19px;line-height:1.35;min-height:64px;padding:10px 12px;
   }
+  .btn.kakao{
+    background:#FEE500;color:#191600;border:2px solid #E5C100;
+    width:100%;min-height:64px;font-size:20px;font-weight:800;line-height:1.35;
+    padding:14px;margin-bottom:12px;
+  }
+  .btn.kakao:active{background:#F2D900;}
   .btn:focus-visible{outline:4px solid #0B2642;outline-offset:3px;}
 
   .sharebar{
@@ -456,8 +462,9 @@
   </section>
 
   <div class="sharebar">
+    <button type="button" class="btn kakao" id="kakaoShareBtn">💬 카카오톡·지인에게 바로 공유</button>
     <button type="button" class="btn share" id="shareBtn">📤 계산 결과 가족·지인에게 복사</button>
-    <p class="sharehint">한 줄 요약 문구를 복사합니다. 카카오톡·문자에 그대로 붙여 넣으면 됩니다.</p>
+    <p class="sharehint">공유 버튼을 누르면 휴대폰 공유 창이 열려 카카오톡으로 바로 보낼 수 있습니다. 공유 창이 열리지 않는 환경에서는 한 줄 요약이 복사되니 카카오톡·문자에 붙여 넣으면 됩니다.</p>
   </div>
 
   <section class="card" style="margin-top:22px;" aria-labelledby="s4title">
@@ -754,9 +761,9 @@
     toastTimer = setTimeout(function () { t.className = "toast"; }, 2400);
   }
 
-  function shareText() {
+  function summaryLines() {
     var r = calcDaily(budgetValue(), spentValue(), daysValue());
-    if (!(r.budget > 0 && r.days > 0)) return "";
+    if (!(r.budget > 0 && r.days > 0)) return null;
     var today = parseYMD(todayDateEl.value) || new Date();
     var head = "[" + (today.getMonth() + 1) + "월 " + today.getDate() + "일 하루 생활비]";
     var lines = [head];
@@ -768,8 +775,23 @@
     } else {
       lines.push("· 예산 초과 " + fmt(r.overBy) + "원");
     }
-    if (SHARE_URL) lines.push("\n내 계산: " + SHARE_URL);
-    return lines.join("\n");
+    return lines;
+  }
+
+  function shareText() {
+    var lines = summaryLines();
+    if (!lines) return "";
+    var t = lines.join("\n");
+    if (SHARE_URL) t += "\n\n내 계산: " + SHARE_URL;
+    return t;
+  }
+
+  function sharePayload() {
+    var lines = summaryLines();
+    if (!lines) return null;
+    var p = { title: "하루 생활비 계산기 (변동비 기준)", text: lines.join("\n") };
+    if (SHARE_URL) p.url = SHARE_URL;
+    return p;
   }
 
   /* ---------------- 이벤트 ---------------- */
@@ -850,6 +872,22 @@
     var t = shareText();
     if (!t) { toast("예산과 남은 날을 먼저 넣어 주세요."); return; }
     copyText(t, "계산 결과를 복사했어요. 카카오톡·문자에 붙여 넣으세요.");
+  });
+
+  $("kakaoShareBtn").addEventListener("click", function () {
+    var p = sharePayload();
+    if (!p) { toast("예산과 남은 날을 먼저 넣어 주세요."); return; }
+    function fallback() {
+      copyText(shareText(), "계산 결과를 복사했어요. 카카오톡에 바로 붙여 넣으세요.");
+    }
+    if (!navigator.share) { fallback(); return; }
+    var sent;
+    try { sent = navigator.share(p); } catch (e) { fallback(); return; }
+    if (sent && typeof sent.then === "function") {
+      sent.then(function () {}, function (err) {
+        if (!err || err.name !== "AbortError") fallback();
+      });
+    }
   });
 
   /* ---------------- 시작 ---------------- */
