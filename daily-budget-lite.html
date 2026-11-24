@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2642">
+<link rel="canonical" href="https://aimami5691.github.io/tools/daily-budget-lite.html">
+<meta name="description" content="저축과 고정비를 뺀 변동비 예산으로 이번 달 남은 생활비와 오늘부터 하루에 쓸 수 있는 돈을 계산하는 큰글씨 계산기. 인터넷이 끊겨도 화면을 연 뒤에는 그대로 계산됩니다.">
+<title>하루 생활비 계산기 (변동비 기준 · 큰글씨 · 무료)</title>
+<style>
+  :root{
+    color-scheme:light;
+    --navy:#0B2642;
+    --navy2:#123A5C;
+    --teal:#009991;
+    --teal-d:#00716B;
+    --cream:#FDF8EF;
+    --cream2:#F5EDDD;
+    --card:#FFFFFF;
+    --line:#E0D8C6;
+    --text:#12283D;
+    --sub:#3E5670;
+    --warn:#8A4B00;
+    --warn-bg:#FFF4E2;
+    --danger:#A32018;
+    --danger-bg:#FDECEA;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  [hidden]{display:none !important;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR","Noto Sans CJK KR",sans-serif;
+    font-size:19px;
+    line-height:1.68;
+    letter-spacing:-0.01em;
+    font-variant-numeric:tabular-nums;
+    word-break:keep-all;
+    overflow-wrap:anywhere;
+  }
+  .wrap{max-width:480px;margin:0 auto;padding:0 16px 56px;}
+
+  header.hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff;
+    padding:26px 16px 30px;
+  }
+  header.hero .inner{max-width:480px;margin:0 auto;}
+  .kicker{
+    display:inline-block;font-size:18px;font-weight:700;color:#9FE8E2;
+    border:2px solid rgba(159,232,226,.45);border-radius:999px;padding:4px 14px;margin-bottom:12px;
+  }
+  h1{font-size:28px;line-height:1.34;margin:0 0 10px;font-weight:800;letter-spacing:-0.02em;}
+  .hero p{margin:0;font-size:18px;color:#D8E6F2;line-height:1.6;}
+  .hero p b{color:#fff;}
+  .hero .stamp{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+  .hero .stamp span{
+    font-size:18px;font-weight:700;background:rgba(255,255,255,.12);
+    border-radius:10px;padding:6px 12px;color:#fff;
+  }
+
+  .toplink{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-top:18px;padding:14px 16px;border-radius:16px;
+    background:#EAF6F4;border:2px solid #9ED9D1;color:#075E58;
+    font-size:18px;font-weight:800;text-decoration:none;line-height:1.4;
+  }
+  .toplink span{flex:1 1 auto;min-width:0;}
+  .toplink em{font-style:normal;font-size:22px;font-weight:900;flex:0 0 auto;}
+
+  section{margin-top:22px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:20px 18px;
+  }
+  .card + .card{margin-top:16px;}
+  h2{
+    font-size:22px;line-height:1.4;margin:0 0 6px;font-weight:800;color:var(--navy);
+    display:flex;align-items:center;gap:10px;
+  }
+  h2 .num{
+    flex:0 0 auto;width:36px;height:36px;border-radius:10px;background:var(--teal);
+    color:#fff;font-size:19px;display:flex;align-items:center;justify-content:center;font-weight:800;
+  }
+  h3{font-size:20px;margin:22px 0 8px;font-weight:800;color:var(--navy);}
+  p{margin:8px 0;}
+  .lead{font-size:18px;color:var(--sub);margin:0 0 4px;}
+  .hint{font-size:18px;color:var(--sub);margin:8px 0 0;line-height:1.6;}
+
+  .notice{
+    background:var(--warn-bg);border:1px solid #F0D6AC;border-left:8px solid #E0A64B;
+    border-radius:14px;padding:16px;margin-top:8px;font-size:18px;
+  }
+  .notice b{color:var(--warn);}
+
+  .modes{display:flex;gap:8px;margin:14px 0 4px;}
+  .modes button{
+    flex:1 1 0;min-width:0;min-height:66px;padding:8px 6px;
+    border:2px solid #A79D8C;border-radius:14px;background:#fff;color:var(--navy);
+    font-family:inherit;font-size:19px;font-weight:800;line-height:1.3;cursor:pointer;
+  }
+  .modes button small{display:block;font-size:18px;font-weight:700;color:var(--sub);margin-top:2px;}
+  .modes button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .modes button[aria-pressed="true"] small{color:#B9D3E8;}
+  .modes button:focus-visible{outline:4px solid var(--teal);outline-offset:3px;}
+
+  .panel{margin-top:14px;}
+  .field{margin-top:14px;}
+  .field:first-child{margin-top:0;}
+  .field label{display:block;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+  input[type="text"],input[type="number"],input[type="date"]{
+    width:100%;border:2px solid #A79D8C;border-radius:14px;background:#fff;
+    padding:16px 14px;font-size:22px;font-family:inherit;color:var(--text);font-weight:700;
+    min-height:62px;
+  }
+  input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px rgba(0,153,145,.18);}
+  .field .hint{margin:6px 0 8px;}
+
+  .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .quick button{
+    appearance:none;font-family:inherit;font-size:18px;font-weight:700;
+    border:2px solid #A79D8C;background:var(--cream2);color:var(--navy);
+    border-radius:12px;min-height:54px;padding:0 14px;cursor:pointer;flex:0 1 auto;
+  }
+  .quick button:focus-visible{outline:4px solid var(--navy);outline-offset:2px;}
+  .echo{font-size:18px;color:var(--teal-d);font-weight:800;margin-top:10px;min-height:0;white-space:pre-line;}
+
+  .calcbox{
+    margin-top:14px;background:#F4FBFA;border:2px solid #9ED9D1;border-radius:14px;padding:14px 16px;
+  }
+  .calcbox .clab{font-size:18px;font-weight:800;color:#075E58;margin:0;}
+  .calcbox .cval{font-size:26px;font-weight:800;color:var(--navy);margin:2px 0 0;line-height:1.3;}
+
+  .sumline{
+    margin-top:14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:18px;font-weight:700;color:var(--navy);background:var(--cream2);
+    border-radius:12px;padding:12px 14px;
+  }
+  .sumline strong{font-size:22px;font-weight:800;flex:0 0 auto;}
+
+  .dailyadd{
+    margin-top:16px;padding:14px;border:2px dashed #A79D8C;border-radius:16px;background:#FFFDF7;
+  }
+  .dailyadd .dt{font-size:18px;font-weight:800;color:var(--navy);margin:0 0 8px;}
+  .row{display:flex;gap:10px;align-items:stretch;}
+  .row input{flex:1 1 auto;min-width:0;}
+  .row .btn{flex:0 0 auto;width:auto;padding:0 18px;font-size:19px;}
+
+  .result{
+    background:linear-gradient(165deg,#0B2642 0%,#123A5C 100%);
+    border-radius:20px;color:#fff;padding:22px 18px;margin-top:22px;
+  }
+  .result .rlabel{font-size:18px;color:#B9D3E8;font-weight:700;margin:0;}
+  .result .rmoney{
+    font-size:34px;line-height:1.16;font-weight:800;color:#fff;margin:2px 0 2px;
+    letter-spacing:-0.02em;
+  }
+  .result .rmoney.big{font-size:40px;}
+  .result .rmoney.zero{font-size:30px;color:#FFD9A8;}
+  .result .rgloss{font-size:19px;line-height:1.4;font-weight:800;color:#9FE8E2;margin:0 0 6px;}
+  .result .rgloss:empty{display:none;}
+  .result .rsub{font-size:18px;color:#CFE2F1;margin:0;white-space:pre-line;line-height:1.6;}
+  .result .divider{height:1px;background:rgba(255,255,255,.2);margin:18px 0;}
+  .result .mkor{color:#9FE8E2;font-weight:700;}
+
+  .gauge{
+    height:20px;border-radius:999px;background:rgba(255,255,255,.18);
+    margin:16px 0 10px;overflow:hidden;
+  }
+  .gauge-fill{
+    height:100%;width:0%;border-radius:999px;background:#9FE8E2;
+    transition:width .25s ease;
+  }
+  .gauge-fill.warn{background:#FFC46B;}
+  .gauge-fill.over{background:#FF8A7A;}
+  .gauge-label{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:18px;color:#CFE2F1;}
+  .gauge-label b{color:#fff;font-size:20px;}
+
+  .overbanner{
+    margin-top:14px;background:#5B1A14;border:2px solid #FF8A7A;border-radius:14px;
+    padding:14px 16px;font-size:18px;color:#FFE0DA;line-height:1.6;
+  }
+  .overbanner b{color:#fff;display:block;font-size:20px;margin-bottom:4px;}
+
+  .kv{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:18px;padding:6px 0;}
+  .kv .k{color:#B9D3E8;flex:1 1 auto;min-width:0;}
+  .kv .v{font-weight:800;text-align:right;flex:0 0 auto;max-width:62%;}
+  .v.strong{color:#9FE8E2;}
+
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+    min-height:64px;border-radius:16px;border:none;font-family:inherit;
+    font-size:21px;font-weight:800;cursor:pointer;text-align:center;
+  }
+  .btn.primary{background:var(--teal);color:#fff;}
+  .btn.primary:active{background:var(--teal-d);}
+  .btn.navy{background:var(--navy);color:#fff;}
+  .btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy);}
+  .btn.share{
+    background:#E6F6F4;color:var(--teal-d);border:2px solid var(--teal);
+    font-size:19px;line-height:1.35;min-height:64px;padding:10px 12px;
+  }
+  .btn:focus-visible{outline:4px solid #0B2642;outline-offset:3px;}
+
+  .sharebar{
+    margin-top:18px;padding:14px;border:2px dashed #A79D8C;border-radius:16px;background:#FFFDF7;
+  }
+  .sharehint{font-size:18px;color:var(--sub);margin:10px 0 0;line-height:1.6;}
+
+  .formula{background:#F1F5F9;border:2px solid #DCE5EE;border-radius:16px;padding:16px;}
+  .formula p{margin:0;font-size:19px;font-weight:800;color:var(--navy);line-height:1.7;}
+  .formula p + p{margin-top:10px;}
+
+  details.more{margin-top:14px;border:2px dashed #A79D8C;border-radius:14px;background:#FFFDF7;}
+  details.more > summary{
+    cursor:pointer;list-style:none;padding:16px 44px 16px 16px;font-size:19px;font-weight:800;color:var(--navy);
+    position:relative;
+  }
+  details.more > summary::-webkit-details-marker{display:none;}
+  details.more > summary::after{content:"▾";font-size:18px;position:absolute;right:16px;top:16px;}
+  details.more[open] > summary::after{content:"▴";}
+  details.more .body{padding:0 16px 16px;font-size:18px;}
+  details.more .body ul{margin:6px 0 0;padding-left:22px;}
+  details.more .body li{margin:6px 0;}
+
+  .promo{
+    margin-top:22px;background:#fff;border:2px solid #9ED9D1;border-radius:18px;padding:18px;
+  }
+  .promo h3{margin-top:0;}
+  .promo .price{font-size:18px;color:var(--sub);font-weight:700;}
+
+  .disclaimer{
+    margin-top:22px;padding:16px;background:var(--warn-bg);border:2px solid #E0A64B;
+    border-radius:16px;font-size:18px;color:#5B3E05;line-height:1.62;font-weight:700;
+  }
+  .disclaimer span{display:block;margin-top:8px;font-weight:700;}
+
+  footer{margin-top:24px;text-align:center;font-size:18px;color:var(--sub);line-height:1.7;}
+  footer .brand{font-size:19px;font-weight:900;color:var(--navy);}
+  footer .footlink{margin:12px 0 0;font-size:18px;}
+  footer a{color:var(--teal-d);font-weight:800;text-decoration:underline;}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);
+    background:#0B2642;color:#fff;font-size:18px;font-weight:700;
+    padding:14px 20px;border-radius:14px;max-width:calc(100% - 40px);
+    opacity:0;pointer-events:none;transition:opacity .18s, transform .18s;z-index:50;text-align:center;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"하루 생활비 계산기 (변동비 기준)","url":"https://aimami5691.github.io/tools/daily-budget-lite.html","description":"저축과 고정비를 뺀 변동비 예산으로 이번 달 남은 생활비와 하루에 쓸 수 있는 돈을 계산하는 큰글씨 계산기.","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"ko-KR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"provider":{"@type":"Organization","name":"라이프나침반","url":"https://aimami5691.github.io/tools/"},"isPartOf":{"@type":"WebSite","name":"라이프나침반","url":"https://aimami5691.github.io/tools/"}}</script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <span class="kicker">변동비 기준 · 큰글씨 계산기</span>
+    <h1>이번 달 남은 생활비,<br>하루 얼마까지 쓸까?</h1>
+    <p>월급 전체가 아니라 <b>저축·고정비를 빼고 남은 식비·교통비 예산</b>으로 계산합니다. 숫자 몇 개만 넣으면 오늘부터 하루에 쓸 수 있는 돈이 바로 나옵니다.</p>
+    <div class="stamp">
+      <span>가입 없음</span><span>로그인 없음</span><span>엑셀 없음</span><span>저장 없음</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <noscript>
+    <div class="notice" style="margin-top:18px;">이 계산기는 화면에서 바로 계산되는 도구라 <b>자바스크립트</b>가 필요합니다. 휴대폰 브라우저에서 자바스크립트를 켜 주세요(대부분 기본으로 켜져 있습니다).</div>
+  </noscript>
+
+
+  <section class="card" aria-labelledby="s1title">
+    <h2 id="s1title"><span class="num" aria-hidden="true">1</span>이번 달 쓸 수 있는 돈</h2>
+    <p class="lead">월세·통신비·보험료·저축은 이미 나갈 돈이라 빼고 봅니다. 남은 돈으로 식비·교통비·생활비를 씁니다.</p>
+
+    <div class="modes" role="group" aria-label="예산 입력 방식">
+      <button type="button" id="modeBudget" aria-pressed="true">변동비 예산<small>바로 넣기</small></button>
+      <button type="button" id="modeIncome" aria-pressed="false">실수령액에서<small>빼고 계산</small></button>
+    </div>
+
+    <div class="panel" id="panelBudget">
+      <div class="field">
+        <label for="budget">이번 달 변동비 예산 (원)</label>
+        <p class="hint">이번 달 식비·교통비·생활비로 쓸 수 있는 돈입니다. 모르면 대략 넣어도 됩니다.</p>
+        <input id="budget" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 800000">
+        <div class="quick" role="group" aria-label="예산 빠른 입력">
+          <button type="button" data-budget="300000">30만</button>
+          <button type="button" data-budget="500000">50만</button>
+          <button type="button" data-budget="800000">80만</button>
+          <button type="button" data-budget="1000000">100만</button>
+          <button type="button" id="budgetClear">지우기</button>
+        </div>
+        <p class="echo" id="budgetEcho" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="panel" id="panelIncome" hidden>
+      <div class="field">
+        <label for="income">이번 달 월 실수령액 (원)</label>
+        <p class="hint">세금·4대보험을 뺀 뒤 통장에 들어오는 돈입니다.</p>
+        <input id="income" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 2800000">
+      </div>
+      <div class="field">
+        <label for="saving">저축·적금 (원)</label>
+        <input id="saving" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 300000">
+      </div>
+      <div class="field">
+        <label for="rent">월세·관리비 (원)</label>
+        <input id="rent" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 600000">
+      </div>
+      <div class="field">
+        <label for="phone">통신비 (원)</label>
+        <input id="phone" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 100000">
+      </div>
+      <div class="field">
+        <label for="ins">보험료 (원)</label>
+        <input id="ins" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 150000">
+      </div>
+      <div class="field">
+        <label for="subs">구독료·기타 고정비 (원)</label>
+        <input id="subs" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 50000">
+      </div>
+      <div class="calcbox">
+        <p class="clab">이번 달 변동비 예산</p>
+        <p class="cval" id="autoBudget">-</p>
+        <p class="hint" id="autoBudgetNote" style="margin-top:6px;">실수령액에서 저축과 고정비를 빼면 자동으로 계산됩니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="s2title">
+    <h2 id="s2title"><span class="num" aria-hidden="true">2</span>지금까지 쓴 돈</h2>
+    <p class="lead">이번 달에 식비·교통비·쇼핑으로 <b>이미 쓴 돈</b>입니다. 오늘 쓴 것까지 넣으세요.</p>
+
+    <div class="modes" role="group" aria-label="지출 입력 방식">
+      <button type="button" id="modeSum" aria-pressed="true">합계로 넣기<small>한 번에</small></button>
+      <button type="button" id="modeItems" aria-pressed="false">항목별로<small>나눠서</small></button>
+    </div>
+
+    <div class="panel" id="panelSum">
+      <div class="field">
+        <label for="spent">지금까지 쓴 변동비 합계 (원)</label>
+        <input id="spent" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 267300">
+        <div class="quick" role="group" aria-label="지출 빠른 입력">
+          <button type="button" data-spent="100000">10만</button>
+          <button type="button" data-spent="200000">20만</button>
+          <button type="button" data-spent="300000">30만</button>
+          <button type="button" id="spentClear">지우기</button>
+        </div>
+        <p class="echo" id="spentEcho" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="panel" id="panelItems" hidden>
+      <div class="field">
+        <label for="itFood">식비·장보기 (원)</label>
+        <input id="itFood" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 150000">
+      </div>
+      <div class="field">
+        <label for="itMove">교통·주유 (원)</label>
+        <input id="itMove" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 50000">
+      </div>
+      <div class="field">
+        <label for="itOut">외식·쇼핑 (원)</label>
+        <input id="itOut" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="예: 60000">
+      </div>
+      <div class="field">
+        <label for="itEtc">기타 (원)</label>
+        <input id="itEtc" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 7300">
+      </div>
+      <div class="sumline"><span>네 항목 합계</span><strong id="itemsSum">0원</strong></div>
+    </div>
+
+    <div class="dailyadd">
+      <p class="dt">오늘 쓴 돈을 바로 더하기</p>
+      <div class="row">
+        <input id="todaySpend" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 12000" aria-label="오늘 쓴 돈">
+        <button type="button" class="btn primary" id="addToday">더하기</button>
+      </div>
+      <p class="hint">넣고 누르면 위 ‘쓴 돈’에 더해집니다. 매일 쓰는 날에 편합니다.</p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="s3title">
+    <h2 id="s3title"><span class="num" aria-hidden="true">3</span>며칠이 남았나</h2>
+    <p class="lead">오늘 날짜와 이번 달 말일을 넣으면 남은 날을 세어 줍니다. 오늘도 하루로 셉니다.</p>
+
+    <div class="modes" role="group" aria-label="남은 날 입력 방식">
+      <button type="button" id="modeDate" aria-pressed="true">이번 달<small>날짜로 세기</small></button>
+      <button type="button" id="modeDays" aria-pressed="false">직접 넣기<small>남은 날</small></button>
+    </div>
+
+    <div class="panel" id="panelDate">
+      <div class="field">
+        <label for="todayDate">오늘 날짜</label>
+        <input id="todayDate" type="date">
+      </div>
+      <div class="field">
+        <label for="endDate">이번 달 말일 (기준일)</label>
+        <p class="hint">월급날이 따로 있으면 그 날짜를 넣으세요. 그날까지 남은 날로 계산됩니다.</p>
+        <input id="endDate" type="date">
+      </div>
+      <p class="echo" id="daysEcho" aria-live="polite"></p>
+    </div>
+
+    <div class="panel" id="panelDays" hidden>
+      <div class="field">
+        <label for="days">남은 날 (오늘 포함)</label>
+        <input id="days" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 18">
+        <div class="quick" role="group" aria-label="남은 날 빠른 입력">
+          <button type="button" data-days="7">7일</button>
+          <button type="button" data-days="14">14일</button>
+          <button type="button" data-days="18">18일</button>
+          <button type="button" data-days="30">30일</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="result" aria-labelledby="rtitle" aria-live="polite">
+    <h2 id="rtitle" style="color:#fff;font-size:22px;margin-bottom:14px;">계산 결과</h2>
+
+    <p class="rlabel">이번 달 남은 생활비</p>
+    <p class="rmoney" id="rRemain">-</p>
+    <p class="rgloss" id="rRemainKor"></p>
+    <p class="rsub" id="rRemainSub">예산과 쓴 돈을 넣으면 바로 계산됩니다.</p>
+
+    <div class="divider"></div>
+
+    <p class="rlabel">오늘부터 하루에 쓸 수 있는 돈</p>
+    <p class="rmoney big" id="rPerDay">-</p>
+    <p class="rgloss" id="rPerDayKor"></p>
+    <p class="rsub" id="rPerDaySub">남은 날로 나눈 금액입니다.</p>
+
+    <div class="gauge" id="gauge" role="img" aria-label="예산 소진율 0%">
+      <div class="gauge-fill" id="gaugeFill"></div>
+    </div>
+    <div class="gauge-label">
+      <span>예산의 <b id="gaugePct">0%</b>를 썼어요</span>
+      <span id="gaugeRest">남은 예산 -</span>
+    </div>
+
+    <div class="overbanner" id="overBanner" hidden></div>
+
+    <div class="divider"></div>
+
+    <div class="kv"><span class="k">이번 달 변동비 예산</span><span class="v" id="kBudget">-</span></div>
+    <div class="kv"><span class="k">지금까지 쓴 돈</span><span class="v" id="kSpent">-</span></div>
+    <div class="kv"><span class="k">남은 생활비</span><span class="v strong" id="kRemain">-</span></div>
+    <div class="kv"><span class="k">남은 날 (오늘 포함)</span><span class="v" id="kDays">-</span></div>
+    <div class="kv"><span class="k">하루에 쓸 수 있는 돈</span><span class="v strong" id="kPerDay">-</span></div>
+    <div class="kv"><span class="k">100원 내림으로 남는 돈</span><span class="v" id="kRest">-</span></div>
+  </section>
+
+  <div class="sharebar">
+    <button type="button" class="btn share" id="shareBtn">📤 계산 결과 가족·지인에게 복사</button>
+    <p class="sharehint">한 줄 요약 문구를 복사합니다. 카카오톡·문자에 그대로 붙여 넣으면 됩니다.</p>
+  </div>
+
+  <section class="card" style="margin-top:22px;" aria-labelledby="s4title">
+    <h2 id="s4title"><span class="num" aria-hidden="true">4</span>계산 공식</h2>
+    <div class="formula">
+      <p>남은 생활비 = 변동비 예산 − 지금까지 쓴 돈</p>
+      <p>하루에 쓸 수 있는 돈 = 남은 생활비 ÷ 남은 날</p>
+    </div>
+    <p class="hint">하루 금액은 실제로 쓰기 편하도록 <b>100원 단위로 내려서</b> 보여 드리고, 정확한 1원 단위 금액을 함께 적습니다. 남은 날은 <b>오늘도 포함</b>해서 셉니다.</p>
+
+    <details class="more">
+      <summary>왜 ‘월급 − 쓴 돈 ÷ 남은 날’은 틀릴까?</summary>
+      <div class="body">
+        <p>월급 전체를 하루씩 나누면, 아직 내지 않은 <b>월세·보험료·저축</b>을 쓰는 돈으로 착각하게 됩니다.</p>
+        <p><b>예시</b><br>
+          월 실수령 280만원 · 저축 30만원 · 고정비 90만원 → 변동비 예산 <b>160만원</b><br>
+          이미 쓴 돈 70만원 · 남은 날 15일 → 남은 90만원, 하루 <b>6만원</b>
+        </p>
+        <p>같은 상황을 월급 전체로 계산하면 (280만 − 70만) ÷ 15일 = <b>14만원</b>이 나옵니다. 실제로 쓸 수 있는 돈의 두 배가 넘습니다.</p>
+        <ul>
+          <li>고정비는 날짜가 정해져 있어 하루 예산에서 빼야 실제와 맞습니다.</li>
+          <li>저축을 먼저 떼어 두면 남은 돈을 다 써도 저축은 지켜집니다.</li>
+          <li>카드 결제일이 밀려 있으면, 이번 달에 실제로 나갈 카드값도 고정비에 넣어 두세요.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+
+  <div class="disclaimer">
+    본 계산기는 개인 생활비 관리를 돕기 위한 참고용 도구입니다.
+    <span>카드 할부·자동이체·예정된 지출까지 모두 반영하지는 않으므로, 실제 통장·카드 내역과 함께 확인해 주세요. 입력한 숫자는 어디에도 저장되거나 전송되지 않고, 화면을 닫으면 사라집니다.</span>
+  </div>
+
+  <footer>
+    하루 생활비 큰글씨 계산기 (변동비 기준)<br>
+    <span class="brand">라이프나침반</span>
+    <p style="margin:12px 0 0;font-size:18px;font-weight:800;color:var(--navy);">※ 참고용 계산이며, 최종 판단은 실제 수입·지출 내역을 확인해 주세요.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SHARE_URL = "";
+
+  function $(id) { return document.getElementById(id); }
+  function digits(v) { return String(v == null ? "" : v).replace(/[^0-9]/g, ""); }
+  function num(el) { var d = digits(el.value); return d ? parseInt(d, 10) : 0; }
+  function fmt(n) { return Number(n).toLocaleString("ko-KR"); }
+
+  function korMoney(n) {
+    var neg = n < 0, v = Math.abs(n);
+    if (v === 0) return "0원";
+    var eok = Math.floor(v / 100000000);
+    var man = Math.floor((v % 100000000) / 10000);
+    var won = v % 10000;
+    var parts = [];
+    if (eok) parts.push(eok + "억");
+    if (man) parts.push(fmt(man) + "만");
+    if (won) parts.push(fmt(won));
+    return (neg ? "-" : "") + parts.join(" ") + "원";
+  }
+
+  /* ---------------- 계산 핵심 (화면과 분리) ---------------- */
+  function calcDaily(budget, spent, days) {
+    budget = Math.max(0, Math.round(budget || 0));
+    spent = Math.max(0, Math.round(spent || 0));
+    days = Math.max(0, Math.round(days || 0));
+    var remain = budget - spent;
+    var exact = days > 0 ? remain / days : 0;
+    var shown = 0;
+    var rest = 0;
+    if (remain > 0 && days > 0) {
+      shown = Math.floor(exact / 100) * 100;
+      rest = remain - shown * days;
+    }
+    var rate = budget > 0 ? (spent / budget) * 100 : 0;
+    return {
+      budget: budget, spent: spent, days: days,
+      remain: remain, exact: exact,
+      perDay: shown, restFromRounding: rest, rate: rate,
+      over: remain < 0, overBy: remain < 0 ? -remain : 0
+    };
+  }
+
+  /* ---------------- 상태 ---------------- */
+  var S = { budgetMode: "budget", spentMode: "sum", periodMode: "date" };
+
+  var budgetEl = $("budget"), incomeEl = $("income"), savingEl = $("saving"),
+      rentEl = $("rent"), phoneEl = $("phone"), insEl = $("ins"), subsEl = $("subs"),
+      spentEl = $("spent"),
+      itFood = $("itFood"), itMove = $("itMove"), itOut = $("itOut"), itEtc = $("itEtc"),
+      todayDateEl = $("todayDate"), endDateEl = $("endDate"), daysEl = $("days"),
+      todaySpendEl = $("todaySpend");
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function isoDate(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function parseYMD(s) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    if (!m) return null;
+    var d = new Date(+m[1], +m[2] - 1, +m[3]);
+    if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+    return d;
+  }
+  function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth() + 1, 0); }
+
+  function budgetValue() {
+    if (S.budgetMode === "budget") return num(budgetEl);
+    var inc = num(incomeEl);
+    var out = num(savingEl) + num(rentEl) + num(phoneEl) + num(insEl) + num(subsEl);
+    return Math.max(0, inc - out);
+  }
+
+  function itemsTotal() {
+    return num(itFood) + num(itMove) + num(itOut) + num(itEtc);
+  }
+
+  function spentValue() {
+    return S.spentMode === "sum" ? num(spentEl) : itemsTotal();
+  }
+
+  function daysValue() {
+    if (S.periodMode === "days") return num(daysEl);
+    var s = parseYMD(todayDateEl.value), e = parseYMD(endDateEl.value);
+    if (!s || !e) return 0;
+    var diff = Math.round((e.getTime() - s.getTime()) / 86400000) + 1;
+    return diff > 0 ? diff : 0;
+  }
+
+  /* ---------------- 화면 ---------------- */
+  function setMoneyEcho(el, n, prefix) {
+    if (!n) { el.textContent = ""; return; }
+    el.textContent = (prefix || "= ") + fmt(n) + "원 (" + korMoney(n) + ")";
+  }
+
+  function renderAutoBudget() {
+    var inc = num(incomeEl);
+    var out = num(savingEl) + num(rentEl) + num(phoneEl) + num(insEl) + num(subsEl);
+    var b = Math.max(0, inc - out);
+    var el = $("autoBudget"), note = $("autoBudgetNote");
+    if (inc <= 0) {
+      el.textContent = "-";
+      note.textContent = "월 실수령액을 넣으면 자동으로 계산됩니다.";
+    } else {
+      el.textContent = fmt(b) + "원 (" + korMoney(b) + ")";
+      note.textContent = "실수령 " + fmt(inc) + "원 − (저축·고정비 " + fmt(out) + "원)";
+      if (b <= 0) note.textContent += " · 저축·고정비가 실수령액보다 큽니다.";
+    }
+  }
+
+  function renderItemsSum() {
+    var t = itemsTotal();
+    $("itemsSum").textContent = fmt(t) + "원";
+  }
+
+  function renderDaysEcho() {
+    if (S.periodMode !== "date") { $("daysEcho").textContent = ""; return; }
+    var s = parseYMD(todayDateEl.value), e = parseYMD(endDateEl.value);
+    if (!s || !e) { $("daysEcho").textContent = "날짜를 넣으면 남은 날을 세어 드립니다."; return; }
+    var d = daysValue();
+    if (d <= 0) {
+      $("daysEcho").textContent = "기준일이 오늘보다 빠릅니다. 날짜를 확인해 주세요.";
+      return;
+    }
+    var last = endOfMonth(s);
+    var sameMonth = e.getFullYear() === last.getFullYear() && e.getMonth() === last.getMonth();
+    $("daysEcho").textContent = "오늘 포함 " + d + "일 남았습니다." + (sameMonth ? "" : " (" + (e.getMonth() + 1) + "월 " + e.getDate() + "일 기준)");
+  }
+
+  function render() {
+    setMoneyEcho($("budgetEcho"), num(budgetEl));
+    if (S.budgetMode === "income") renderAutoBudget();
+    setMoneyEcho($("spentEcho"), num(spentEl));
+    if (S.spentMode === "items") renderItemsSum();
+    renderDaysEcho();
+
+    var r = calcDaily(budgetValue(), spentValue(), daysValue());
+    var ready = r.budget > 0 && r.days > 0;
+
+    var rRemain = $("rRemain"), rPerDay = $("rPerDay");
+    var kRest = $("kRest");
+
+    if (!ready) {
+      rRemain.textContent = "-";
+      rRemain.className = "rmoney";
+      $("rRemainKor").textContent = "";
+      $("rRemainSub").textContent = r.budget <= 0
+        ? "이번 달 쓸 수 있는 돈(변동비 예산)을 넣어 주세요."
+        : "남은 날을 넣어 주세요.";
+      rPerDay.textContent = "-";
+      rPerDay.className = "rmoney big";
+      $("rPerDayKor").textContent = "";
+      $("rPerDaySub").textContent = "남은 생활비를 남은 날로 나눈 금액입니다.";
+      $("gaugeFill").style.width = "0%";
+      $("gaugeFill").className = "gauge-fill";
+      $("gaugePct").textContent = "0%";
+      $("gaugeRest").textContent = "남은 예산 -";
+      $("overBanner").hidden = true;
+      $("kBudget").textContent = r.budget > 0 ? fmt(r.budget) + "원" : "-";
+      $("kSpent").textContent = r.spent > 0 ? fmt(r.spent) + "원" : "-";
+      $("kRemain").textContent = "-";
+      $("kDays").textContent = r.days > 0 ? r.days + "일" : "-";
+      $("kPerDay").textContent = "-";
+      kRest.textContent = "-";
+      return;
+    }
+
+    rRemain.textContent = fmt(r.remain) + "원";
+    rRemain.className = "rmoney" + (r.remain <= 0 ? " zero" : "");
+    $("rRemainKor").textContent = korMoney(r.remain);
+    $("rRemainSub").textContent = "예산 " + fmt(r.budget) + "원 − 쓴 돈 " + fmt(r.spent) + "원";
+
+    if (r.remain > 0) {
+      rPerDay.textContent = fmt(r.perDay) + "원";
+      rPerDay.className = "rmoney big";
+      $("rPerDayKor").textContent = korMoney(r.perDay);
+      var exactWon = Math.round(r.exact);
+      var tail = (exactWon === r.perDay)
+        ? "\n100원 단위로 나누어떨어져 하루 " + fmt(r.perDay) + "원 그대로입니다."
+        : "\n쓰기 편하게 100원 단위로 내려 하루 " + fmt(r.perDay) + "원으로 보여 드립니다.";
+      $("rPerDaySub").textContent = "남은 " + fmt(r.remain) + "원 ÷ " + r.days + "일 = 정확히 "
+        + fmt(exactWon) + "원 (1원 단위)" + tail;
+      kRest.textContent = r.restFromRounding > 0 ? fmt(r.restFromRounding) + "원" : "0원";
+    } else {
+      rPerDay.textContent = "0원";
+      rPerDay.className = "rmoney big zero";
+      $("rPerDayKor").textContent = "";
+      $("rPerDaySub").textContent = "남은 생활비가 없어 오늘 쓸 수 있는 돈이 0원입니다.";
+      kRest.textContent = "-";
+    }
+
+    var pct = r.rate;
+    var w = Math.min(100, Math.max(0, pct));
+    var fill = $("gaugeFill");
+    fill.style.width = w + "%";
+    fill.className = "gauge-fill" + (pct >= 100 ? " over" : (pct >= 70 ? " warn" : ""));
+    $("gaugePct").textContent = Math.round(pct) + "%";
+    $("gauge").setAttribute("aria-label", "예산 소진율 " + Math.round(pct) + "%");
+    $("gaugeRest").textContent = r.remain >= 0 ? "남은 예산 " + fmt(r.remain) + "원" : "초과 " + fmt(r.overBy) + "원";
+
+    var ob = $("overBanner");
+    if (r.over) {
+      ob.hidden = false;
+      ob.innerHTML = "<b>⚠ 예산을 초과했어요</b>"
+        + "이번 달 변동비 예산보다 " + fmt(r.overBy) + "원 더 썼습니다. 남은 " + r.days + "일 동안은 새 지출을 줄이거나, 다음 달 예산에서 이 금액을 빼고 시작하세요.";
+    } else if (pct >= 90) {
+      ob.hidden = false;
+      ob.innerHTML = "<b>거의 다 썼어요</b>"
+        + "예산의 " + Math.round(pct) + "%를 썼고 남은 돈은 " + fmt(r.remain) + "원입니다. 남은 " + r.days + "일 동안 하루 " + fmt(r.perDay) + "원씩 쓰면 맞습니다.";
+    } else {
+      ob.hidden = true;
+      ob.innerHTML = "";
+    }
+
+    $("kBudget").textContent = fmt(r.budget) + "원";
+    $("kSpent").textContent = fmt(r.spent) + "원";
+    $("kRemain").textContent = fmt(r.remain) + "원";
+    $("kDays").textContent = r.days + "일";
+    $("kPerDay").textContent = fmt(r.perDay) + "원";
+  }
+
+  /* ---------------- 복사 ---------------- */
+  function copyText(text, okMsg) {
+    function done() { toast(okMsg || "복사했어요. 붙여 넣으세요."); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+  function fallbackCopy(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.className = "toast on";
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.className = "toast"; }, 2400);
+  }
+
+  function shareText() {
+    var r = calcDaily(budgetValue(), spentValue(), daysValue());
+    if (!(r.budget > 0 && r.days > 0)) return "";
+    var today = parseYMD(todayDateEl.value) || new Date();
+    var head = "[" + (today.getMonth() + 1) + "월 " + today.getDate() + "일 하루 생활비]";
+    var lines = [head];
+    lines.push("· 변동비 예산 " + fmt(r.budget) + "원");
+    lines.push("· 지금까지 쓴 돈 " + fmt(r.spent) + "원 (" + Math.round(r.rate) + "%)");
+    lines.push("· 남은 생활비 " + fmt(r.remain) + "원");
+    if (r.remain > 0) {
+      lines.push("· 남은 " + r.days + "일 → 하루 " + fmt(r.perDay) + "원");
+    } else {
+      lines.push("· 예산 초과 " + fmt(r.overBy) + "원");
+    }
+    if (SHARE_URL) lines.push("\n내 계산: " + SHARE_URL);
+    return lines.join("\n");
+  }
+
+  /* ---------------- 이벤트 ---------------- */
+  function showMode(kind) {
+    S.budgetMode = kind;
+    $("modeBudget").setAttribute("aria-pressed", kind === "budget" ? "true" : "false");
+    $("modeIncome").setAttribute("aria-pressed", kind === "income" ? "true" : "false");
+    $("panelBudget").hidden = kind !== "budget";
+    $("panelIncome").hidden = kind !== "income";
+  }
+  function showSpentMode(kind) {
+    S.spentMode = kind;
+    $("modeSum").setAttribute("aria-pressed", kind === "sum" ? "true" : "false");
+    $("modeItems").setAttribute("aria-pressed", kind === "items" ? "true" : "false");
+    $("panelSum").hidden = kind !== "sum";
+    $("panelItems").hidden = kind !== "items";
+  }
+  function showPeriodMode(kind) {
+    S.periodMode = kind;
+    $("modeDate").setAttribute("aria-pressed", kind === "date" ? "true" : "false");
+    $("modeDays").setAttribute("aria-pressed", kind === "days" ? "true" : "false");
+    $("panelDate").hidden = kind !== "date";
+    $("panelDays").hidden = kind !== "days";
+  }
+
+  $("modeBudget").addEventListener("click", function () { showMode("budget"); render(); });
+  $("modeIncome").addEventListener("click", function () { showMode("income"); render(); });
+  $("modeSum").addEventListener("click", function () { showSpentMode("sum"); render(); });
+  $("modeItems").addEventListener("click", function () { showSpentMode("items"); render(); });
+  $("modeDate").addEventListener("click", function () { showPeriodMode("date"); render(); });
+  $("modeDays").addEventListener("click", function () { showPeriodMode("days"); render(); });
+
+  [budgetEl, incomeEl, savingEl, rentEl, phoneEl, insEl, subsEl, spentEl,
+   itFood, itMove, itOut, itEtc, daysEl, todaySpendEl].forEach(function (el) {
+    el.addEventListener("input", function () {
+      var d = digits(el.value);
+      if (el.value !== d) el.value = d;
+      render();
+    });
+  });
+
+  [todayDateEl, endDateEl].forEach(function (el) {
+    el.addEventListener("change", function () {
+      if (el === todayDateEl) {
+        var s = parseYMD(todayDateEl.value);
+        if (s) endDateEl.value = isoDate(endOfMonth(s));
+      }
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-budget]").forEach(function (b) {
+    b.addEventListener("click", function () { budgetEl.value = b.getAttribute("data-budget"); render(); });
+  });
+  $("budgetClear").addEventListener("click", function () { budgetEl.value = ""; render(); });
+  document.querySelectorAll("[data-spent]").forEach(function (b) {
+    b.addEventListener("click", function () { spentEl.value = b.getAttribute("data-spent"); render(); });
+  });
+  $("spentClear").addEventListener("click", function () { spentEl.value = ""; render(); });
+  document.querySelectorAll("[data-days]").forEach(function (b) {
+    b.addEventListener("click", function () { daysEl.value = b.getAttribute("data-days"); render(); });
+  });
+
+  $("addToday").addEventListener("click", function () {
+    var v = num(todaySpendEl);
+    if (v <= 0) { toast("오늘 쓴 돈을 넣어 주세요."); return; }
+    if (S.spentMode === "sum") {
+      spentEl.value = String(num(spentEl) + v);
+    } else {
+      itEtc.value = String(num(itEtc) + v);
+    }
+    todaySpendEl.value = "";
+    render();
+    toast(fmt(v) + "원을 더했어요. 남은 생활비를 다시 계산했습니다.");
+  });
+
+  $("shareBtn").addEventListener("click", function () {
+    var t = shareText();
+    if (!t) { toast("예산과 남은 날을 먼저 넣어 주세요."); return; }
+    copyText(t, "계산 결과를 복사했어요. 카카오톡·문자에 붙여 넣으세요.");
+  });
+
+  /* ---------------- 시작 ---------------- */
+  var now = new Date();
+  todayDateEl.value = isoDate(now);
+  endDateEl.value = isoDate(endOfMonth(now));
+  render();
+})();
+</script>
+</body>
+</html>
