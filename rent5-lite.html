@@ -354,20 +354,20 @@
       </div>
 
       <details class="more">
-        <summary>적용되는 전환율 확인 (지금 연 5.0%)</summary>
+        <summary>적용되는 전환율 확인 (지금 연 5.25%)</summary>
         <div class="body">
           <p class="hint">
             보증금과 월세를 하나의 금액으로 비교할 때 쓰는 비율입니다.
             법은 <b>연 10%</b>와 <b>한국은행 기준금리 + 연 2%</b> 중 <b>낮은 쪽</b>을 넘지 못하게 합니다.
-            지금은 기준금리 <b>연 3.00%</b> + 2% = <b>연 5.0%</b>입니다.
+            지금은 기준금리 <b>연 3.25%</b> + 2% = <b>연 5.25%</b>입니다.
           </p>
           <div class="field">
             <label for="baseRate">한국은행 기준금리 (%)</label>
-            <input id="baseRate" type="number" step="0.25" min="0" max="10" inputmode="decimal" value="3.00">
+            <input id="baseRate" type="number" step="0.25" min="0" max="10" inputmode="decimal" value="3.25">
             <p class="echo" id="rateEcho" aria-live="polite"></p>
           </div>
           <p class="hint" style="margin-top:12px;">
-            기준금리는 2026년 8월 27일에 3.00%로 정해졌고 10월 22일 회의에서 그대로 유지되었습니다.
+            기준금리는 2026년 11월 26일 회의에서 3.00%에서 3.25%로 인상되었습니다.
             금리가 바뀌면 이 비율도 같이 바뀝니다.
           </p>
         </div>
@@ -387,7 +387,7 @@
         <div class="kv"><span class="k">지금 보증금</span><span class="v" id="rDep">-</span></div>
         <div class="kv"><span class="k">지금 월세</span><span class="v" id="rRent">-</span></div>
         <div class="kv"><span class="k">환산보증금</span><span class="v" id="rHv">-</span></div>
-        <div class="kv"><span class="k">적용 전환율</span><span class="v" id="rRate">연 5.0%</span></div>
+        <div class="kv"><span class="k">적용 전환율</span><span class="v" id="rRate">연 5.25%</span></div>
         <div class="range" id="rEach">보증금과 월세 각각 5%까지가 가장 안전합니다.</div>
         <div class="warnline" id="rWarn" hidden></div>
       </div>
@@ -660,11 +660,11 @@
   </div>
 
   <p class="src" style="margin-top:16px;">
-    <b>근거 법령</b> (2026년 11월 20일 확인)<br>
+    <b>근거 법령</b> (2026년 11월 26일 확인)<br>
     · 주택임대차보호법 제6조의3(계약갱신 요구), 제7조(차임 등의 증감청구권), 제7조의2(월차임 전환 시 산정률), 제10조의2(초과 차임 등의 반환청구),
     같은 법 시행령 제9조 — <a href="https://www.law.go.kr/LSW/lsInfoR.do?efYd=20260102&amp;lsiSeq=276291" target="_blank" rel="noopener">국가법령정보센터</a><br>
     · 공동주택관리법 제30조(장기수선충당금의 적립), 같은 법 시행령 제31조 제8항·제9항 — <a href="https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032312857" target="_blank" rel="noopener">조문 원문</a><br>
-    · 전환율 산정 기준금리: 한국은행 기준금리 연 3.00%(2026. 8. 27. 결정, 10. 22. 동결)
+    · 전환율 산정 기준금리: 한국은행 기준금리 연 3.25%(2026. 11. 26. 0.25%p 인상)
   </p>
 
   <footer>
@@ -1069,7 +1069,7 @@ function shareRepairText(o) {
   function newDepValue() { return numFrom(newDepEl) * 10000; }
   function rateValue() {
     var b = parseFloat(baseEl.value);
-    if (!isFinite(b) || b < 0) b = 3;
+    if (!isFinite(b) || b < 0) b = 3.25;
     return conversionRate(b);
   }
 
