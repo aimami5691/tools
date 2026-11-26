@@ -338,8 +338,8 @@
   </section>
 
   <section class="card" aria-labelledby="s2title">
-    <h2 id="s2title"><span class="num" aria-hidden="true">2</span>지금까지 쓴 돈</h2>
-    <p class="lead">이번 달에 식비·교통비·쇼핑으로 <b>이미 쓴 돈</b>입니다. 오늘 쓴 것까지 넣으세요.</p>
+    <h2 id="s2title"><span class="num" aria-hidden="true">2</span>어제까지 쓴 돈</h2>
+    <p class="lead">이번 달에 식비·교통비·쇼핑으로 <b>어제까지 쓴 돈</b>입니다. 오늘 쓴 돈은 빼고 넣으세요.</p>
 
     <div class="modes" role="group" aria-label="지출 입력 방식">
       <button type="button" id="modeSum" aria-pressed="true">합계로 넣기<small>한 번에</small></button>
@@ -348,7 +348,7 @@
 
     <div class="panel" id="panelSum">
       <div class="field">
-        <label for="spent">지금까지 쓴 변동비 합계 (원)</label>
+        <label for="spent">어제까지 쓴 변동비 합계 (원)</label>
         <input id="spent" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 267300">
         <div class="quick" role="group" aria-label="지출 빠른 입력">
           <button type="button" data-spent="100000">10만</button>
@@ -381,12 +381,12 @@
     </div>
 
     <div class="dailyadd">
-      <p class="dt">오늘 쓴 돈을 바로 더하기</p>
+      <p class="dt">쓴 돈을 바로 더하기</p>
       <div class="row">
-        <input id="todaySpend" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 12000" aria-label="오늘 쓴 돈">
+        <input id="todaySpend" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="예: 12000" aria-label="더할 금액">
         <button type="button" class="btn primary" id="addToday">더하기</button>
       </div>
-      <p class="hint">넣고 누르면 위 ‘쓴 돈’에 더해집니다. 매일 쓰는 날에 편합니다.</p>
+      <p class="hint">넣고 누르면 위 ‘어제까지 쓴 돈’에 더해집니다. 며칠 치 지출을 한꺼번에 더할 때 편합니다.</p>
     </div>
   </section>
 
@@ -454,7 +454,7 @@
     <div class="divider"></div>
 
     <div class="kv"><span class="k">이번 달 변동비 예산</span><span class="v" id="kBudget">-</span></div>
-    <div class="kv"><span class="k">지금까지 쓴 돈</span><span class="v" id="kSpent">-</span></div>
+    <div class="kv"><span class="k">어제까지 쓴 돈</span><span class="v" id="kSpent">-</span></div>
     <div class="kv"><span class="k">남은 생활비</span><span class="v strong" id="kRemain">-</span></div>
     <div class="kv"><span class="k">남은 날 (오늘 포함)</span><span class="v" id="kDays">-</span></div>
     <div class="kv"><span class="k">하루에 쓸 수 있는 돈</span><span class="v strong" id="kPerDay">-</span></div>
@@ -471,7 +471,7 @@
   <section class="card" style="margin-top:22px;" aria-labelledby="s4title">
     <h2 id="s4title"><span class="num" aria-hidden="true">4</span>계산 공식</h2>
     <div class="formula">
-      <p>남은 생활비 = 변동비 예산 − 지금까지 쓴 돈</p>
+      <p>남은 생활비 = 변동비 예산 − 어제까지 쓴 돈</p>
       <p>하루에 쓸 수 있는 돈 = 남은 생활비 ÷ 남은 날</p>
     </div>
     <p class="hint">하루 금액은 실제로 쓰기 편하도록 <b>100원 단위로 내려서</b> 보여 드리고, 정확한 1원 단위 금액을 함께 적습니다. 남은 날은 <b>오늘도 포함</b>해서 셉니다.</p>
@@ -482,7 +482,7 @@
         <p>월급 전체를 하루씩 나누면, 아직 내지 않은 <b>월세·보험료·저축</b>을 쓰는 돈으로 착각하게 됩니다.</p>
         <p><b>예시</b><br>
           월 실수령 280만원 · 저축 30만원 · 고정비 90만원 → 변동비 예산 <b>160만원</b><br>
-          이미 쓴 돈 70만원 · 남은 날 15일 → 남은 90만원, 하루 <b>6만원</b>
+          어제까지 쓴 돈 70만원 · 남은 날 15일 → 남은 90만원, 하루 <b>6만원</b>
         </p>
         <p>같은 상황을 월급 전체로 계산하면 (280만 − 70만) ÷ 15일 = <b>14만원</b>이 나옵니다. 실제로 쓸 수 있는 돈의 두 배가 넘습니다.</p>
         <ul>
@@ -804,7 +804,7 @@
       return lines;
     }
     lines.push("· 변동비 예산 " + fmt(r.budget) + "원");
-    lines.push("· 지금까지 쓴 돈 " + fmt(r.spent) + "원 (" + Math.round(r.rate) + "%)");
+    lines.push("· 어제까지 쓴 돈 " + fmt(r.spent) + "원 (" + Math.round(r.rate) + "%)");
     if (r.remain > 0) {
       lines.push("· 남은 생활비 " + fmt(r.remain) + "원");
       lines.push("· 남은 " + r.days + "일 → 하루 " + fmt(r.perDay) + "원");
@@ -913,7 +913,7 @@
 
   $("addToday").addEventListener("click", function () {
     var v = num(todaySpendEl);
-    if (v <= 0) { toast("오늘 쓴 돈을 넣어 주세요."); return; }
+    if (v <= 0) { toast("더할 금액을 넣어 주세요."); return; }
     if (S.spentMode === "sum") {
       spentEl.value = String(num(spentEl) + v);
     } else {
